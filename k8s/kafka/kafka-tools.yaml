@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-tools
+  namespace: kafka
+  labels:
+    purpose: kafka-cli
+spec:
+  volumes:
+    - name: kafka-credentials
+      secret:
+        secretName: kafka-matej-credentials
+  containers:
+    - name: kafka-cli
+      image: conitasgmbh/kafka-cli
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do sleep 3600; done"]
+      resources:
+        limits:
+          cpu: 100m
+          memory: 200M
+      volumeMounts:
+        - name: kafka-credentials
+          mountPath: /credentials
+          readOnly: true
+  restartPolicy: OnFailure

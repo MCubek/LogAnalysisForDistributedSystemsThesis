@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: filebeat-kafka-matej
+    owner: matejc
+  name: filebeat-kafka-matej
+  namespace: elk
+spec:
+  selector:
+    matchLabels:
+      app: filebeat-kafka-matej
+  template:
+    metadata:
+      labels:
+        app: filebeat-kafka-matej
+    spec:
+      priorityClassName: high-priority
+      containers:
+        - env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+          image: docker.elastic.co/beats/filebeat:8.7.0
+          name: filebeat
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            runAsUser: 0
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /usr/share/filebeat/filebeat.yml
+              name: config
+              readOnly: true
+              subPath: filebeat-opensearch.yml
+            - mountPath: /var/log/containers
+              name: varlogcontainers
+              readOnly: true
+            - mountPath: /var/log/pods
+              name: varlogpods
+              readOnly: true
+            - name: kafka-ssl
+              mountPath: /etc/filebeat/ssl
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      serviceAccount: filebeat-serviceaccount
+      serviceAccountName: filebeat-serviceaccount
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - configMap:
+            defaultMode: 420
+            name: filebeat-kafka-matej
+          name: config
+        - hostPath:
+            path: /var/log/containers
+            type: ""
+          name: varlogcontainers
+        - hostPath:
+            path: /var/log/pods
+            type: ""
+          name: varlogpods
+        - name: kafka-ssl
+          secret:
+            secretName: kafka-matej-ssl-secret
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate

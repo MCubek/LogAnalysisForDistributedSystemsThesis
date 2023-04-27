@@ -1,0 +1,10 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  labels:
+    strimzi.io/cluster: masters-cluster
+  name: kafkauser-matej
+  namespace: kafka
+spec:
+  authentication:
+    type: tls

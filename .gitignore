@@ -1,0 +1,29 @@
+/docs/*.aux
+/docs/*.lof
+/docs/*.log
+/docs/*.lot
+/docs/*.out
+/docs/*.pdf
+/docs/*.synctex.gz
+/docs/*.toc
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### VS Code ###
+.vscode/
+
+### Keys ###
+*.p12
+*.jks
+*.password
+*.crt
+*.pem
+
+*.DS_Store

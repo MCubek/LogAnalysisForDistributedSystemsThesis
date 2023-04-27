@@ -1,0 +1,74 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnect
+metadata:
+  name: masters
+  namespace: kafka
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  version: 3.4.0
+  replicas: 3
+  bootstrapServers: kafka-cluster-kafka-bootstrap:9092
+  config:
+    config.providers: secrets
+    config.providers.secrets.class: io.strimzi.kafka.KubernetesSecretConfigProvider
+    group.id: kafka-connect
+    offset.storage.topic: _connect-offsets
+    config.storage.topic: _connect-configs
+    status.storage.topic: _connect-status
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter.schema.registry.url: http://schema-registry:8081
+    value.converter: io.confluent.connect.avro.AvroConverter
+    config.storage.replication.factor: 1
+    offset.storage.replication.factor: 1
+    status.storage.replication.factor: 1
+  logging:
+    type: inline
+    loggers:
+      connect.root.logger.level: "WARN"
+  build:
+    output:
+      type: docker
+      image: my-registry.io/my-org/my-connect-cluster:latest
+      pushSecret: my-registry-credentials
+    plugins:
+      - name: debezium-postgres-connector
+        artifacts:
+          - type: tgz
+            url: https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.1.1.Final/debezium-connector-postgres-2.1.1.Final-plugin.tar.gz
+            sha512sum: 962a12151bdf9a5a30627eebac739955a4fd95a08d373b86bdcea2b4d0c27dd6e1edd5cb548045e115e33a9e69b1b2a352bee24df035a0447cb820077af00c03
+      - name: confluentinc-kafka-connect-jdbc-10
+        artifacts:
+          - type: zip
+            url: https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-jdbc/versions/10.2.6/confluentinc-kafka-connect-jdbc-10.2.6.zip
+      - name: confluentinc-kafka-connect-avro-converter
+        artifacts:
+          - type: zip
+            url: https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-avro-converter/versions/7.0.1/confluentinc-kafka-connect-avro-converter-7.0.1.zip
+  externalConfiguration:
+    env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: aws-creds
+            key: awsAccessKey
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: aws-creds
+            key: awsSecretAccessKey
+  template:
+    pod:
+      imagePullSecrets:
+        - name: imagePullSecret
+      tmpDirSizeLimit: 10Mi
+  resources:
+    limits:
+      cpu: 400m
+      memory: 2000Mi
+  readinessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 5
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 5

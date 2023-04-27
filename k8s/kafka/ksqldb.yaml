@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: ksqldb-interactive
+  name: ksqldb-interactive
+  namespace: kafka
+spec:
+  serviceName: ksqldb-interactive
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ksqldb-interactive
+  template:
+    metadata:
+      labels:
+        app: ksqldb-interactive
+    spec:
+      containers:
+        - env:
+            - name: KSQL_KSQL_SERVICE_ID
+              value: masters_ksqldb
+            - name: KSQL_BOOTSTRAP_SERVERS
+              value: masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+            - name: KSQL_KSQL_SCHEMA_REGISTRY_URL
+              value: http://schema-registry:8081
+            # - name: KSQL_KSQL_CONNECT_URL
+            #   value: http://masters-cluster-connect-api:8083
+            - name: KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE
+              value: "true"
+            - name: KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE
+              value: "true"
+            - name: KSQL_LISTENERS
+              value: http://0.0.0.0:8089
+            - name: KSQL_QUERY_PULL_ENABLE_STANDBY_READS
+              value: "false"
+            - name: KSQL_KSQL_HEARTBEAT_ENABLE
+              value: "true"
+            - name: KSQL_PROCESSING_GUARANTEE
+              value: exactly_once_v2
+            - name: KSQL_STREAMS_STATE_DIR
+              value: /var/lib/ksqldb/state
+          image: confluentinc/ksqldb-server:0.28.2
+          imagePullPolicy: IfNotPresent
+          name: ksqldb-server-interactive
+          ports:
+            - containerPort: 8089
+              protocol: TCP
+          volumeMounts:
+            - name: ksqldb-data
+              mountPath: /var/lib/ksqldb/state
+          resources:
+            limits:
+              cpu: "1"
+              memory: 6Gi
+      hostname: ksqldb-interactive
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+  volumeClaimTemplates:
+    - metadata:
+        name: ksqldb-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ksqldb-interactive-lb
+  namespace: kafka
+  labels:
+    app: ksqldb-interactive
+spec:
+  type: LoadBalancer
+  ports:
+    - name: ksqldb
+      port: 8089
+      targetPort: 8089
+      protocol: TCP
+  selector:
+    app: ksqldb-interactive

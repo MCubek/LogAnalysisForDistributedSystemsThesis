@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kafka-ui
+  name: kafka-ui
+  namespace: kafka
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_CLUSTERS_0_NAME
+          value: masters-cluster
+        - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+          value: masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+        - name: KAFKA_CLUSTERS_0_KSQLDBSERVER
+          value: http://ksqldb-interactive.kafka.svc.cluster.local:8089
+        - name: KAFKA_CLUSTERS_0_SCHEMAREGISTRY
+          value: http://schema-registry.kafka.svc.cluster.local:8081
+        - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME
+          value: masters-connect-api
+        - name: KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS
+          value: http://masters-cluster-connect-api.kafka.svc.cluster.local:8083
+        image: provectuslabs/kafka-ui:latest
+        imagePullPolicy: Always
+        name: kafka-ui
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafka-ui
+  name: kafka-ui
+  namespace: kafka
+spec:
+  ports:
+    - name: kafka-ui
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: kafka-ui

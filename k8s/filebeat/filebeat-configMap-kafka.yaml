@@ -1,0 +1,91 @@
+apiVersion: v1
+data:
+  filebeat-opensearch.yml: |
+    filebeat.inputs:
+      - type: container
+        format: cri
+        paths:
+          - /var/log/containers/*.log
+        processors:
+          - decode_json_fields:
+              fields: ["message"]
+              target: ""
+              overwrite_keys: true
+          - add_kubernetes_metadata:
+              in_cluster: true
+              host: ${NODE_NAME}
+              matchers:
+                - logs_path:
+                    logs_path: /var/log/containers/
+          - script:
+              lang: javascript
+              source: >
+                function process(event) {
+                  var appName=event.Get("kubernetes.labels.app");
+                  if (appName!==null && appName.indexOf("cloudvane") !== -1)
+                  {
+                      event.Put("indexName",event.Get("kubernetes.labels.app"));
+                  }
+                  else if (appName!==null && appName.indexOf("kafka")!== -1)
+                  {
+                      event.Put("indexName","cloudvane-".concat(event.Get("kubernetes.labels.app")));
+                  }
+                  else
+                  {
+                      event.Put("indexName","other");
+                  }
+                }
+      - type: log
+        paths:
+          - /var/log/containers/*.out
+        processors:
+          - decode_json_fields:
+              fields: ["message"]
+              target: ""
+              overwrite_keys: true
+          - script:
+              lang: javascript
+              source: >
+                function process(event) {
+                    event.Put("indexName","usage");
+                }
+    processors:
+      - add_host_metadata:
+    
+    setup.template:
+      name: k8s
+      pattern: k8s-*
+    setup.ilm.enabled: false
+
+    output.kafka:
+        # The list of Kafka broker addresses to connect to
+        hosts: ["109.60.33.45:30096"]
+
+        version: '2.6.0'
+
+        # The Kafka topic to send the events to
+        topic: 'logs-k8s-%{[indexName]}'
+
+        # Set the partitioning strategy. Default is 'round_robin'.
+        partition.round_robin:
+          reachable_only: false
+
+        # Set the required ACKs from the broker. Default is 1.
+        required_acks: 1
+
+        # Set the maximum number of events to be sent in a batch. Default is 2048.
+        batch.max_events: 2048
+
+        #  Set the compression codec for the output events. Default is 'none'.
+        compression: snappy
+        max_message_bytes: 1000000
+
+        ssl.enabled: true
+        ssl.certificate_authorities: ['/etc/filebeat/ssl/ca.pem']
+        ssl.certificate: '/etc/filebeat/ssl/certificate.pem'
+        ssl.key: '/etc/filebeat/ssl/key.pem'
+
+kind: ConfigMap
+metadata:
+  name: filebeat-kafka-matej
+  namespace: elk

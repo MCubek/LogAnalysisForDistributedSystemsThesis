@@ -1,0 +1,38 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: masters
+  namespace: elk
+spec:
+  version: 8.7.0
+  nodeSets:
+    - name: default
+      count: 1
+      config:
+        node.store.allow_mmap: false
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+            storageClassName: standard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: masters-es-http-lb
+  namespace: elk
+spec:
+  ports:
+    - name: https
+      port: 9200
+      protocol: TCP
+      targetPort: 9200
+  selector:
+    common.k8s.elastic.co/type: elasticsearch
+    elasticsearch.k8s.elastic.co/cluster-name: masters
+  type: LoadBalancer

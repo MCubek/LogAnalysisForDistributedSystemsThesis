@@ -1,0 +1,26 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: masters
+  namespace: elk
+spec:
+  version: 8.7.0
+  count: 1
+  elasticsearchRef:
+    name: masters
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: masters-kb-http-lb
+  namespace: elk
+spec:
+  ports:
+    - name: https
+      port: 5601
+      protocol: TCP
+      targetPort: 5601
+  selector:
+    common.k8s.elastic.co/type: kibana
+    kibana.k8s.elastic.co/name: masters
+  type: LoadBalancer
