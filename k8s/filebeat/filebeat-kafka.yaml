@@ -23,7 +23,7 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
-          image: docker.elastic.co/beats/filebeat:8.7.0
+          image: docker.elastic.co/beats/filebeat:8.7.1
           name: filebeat
           resources:
             limits:

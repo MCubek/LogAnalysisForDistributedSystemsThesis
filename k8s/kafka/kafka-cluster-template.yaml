@@ -41,7 +41,7 @@ spec:
         configuration:
           brokers:
             - broker: 0 # Needed only for minikube
-              advertisedHost: 109.60.33.45
+              advertisedHost: MY_PUBLIC_IP
               advertisedPort: 30096
     template:
       pod:
@@ -74,6 +74,7 @@ spec:
       type: inline
       loggers:
         kafka.root.logger.level: "WARN"
+        kafka.controller: "INFO"
 
   zookeeper:
     replicas: 1
@@ -85,6 +86,7 @@ spec:
       type: inline
       loggers:
         zookeeper.root.logger: "WARN"
+        org.apache.zookeeper.server: "WARN"
   entityOperator:
     topicOperator: {}
     userOperator: {}

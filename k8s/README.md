@@ -37,7 +37,7 @@
     3. Start kafka cluster
 
         ```bash
-        kubectl apply -f kafka/kafka-cluster.yaml
+        bash kafka-cluster-deploy.sh
         ```
 
     4. Wait for kafka cluster
@@ -59,7 +59,7 @@
         kubectl apply -f kafka/kafkauser-matej.yaml
         ```
 
-    7. Export kafka user keystore and print keystore password
+    7. Export kafka user keystore and keystore password
 
         ```bash
         kubectl get secrets -n kafka kafkauser-matej -o jsonpath='{.data.user\.p12}' | base64 -d > kafka/keystore.p12
@@ -106,12 +106,13 @@
 
         ```bash
         kubectl apply -f elk/elk-cluster.yaml
+        kubectl wait --for=condition=ready pod -l elasticsearch.k8s.elastic.co/cluster-name=masters -n elk
         ```
 
-    5. Get generated password for *elastic* user
+    5. Export generated password for *elastic* user
 
         ```bash
-        kubectl get secret -n elk masters-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'
+        kubectl get secret -n elk masters-es-elastic-user -o go-template='{{.data.elastic | base64decode}}' > elk/elk.password
         ```
 
     6. Create Kibana
@@ -121,6 +122,12 @@
         ```
 
     7. Login into Kibana with password from step 5 and username *elastic*
+
+    8. Deploy logstash
+
+        ```bash
+        kubectl apply -f logstash/logstash-config.yaml -f logstash/logstash-src.yaml
+        ```
 
 - ## Grafana setup
 
@@ -153,9 +160,17 @@
     2. Deploy Filebeat daemonset
 
         ```bash
-        kubectl apply -f kafka/filebeat/filebeat-kafka.yaml
+        bash filebeat/deploy-filebeat.sh
         ```
 
-    3. ```bash
+    3. To connecto to kafka over internet using kafka-cli
+
+        ```bash
         /opt/kafka/bin/kafka-topics.sh --bootstrap-server vrbanizagreb.ddns.net:30096 --command-config ssl-client.properties --list
+        ```
+
+    4. Delete Filebeat daemonset
+
+        ```bash
+        kubectl delete -f filebeat/filebeat-configMap-kafka-template.yaml -f filebeat/filebeat-kafka.yaml
         ```

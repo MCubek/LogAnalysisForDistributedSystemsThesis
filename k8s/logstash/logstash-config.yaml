@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: elk
+data:
+  logstash.yml: |
+
+    input:
+      kafka:
+        bootstrap_servers: "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        topics_pattern: "^logs.*"
+        group_id: "logstash"
+        codec: "json"
+
+    output:
+      elasticsearch:
+        hosts: ["http://masters-es-internal-http.elk:9200"]
+        index: "logs-%{[@metadata][kafka][topic]}-%{+YYYY.MM.dd}"

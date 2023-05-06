@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
   filebeat-opensearch.yml: |
+
     filebeat.inputs:
       - type: container
         format: cri
@@ -35,6 +36,16 @@ data:
                       event.Put("indexName","other");
                   }
                 }
+          
+          - drop_event:
+              when:
+                not:
+                  or:
+                    - equals:
+                        kubernetes.namespace: "cloudvane-test"
+                    - equals:
+                        kubernetes.namespace: "kafka-test"
+
       - type: log
         paths:
           - /var/log/containers/*.out
@@ -59,12 +70,12 @@ data:
 
     output.kafka:
         # The list of Kafka broker addresses to connect to
-        hosts: ["109.60.33.45:30096"]
+        hosts: ["MY_PUBLIC_IP:30096"]
 
         version: '2.6.0'
 
         # The Kafka topic to send the events to
-        topic: 'logs-k8s-%{[indexName]}'
+        topic: 'logs-%{[indexName]}-%{[kubernetes.namespace]}'
 
         # Set the partitioning strategy. Default is 'round_robin'.
         partition.round_robin:
