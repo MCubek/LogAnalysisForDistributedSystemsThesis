@@ -126,7 +126,7 @@
     8. Deploy logstash
 
         ```bash
-        kubectl apply -f logstash/logstash-config.yaml -f logstash/logstash-src.yaml
+        bash logstash/logstash-deploy.sh
         ```
 
 - ## Grafana setup

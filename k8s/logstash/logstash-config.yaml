@@ -6,14 +6,10 @@ metadata:
 data:
   logstash.yml: |
 
-    input:
-      kafka:
-        bootstrap_servers: "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-        topics_pattern: "^logs.*"
-        group_id: "logstash"
-        codec: "json"
+    log.level: info
+    config.support_escapes: true
 
-    output:
-      elasticsearch:
-        hosts: ["http://masters-es-internal-http.elk:9200"]
-        index: "logs-%{[@metadata][kafka][topic]}-%{+YYYY.MM.dd}"
+  pipelines.yml: |
+
+    - pipeline.id: kafka-source
+      path.config: '/usr/share/logstash/pipeline/kafka-source.conf'

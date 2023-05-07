@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config-pipelines
+  namespace: elk
+data:
+  kafka-source.conf: |
+
+    input {
+      kafka {
+        bootstrap_servers => "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        topics_pattern => "^logs.*"
+        group_id => "logstash"
+        codec => "json"
+        decorate_events => "extended"
+      }
+    }
+
+    filter {
+      mutate {
+        add_field => { "topic" => "%{[@metadata][kafka][topic]}" }
+      }
+    }
+
+    output {
+      elasticsearch {
+
+        hosts => ["https://masters-es-internal-http.elk.svc.cluster.local:9200"]
+        index => "k8s-logs-%{topic}"
+
+        ssl => true
+        ssl_certificate_verification => false
+        user => "elastic"
+        password => "ELASTIC_PASSWORD"
+
+        ilm_enabled => false
+      }
+    }

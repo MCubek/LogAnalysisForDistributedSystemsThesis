@@ -23,12 +23,18 @@ spec:
               value: "masters-es-internal-http.elk"
             - name: ELASTICSEARCH_PORT
               value: "9200"
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: masters-es-elastic-user
+                  key: elastic
           ports:
             - containerPort: 5044
           volumeMounts:
             - name: logstash-config-volume
-              mountPath: /usr/share/logstash/config/logstash.yml
-              subPath: logstash.yml
+              mountPath: /usr/share/logstash/config/
+            - name: logstash-pipeline-volume
+              mountPath: /usr/share/logstash/pipeline/
           resources:
             limits:
               cpu: 200m
@@ -37,3 +43,6 @@ spec:
         - name: logstash-config-volume
           configMap:
             name: logstash-config
+        - name: logstash-pipeline-volume
+          configMap:
+            name: logstash-config-pipelines
