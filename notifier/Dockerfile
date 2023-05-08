@@ -11,10 +11,10 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
-COPY . /app
+COPY . /notifier_service.py
 
 # Expose the port for any external services
 EXPOSE 8080
 
 # Run the application
-CMD ["python", "app.py"]
+CMD ["python", "notifier_service.py"]
