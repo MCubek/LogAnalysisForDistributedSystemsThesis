@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-notification
+  template:
+    metadata:
+      labels:
+        app: kafka-notification
+    spec:
+      containers:
+        - name: kafka-notification
+          image: mcubek/kafka-ai-enricher:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BOOTSTRAP_SERVER
+              value: "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: AI_MODEL
+              value: "text-davinci-003"
+            - name: TOPIC_REGEX
+              value: "errors-.*"
+            - name: OUTPUT_TOPIC
+              value: "notification-enriched-errors"
+            - name: RATE_LIMIT
+              value: 120
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: enricher-credentials
+                  key: OPENAI_API_KEY
