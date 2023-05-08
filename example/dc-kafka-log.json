@@ -1,0 +1,353 @@
+[
+  {
+    "@timestamp": "2023-05-03T17:00:04.035Z",
+    "@metadata": {
+      "beat": "filebeat",
+      "type": "_doc",
+      "version": "8.7.1"
+    },
+    "log": {
+      "offset": 288791,
+      "file": {
+        "path": "/var/log/containers/cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb_cloudvane-test_cloudvane-datacollector-a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45.log"
+      }
+    },
+    "stream": "stdout",
+    "input": {
+      "type": "container"
+    },
+    "level_value": 40000,
+    "stack_trace": "hr.neos.cloudvane.datacollector.rest.client.azure.AzureApiException: The specified account is disabled.\nRequestId:087e8291-601e-0047-67e0-7d94cc000000\nTime:2023-05-03T17:00:04.0332933Z\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\n\tat java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)\n\tat java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)\n\tat com.fasterxml.jackson.databind.introspect.AnnotatedConstructor.call(AnnotatedConstructor.java:124)\n\tat com.fasterxml.jackson.databind.deser.std.StdValueInstantiator.createFromObjectWith(StdValueInstantiator.java:291)\n\tat com.fasterxml.jackson.databind.deser.ValueInstantiator.createFromObjectWith(ValueInstantiator.java:288)\n\tat com.fasterxml.jackson.databind.deser.impl.PropertyBasedCreator.build(PropertyBasedCreator.java:202)\n\tat com.fasterxml.jackson.databind.deser.BeanDeserializer._deserializeUsingPropertyBased(BeanDeserializer.java:520)\n\tat com.fasterxml.jackson.databind.deser.std.ThrowableDeserializer.deserializeFromObject(ThrowableDeserializer.java:65)\n\tat com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:195)\n\tat com.fasterxml.jackson.dataformat.xml.deser.XmlDeserializationContext.readRootValue(XmlDeserializationContext.java:91)\n\tat com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:4593)\n\tat com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:3601)\n\tat org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:378)\n\tat org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:342)\n\tat org.springframework.web.client.HttpMessageConverterExtractor.extractData(HttpMessageConverterExtractor.java:105)\n\tat org.springframework.web.client.ExtractingResponseErrorHandler.extract(ExtractingResponseErrorHandler.java:157)\n\tat org.springframework.web.client.ExtractingResponseErrorHandler.handleError(ExtractingResponseErrorHandler.java:141)\n\tat org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:125)\n\tat org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)\n\tat org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:819)\n\tat org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:777)\n\tat org.springframework.web.client.RestTemplate.execute(RestTemplate.java:711)\n\tat org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:631)\n\tat hr.neos.cloudvane.datacollector.rest.client.azure.AzureApiClient.getPages(AzureApiClient.java:76)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.processCostReportFileFromOffset(AzureCollectionService.java:328)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.lambda$processCostReportFileName$6(AzureCollectionService.java:318)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.processBatchOffset(CollectionService.java:243)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.processCostReportFileName(AzureCollectionService.java:314)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.fetchApi(AzureCollectionService.java:201)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.collect(AzureCollectionService.java:129)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.collectScheduled(CollectionService.java:84)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.collectCronJob(CollectionService.java:76)\n\tat jdk.internal.reflect.GeneratedMethodAccessor143.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:568)\n\tat org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)\n\tat org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)\n\tat org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:95)\n\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:833)\n",
+    "thread_name": "scheduling-1",
+    "level": "ERROR",
+    "instana.trace.id": "adf2108f84007f73",
+    "logger_name": "hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService",
+    "indexName": "cloudvane-datacollector-kafka",
+    "ecs": {
+      "version": "8.0.0"
+    },
+    "message": "CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsRegular # AzureCollectionService.fetchApi # EXC: The specified account is disabled.\nRequestId:087e8291-601e-0047-67e0-7d94cc000000\nTime:2023-05-03T17:00:04.0332933Z",
+    "@version": "1",
+    "container": {
+      "image": {
+        "name": "fra.ocir.io/frpf7jvyycgx/cv-kafka/openjdk-17/cloudvane-datacollector:1fc430e8a2191801cdbaf4615475c4432b0a0f6f"
+      },
+      "id": "a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45",
+      "runtime": "cri-o"
+    },
+    "kubernetes": {
+      "container": {
+        "name": "cloudvane-datacollector"
+      },
+      "node": {
+        "name": "10.38.1.11",
+        "uid": "9c999e81-cafc-405c-936c-8c45183351b5",
+        "labels": {
+          "beta_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "failure-domain_beta_kubernetes_io/region": "eu-frankfurt-1",
+          "topology_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2",
+          "oke_oraclecloud_com/node_info_private_worker": "true",
+          "beta_kubernetes_io/arch": "amd64",
+          "kubernetes_io/hostname": "10.38.1.11",
+          "internal_addr": "10.38.1.11",
+          "kubernetes_io/arch": "amd64",
+          "topology_kubernetes_io/region": "eu-frankfurt-1",
+          "node_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "failure-domain_beta_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2",
+          "node_info/compartment_name": "development",
+          "node-role_kubernetes_io/node": "",
+          "node_info/kubeletVersion": "v1.25",
+          "oci_oraclecloud_com/fault-domain": "FAULT-DOMAIN-1",
+          "beta_kubernetes_io/os": "linux",
+          "oke_oraclecloud_com/node_info_private_subnet": "true",
+          "displayName": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3",
+          "name": "oke-new-pool2",
+          "kubernetes_io/os": "linux",
+          "node_info_ds_proxymux_client": "true",
+          "hostname": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3"
+        },
+        "hostname": "10.38.1.11"
+      },
+      "pod": {
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb",
+        "uid": "1a2ff384-ac41-47d0-815d-43c27591cff7",
+        "ip": "10.244.1.5"
+      },
+      "namespace": "cloudvane-test",
+      "namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+      "namespace_labels": {
+        "kubernetes_io/metadata_name": "cloudvane-test"
+      },
+      "replicaset": {
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c"
+      },
+      "labels": {
+        "client": "test",
+        "pod-template-hash": "75f86b6d7c",
+        "app": "cloudvane-datacollector-kafka"
+      }
+    },
+    "host": {
+      "name": "filebeat-kafka-matej-44gl2",
+      "ip": [
+        "10.244.1.90",
+        "fe80::8bf:80ff:fe5f:3832"
+      ],
+      "mac": [
+        "0A-BF-80-5F-38-32"
+      ],
+      "hostname": "filebeat-kafka-matej-44gl2",
+      "architecture": "x86_64",
+      "os": {
+        "codename": "focal",
+        "type": "linux",
+        "platform": "ubuntu",
+        "version": "20.04.6 LTS (Focal Fossa)",
+        "family": "debian",
+        "name": "Ubuntu",
+        "kernel": "5.4.17-2136.314.6.2.el7uek.x86_64"
+      },
+      "containerized": true
+    },
+    "agent": {
+      "name": "filebeat-kafka-matej-44gl2",
+      "type": "filebeat",
+      "version": "8.7.1",
+      "ephemeral_id": "5c71c9f5-3073-4b71-90a8-04ef13492db4",
+      "id": "18a62338-ce41-4a14-9d6d-e9f6887041b0"
+    }
+  },
+  {
+    "@timestamp": "2023-05-03T17:00:04.018Z",
+    "@metadata": {
+      "beat": "filebeat",
+      "type": "_doc",
+      "version": "8.7.1"
+    },
+    "input": {
+      "type": "container"
+    },
+    "container": {
+      "id": "a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45",
+      "runtime": "cri-o",
+      "image": {
+        "name": "fra.ocir.io/frpf7jvyycgx/cv-kafka/openjdk-17/cloudvane-datacollector:1fc430e8a2191801cdbaf4615475c4432b0a0f6f"
+      }
+    },
+    "ecs": {
+      "version": "8.0.0"
+    },
+    "stream": "stdout",
+    "message": "First usage start time set to to 2023-04-01T00:00Z[UTC].",
+    "level_value": 10000,
+    "logger_name": "hr.neos.cloudvane.datacollector.collector.cloud.gcp.GCPCollectionService",
+    "thread_name": "Thread-174",
+    "level": "DEBUG",
+    "log": {
+      "offset": 288103,
+      "file": {
+        "path": "/var/log/containers/cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb_cloudvane-test_cloudvane-datacollector-a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45.log"
+      }
+    },
+    "kubernetes": {
+      "node": {
+        "hostname": "10.38.1.11",
+        "name": "10.38.1.11",
+        "uid": "9c999e81-cafc-405c-936c-8c45183351b5",
+        "labels": {
+          "node_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "hostname": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3",
+          "kubernetes_io/hostname": "10.38.1.11",
+          "kubernetes_io/os": "linux",
+          "failure-domain_beta_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2",
+          "topology_kubernetes_io/region": "eu-frankfurt-1",
+          "topology_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2",
+          "node_info_ds_proxymux_client": "true",
+          "oke_oraclecloud_com/node_info_private_worker": "true",
+          "failure-domain_beta_kubernetes_io/region": "eu-frankfurt-1",
+          "internal_addr": "10.38.1.11",
+          "oci_oraclecloud_com/fault-domain": "FAULT-DOMAIN-1",
+          "beta_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "name": "oke-new-pool2",
+          "node-role_kubernetes_io/node": "",
+          "node_info/kubeletVersion": "v1.25",
+          "displayName": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3",
+          "beta_kubernetes_io/arch": "amd64",
+          "node_info/compartment_name": "development",
+          "beta_kubernetes_io/os": "linux",
+          "oke_oraclecloud_com/node_info_private_subnet": "true",
+          "kubernetes_io/arch": "amd64"
+        }
+      },
+      "pod": {
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb",
+        "uid": "1a2ff384-ac41-47d0-815d-43c27591cff7",
+        "ip": "10.244.1.5"
+      },
+      "namespace": "cloudvane-test",
+      "namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+      "namespace_labels": {
+        "kubernetes_io/metadata_name": "cloudvane-test"
+      },
+      "replicaset": {
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c"
+      },
+      "labels": {
+        "pod-template-hash": "75f86b6d7c",
+        "app": "cloudvane-datacollector-kafka",
+        "client": "test"
+      },
+      "container": {
+        "name": "cloudvane-datacollector"
+      }
+    },
+    "indexName": "cloudvane-datacollector-kafka",
+    "host": {
+      "mac": [
+        "0A-BF-80-5F-38-32"
+      ],
+      "name": "filebeat-kafka-matej-44gl2",
+      "hostname": "filebeat-kafka-matej-44gl2",
+      "architecture": "x86_64",
+      "os": {
+        "family": "debian",
+        "name": "Ubuntu",
+        "kernel": "5.4.17-2136.314.6.2.el7uek.x86_64",
+        "codename": "focal",
+        "type": "linux",
+        "platform": "ubuntu",
+        "version": "20.04.6 LTS (Focal Fossa)"
+      },
+      "containerized": true,
+      "ip": [
+        "10.244.1.90",
+        "fe80::8bf:80ff:fe5f:3832"
+      ]
+    },
+    "@version": "1",
+    "agent": {
+      "id": "18a62338-ce41-4a14-9d6d-e9f6887041b0",
+      "name": "filebeat-kafka-matej-44gl2",
+      "type": "filebeat",
+      "version": "8.7.1",
+      "ephemeral_id": "5c71c9f5-3073-4b71-90a8-04ef13492db4"
+    }
+  },
+  {
+    "@timestamp": "2023-05-03T17:00:04.068Z",
+    "@metadata": {
+      "beat": "filebeat",
+      "type": "_doc",
+      "version": "8.7.1"
+    },
+    "log": {
+      "offset": 294991,
+      "file": {
+        "path": "/var/log/containers/cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb_cloudvane-test_cloudvane-datacollector-a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45.log"
+      }
+    },
+    "level_value": 20000,
+    "logger_name": "hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService",
+    "ecs": {
+      "version": "8.0.0"
+    },
+    "host": {
+      "ip": [
+        "10.244.1.90",
+        "fe80::8bf:80ff:fe5f:3832"
+      ],
+      "mac": [
+        "0A-BF-80-5F-38-32"
+      ],
+      "hostname": "filebeat-kafka-matej-44gl2",
+      "architecture": "x86_64",
+      "os": {
+        "platform": "ubuntu",
+        "version": "20.04.6 LTS (Focal Fossa)",
+        "family": "debian",
+        "name": "Ubuntu",
+        "kernel": "5.4.17-2136.314.6.2.el7uek.x86_64",
+        "codename": "focal",
+        "type": "linux"
+      },
+      "containerized": true,
+      "name": "filebeat-kafka-matej-44gl2"
+    },
+    "stream": "stdout",
+    "input": {
+      "type": "container"
+    },
+    "instana.trace.id": "adf2108f84007f73",
+    "level": "INFO",
+    "container": {
+      "id": "a248de8e52ca95d0591cd220cd4f438488e4765bc1de51644c4c7621784b9e45",
+      "runtime": "cri-o",
+      "image": {
+        "name": "fra.ocir.io/frpf7jvyycgx/cv-kafka/openjdk-17/cloudvane-datacollector:1fc430e8a2191801cdbaf4615475c4432b0a0f6f"
+      }
+    },
+    "message": "Fetching AZURE cost file list from URL: https://storageaccounttestcv.blob.core.windows.net/dailycontainer?restype=container&comp=list",
+    "agent": {
+      "ephemeral_id": "5c71c9f5-3073-4b71-90a8-04ef13492db4",
+      "id": "18a62338-ce41-4a14-9d6d-e9f6887041b0",
+      "name": "filebeat-kafka-matej-44gl2",
+      "type": "filebeat",
+      "version": "8.7.1"
+    },
+    "@version": "1",
+    "thread_name": "scheduling-1",
+    "kubernetes": {
+      "labels": {
+        "app": "cloudvane-datacollector-kafka",
+        "client": "test",
+        "pod-template-hash": "75f86b6d7c"
+      },
+      "container": {
+        "name": "cloudvane-datacollector"
+      },
+      "node": {
+        "labels": {
+          "node_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "node_info/kubeletVersion": "v1.25",
+          "kubernetes_io/arch": "amd64",
+          "beta_kubernetes_io/arch": "amd64",
+          "beta_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+          "hostname": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3",
+          "name": "oke-new-pool2",
+          "displayName": "oke-ctdomdegvsd-nv2h4jgdgzq-s732jf3gncq-3",
+          "beta_kubernetes_io/os": "linux",
+          "node_info_ds_proxymux_client": "true",
+          "oke_oraclecloud_com/node_info_private_subnet": "true",
+          "oci_oraclecloud_com/fault-domain": "FAULT-DOMAIN-1",
+          "failure-domain_beta_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2",
+          "node_info/compartment_name": "development",
+          "oke_oraclecloud_com/node_info_private_worker": "true",
+          "failure-domain_beta_kubernetes_io/region": "eu-frankfurt-1",
+          "internal_addr": "10.38.1.11",
+          "kubernetes_io/hostname": "10.38.1.11",
+          "topology_kubernetes_io/region": "eu-frankfurt-1",
+          "node-role_kubernetes_io/node": "",
+          "kubernetes_io/os": "linux",
+          "topology_kubernetes_io/zone": "EU-FRANKFURT-1-AD-2"
+        },
+        "hostname": "10.38.1.11",
+        "name": "10.38.1.11",
+        "uid": "9c999e81-cafc-405c-936c-8c45183351b5"
+      },
+      "pod": {
+        "ip": "10.244.1.5",
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb",
+        "uid": "1a2ff384-ac41-47d0-815d-43c27591cff7"
+      },
+      "namespace": "cloudvane-test",
+      "namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+      "namespace_labels": {
+        "kubernetes_io/metadata_name": "cloudvane-test"
+      },
+      "replicaset": {
+        "name": "cloudvane-datacollector-kafka-test-75f86b6d7c"
+      }
+    },
+    "indexName": "cloudvane-datacollector-kafka"
+  }
+]
