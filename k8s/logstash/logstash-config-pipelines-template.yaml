@@ -26,7 +26,7 @@ data:
       elasticsearch {
 
         hosts => ["https://masters-es-internal-http.elk.svc.cluster.local:9200"]
-        index => "k8s-logs-%{topic}"
+        index => "k8s-%{topic}"
 
         ssl => true
         ssl_certificate_verification => false
@@ -36,3 +36,36 @@ data:
         ilm_enabled => false
       }
     }
+
+  kafka-agg-source.conf: |
+    
+    input {
+      kafka {
+        bootstrap_servers => "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        topics_pattern => "^aggregated.*"
+        group_id => "logstash"
+        codec => "json"
+        decorate_events => "extended"
+      }
+    }
+
+    filter {
+      mutate {
+        add_field => { "topic" => "%{[@metadata][kafka][topic]}" }
+      }
+    }
+
+    output {
+      elasticsearch {
+
+        hosts => ["https://masters-es-internal-http.elk.svc.cluster.local:9200"]
+        index => "%{topic}"
+
+        ssl => true
+        ssl_certificate_verification => false
+        user => "elastic"
+        password => "ELASTIC_PASSWORD"
+
+        ilm_enabled => false
+      }
+    } 

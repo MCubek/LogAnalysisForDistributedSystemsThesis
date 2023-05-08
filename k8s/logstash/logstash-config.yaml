@@ -13,3 +13,6 @@ data:
 
     - pipeline.id: kafka-source
       path.config: '/usr/share/logstash/pipeline/kafka-source.conf'
+      
+    - pipeline.id: kafka-aggregated-source
+      path.config: '/usr/share/logstash/pipeline/kafka-agg-source.conf'
