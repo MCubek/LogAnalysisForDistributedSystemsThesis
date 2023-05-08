@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-notifier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-notifier
+  template:
+    metadata:
+      labels:
+        app: kafka-notifier
+    spec:
+      containers:
+        - name: kafka-notifier
+          image: mcubek/kafka-notifier:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BOOTSTRAP_SERVER
+              value: "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: TOPIC_PREFIX
+              value: "notification-.*"
+            - name: SLACK_CHANNEL
+              value: "kafka-notifications"
+            - name: SLACK_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: notifier-credentials
+                  key: SLACK_BOT_TOKEN
+            - name: PUSHBULLET_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: notifier-credentials
+                  key: PUSHBULLET_API_KEY
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: notifier-credentials
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notifier-credentials
+                  key: EMAIL_PASSWORD
+          volumeMounts:
+            - name: email-recipients-config
+              mountPath: "/config"
+      volumes:
+        - name: email-recipients-config
+          configMap:
+            name: email-recipients
