@@ -4,7 +4,6 @@ metadata:
   name: kstream-aggregator
   labels:
     app: kstream-aggregator
-  namespace: kafka
 spec:
   replicas: 1
   selector:
@@ -21,11 +20,7 @@ spec:
           image: mcubek/log_aggregation_kstream:1.0
           imagePullPolicy: Always
           env:
-            - name: INPUT_TOPIC_PATTERN
-              value: "logs-.*"
-            - name: OUTPUT_TOPIC
-              value: "aggregated-log-errors"
-            - name: KAFKA_BOOTSTRAP_SERVERS
-              value: masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
+            - name: PROFILE
+              value: dev
       restartPolicy: Always
       
