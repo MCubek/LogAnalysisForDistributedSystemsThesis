@@ -43,13 +43,18 @@ data:
     
                   // Remove Time field
                   input = input.replace(/Time:[^ ]*/g, "");
+                
+                  // Remove timestamps
+                  input = input.replace(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/g, "");
+                  input = input.replace(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}/g, "");
     
                   // Create the kafkaKey JSON object
                   var kafkaKey = {
                     "message": input,
                     "service": event.Get("indexName"),
                     "kubernetes": {
-                      "namespace": event.Get("kubernetes.namespace")
+                      "namespace": event.Get("kubernetes.namespace"),
+                      "pod": event.Get("kubernetes.pod.name")
                     }
                   };
     
@@ -124,6 +129,7 @@ data:
         ssl.certificate_authorities: ['/etc/filebeat/ssl/ca.pem']
         ssl.certificate: '/etc/filebeat/ssl/certificate.pem'
         ssl.key: '/etc/filebeat/ssl/key.pem'
+
 
 kind: ConfigMap
 metadata:
