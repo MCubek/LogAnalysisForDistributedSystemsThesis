@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "input.topic.pattern",
+      "type": "java.lang.String",
+      "description": "Regex pattern for input topics."
+    },
+    {
+      "name": "output.topic",
+      "type": "java.lang.String",
+      "description": "Topic for aggregation results."
+    }
+  ]
+}
