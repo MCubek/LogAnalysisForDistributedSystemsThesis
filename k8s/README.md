@@ -37,7 +37,7 @@
     3. Start kafka cluster
 
         ```bash
-        bash kafka-cluster-deploy.sh
+        bash kafka/kafka-cluster-deploy.sh
         ```
 
     4. Wait for kafka cluster
@@ -157,19 +157,19 @@
         -n elk
         ```
 
-    2. Deploy Filebeat daemonset
+    2. Deploy Filebeat daemon set
 
         ```bash
         bash filebeat/deploy-filebeat.sh
         ```
 
-    3. To connecto to kafka over internet using kafka-cli
+    3. To connect to kafka over internet using kafka-cli
 
         ```bash
         /opt/kafka/bin/kafka-topics.sh --bootstrap-server vrbanizagreb.ddns.net:30096 --command-config ssl-client.properties --list
         ```
 
-    4. Delete Filebeat daemonset
+    4. Delete Filebeat daemon set
 
         ```bash
         kubectl delete -f filebeat/filebeat-configMap-kafka-template.yaml -f filebeat/filebeat-kafka.yaml

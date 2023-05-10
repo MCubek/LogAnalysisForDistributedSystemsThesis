@@ -35,7 +35,27 @@ data:
                   {
                       event.Put("indexName","other");
                   }
-                }
+                  
+                  var input = event.Get("message");
+
+                  // Remove RequestId field
+                  input = input.replace(/RequestId:[^ ]*/g, "");
+    
+                  // Remove Time field
+                  input = input.replace(/Time:[^ ]*/g, "");
+    
+                  // Create the kafkaKey JSON object
+                  var kafkaKey = {
+                    "message": input,
+                    "service": event.Get("indexName"),
+                    "kubernetes": {
+                      "namespace": event.Get("kubernetes.namespace")
+                    }
+                  };
+    
+                  // Add the kafkaKey field with the JSON object
+                  event.Put("kafkaKey", JSON.stringify(kafkaKey));
+                }    
           
           - drop_event:
               when:
@@ -59,6 +79,13 @@ data:
               source: >
                 function process(event) {
                     event.Put("indexName","usage");
+    
+                    var kafkaKey = {
+                      "message": event.Get("message"),
+                      "service": event.Get("indexName"),
+                    };
+    
+                    event.Put("kafkaKey", JSON.stringify(kafkaKey));
                 }
     processors:
       - add_host_metadata:
@@ -73,6 +100,8 @@ data:
         hosts: ["MY_PUBLIC_IP:30096"]
 
         version: '2.6.0'
+    
+        key: '%{[kafkaKey]}'
 
         # The Kafka topic to send the events to
         topic: 'logs-%{[indexName]}-%{[kubernetes.namespace]}'
@@ -99,4 +128,6 @@ data:
 kind: ConfigMap
 metadata:
   name: filebeat-kafka-matej
+  labels:
+    app: filebeat-kafka-matej
   namespace: elk
