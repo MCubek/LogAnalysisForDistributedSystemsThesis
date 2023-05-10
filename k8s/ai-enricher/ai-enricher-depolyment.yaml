@@ -1,20 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-notification
+  name: ai-enhancer
+  labels:
+    app: ai-enhancer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-notification
+      app: ai-enhancer
   template:
     metadata:
       labels:
-        app: kafka-notification
+        app: ai-enhancer
     spec:
       containers:
-        - name: kafka-notification
+        - name: ai-enhancer
           image: mcubek/kafka-ai-enricher:1.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -23,11 +26,11 @@ spec:
             - name: AI_MODEL
               value: "text-davinci-003"
             - name: TOPIC_REGEX
-              value: "errors-.*"
+              value: "aggregated-errors.*"
             - name: OUTPUT_TOPIC
-              value: "notification-enriched-errors"
+              value: "enriched-errors"
             - name: RATE_LIMIT
-              value: 120
+              value: "120"
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:

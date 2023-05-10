@@ -129,20 +129,6 @@
         bash logstash/logstash-deploy.sh
         ```
 
-- ## Grafana setup
-
-    1. Create Grafana namespace
-
-        ```bash
-        kubectl create ns grafana
-        ```
-
-    2. Create Grafana cluster
-
-        ```bash
-        kubectl apply -f elk/grafana.yaml
-        ```
-
 - ## Kafka credentials on cloudvane cluster and deploy filebeat
 
     1. Create secrets
@@ -173,4 +159,39 @@
 
         ```bash
         kubectl delete -f filebeat/filebeat-configMap-kafka-template.yaml -f filebeat/filebeat-kafka.yaml
+        ```
+
+- ## Custom services
+
+    1. Deploy KStream aggregator
+       
+        ```bash
+        kubectl apply -f aggregator/aggregator-kstream-deployment.yaml
+        ```
+       
+    2. Deploy ai-enricher service
+
+        ```bash
+        kubectl apply -f ai-enricher/ai-enricher-deployment.yaml
+        ```
+          
+    3. Deploy notification service
+
+        ```bash
+        kubectl apply -f notifier/notifier-deployment.yaml
+        ```
+       
+
+- ## Grafana setup
+
+    1. Create Grafana namespace
+
+        ```bash
+        kubectl create ns grafana
+        ```
+
+    2. Create Grafana cluster
+
+        ```bash
+        kubectl apply -f elk/grafana.yaml
         ```

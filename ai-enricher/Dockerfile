@@ -11,10 +11,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
-COPY . /ai-enricher.py
-
-# Expose the port for any external services
-EXPOSE 8080
+COPY ai-enricher.py /app/ai-enricher.py
 
 # Run the application
 CMD ["python", "ai-enricher.py"]
