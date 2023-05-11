@@ -15,6 +15,7 @@ spec:
       containers:
         - name: kafka-notifier
           image: mcubek/kafka-notifier:1.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
