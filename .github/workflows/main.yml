@@ -1,0 +1,21 @@
+name: Build PDF
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Build LaTeX document
+      uses: xu-cheng/latex-action@v2
+      with:
+        root_file: docs/diplomski.tex
