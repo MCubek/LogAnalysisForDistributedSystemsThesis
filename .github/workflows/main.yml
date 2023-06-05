@@ -15,7 +15,10 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
+    - name: Change working directory
+      run: cd docs
+
     - name: Build LaTeX document
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: docs/diplomski.tex
+        root_file: diplomski.tex
