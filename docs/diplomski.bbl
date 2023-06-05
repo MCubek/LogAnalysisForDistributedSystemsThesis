@@ -1,8 +1,59 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Courtemanche et~al.()Courtemanche, Mell, i
+  Gillis]{courtemanche_what_nodate}
+Meredith Courtemanche, Emily Mell, i Alexander Gillis.
+\newblock What {Is} {DevOps}? {The} {Ultimate} {Guide}.
+\newblock URL
+  \url{https://www.techtarget.com/searchitoperations/definition/DevOps}.
+
+\bibitem[Finops~Fundation()]{finops_fundation_finops_nodate}
+Finops Finops~Fundation.
+\newblock {FinOps} {Foundation} - {What} is {FinOps}?
+\newblock URL \url{https://www.finops.org/introduction/what-is-finops/}.
+
+\bibitem[Kolny(2023)]{kolny_scaling_2023}
+Marcin Kolny.
+\newblock Scaling up the {Prime} {Video} audio/video monitoring service and
+  reducing costs by 90\%, O\v{z}ujak 2023.
+\newblock URL
+  \url{https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90}.
+\newblock Section: Video Streaming.
+
+\bibitem[Lukša(2023)]{luksa_kubernetes_2023}
+Marko Lukša.
+\newblock \emph{Kubernetes in {Action}, {Second} {Edition}}.
+\newblock Manning, Kolovoz 2023.
+\newblock ISBN 978-1-61729-761-8.
+\newblock Google-Books-ID: \_YrwzgEACAAJ.
+
+\bibitem[Neos()]{neos_cloudvane_nodate}
+Neos.
+\newblock {CloudVane}.
+\newblock URL \url{https://www.neos.hr/solution/cloudvane/}.
+
+\bibitem[Tanenbaum i Steen(2007)]{tanenbaum_distributed_2007}
+Andrew~S. Tanenbaum i Maarten~van Steen.
+\newblock \emph{Distributed systems: principles and paradigms}.
+\newblock Pearson Prentice Hall, Upper Saddle RIiver, NJ, 2nd ed izdanju, 2007.
+\newblock ISBN 978-0-13-239227-3.
+\newblock OCLC: ocm70707891.
+
+\bibitem[Čubek(2022)]{cubek_apache_2022}
+Matej Čubek.
+\newblock Apache {Kafka} {Seminar}.
+\newblock 2022.
+
+\bibitem[Žarko et~al.(2013)Žarko, Pripužić, Lovrek, i
+  Kušek]{zarko_raspodijeljeni_2013}
+Ivana~Podnar Žarko, Krešimir Pripužić, Ignac Lovrek, i Mario Kušek.
+\newblock \emph{Raspodijeljeni {Sustavi} - {Radna} inačica udžbenika}, svezak
+  v1.3.
+\newblock 2013.
 
 \end{thebibliography}

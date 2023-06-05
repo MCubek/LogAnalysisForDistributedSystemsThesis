@@ -3,8 +3,7 @@
 
 \begin{document}
 
-% TODO: Navedite broj rada.
-\thesisnumber{000}
+\thesisnumber{52}
 
 \title{Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu}
 
@@ -12,16 +11,183 @@
 
 \maketitle
 
-% Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
-
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{}
 
 \tableofcontents
 
 \chapter{Uvod}
-Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
+
+Informacijski sustavi s vremenom postaju složeniji, te su samim time izazovniji u pogledu održavanja i nadzora. U svijetu složenih informatičkih sustava, dnevnički zapisi imaju ključnu ulogu u praćenu i održavanju kvalitete svih aplikacija. Međutim, u okruženju raspodijeljenih sustava, gdje su aplikacije pokrenute na različitim čvorovima računalnih grozdova ili računalima, pregledavanje dnevničkih zapisa svih servisa postaje iznimno zahtjevan zadatak. Ova teza, pod nazivom "Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu", proučava upotrebu Apache Kafka platforme, ELK platforme i OpenAI API-ja za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.\\
+
+Nadzor nad dnevnim zapisima omogućuje otkrivanje anomalija, detektiranje negativnih učinaka na performanse i drugih problema koji mogu utjecati na kvalitetu usluge. Cilj ove teze je istražiti mogućnosti Kafka platforme za analizu dnevničkih zapisa, s posebnim naglaskom na detekciju i nadzor anomalija u raspodijeljenim sustavima.
+
+Ovaj rad proučavati će Apache Kafka  i ELK platformu istražujući kako se mogu koristiti za obradu i analizu dnevnih zapisa u stvarnom vremenu. Analiza će se napraviti na stvarnom primjeru SaaS-a\footnote{Softver kao usluga \engl{Software as a Servcie}} \emph{Cloudvane} tvrtke \emph{Neos} te će se na toj distribuiranoj aplikaciji pokazati iskoristivost rada.
+
+Također rad će razmatrati kako se pouzdanost i brzina obrade podataka mogu poboljšati kako bi se sustav mogao pravovremeno odazvati na probleme. Očekuje se da će ovaj rad pružiti dublje razumijevanje važnosti i mogućnosti analize dnevničkih zapisa u raspodijeljenim sustavima, kao i uloge Kafka platforme u tom kontekstu.
+
+\chapter{Arhitektura aplikacija: Raspodijeljeni i monolitni sustavi te načini pokretanja aplikacija i Oblak}
+
+\section{Monolitne aplikacije}
+
+Monolitne aplikacije karakteriziraju se integracijom svih funkcionalnosti unutar jedinstvene operativne jedinice. U ovakvom sustavu, sve komponente, od korisničkog sučelja do pozadinskog sustava i baze podataka, tvore koherentnu cjelinu iste aplikacije. \\
+
+Glavna prednost monolitne arhitekture leži u njenom centraliziranom pristupu koji pojednostavljuje interakcije među komponentama eliminirajući potrebu za kompleksnom komunikacijom koja je česta kod distribuiranih aplikacija. Osim toga, monolitne aplikacije često su jednostavnije za testiranje i održavanje jer se ne zahtijeva upravljanje mnoštvom odvojenih servisa. 
+
+Ipak, monolitne aplikacije nisu bez nedostataka. Jedan od ključnih izazova je skaliranje: kako raste opterećenje na aplikaciju, monolitne aplikacije omogućavaju samo vertikalno skaliranje, što znači povećanje resursa na postojećem serveru. Horizontalno skaliranje, koje podrazumijeva dodavanje dodatnih servera, nije moguće. Također, ažuriranje ili mijenjanje bilo kojeg segmenta aplikacije često zahtijeva ponovnu implementaciju \engl{deployment} cijelog sustava, što može dovesti do privremene nedostupnosti usluge. \\
+
+Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u IT industriji. U mnogim slučajevima njihova jednostavnost, kombinirana s potencijalnom uštedom u mrežnom prometu, čini ih atraktivnom opcijom za manje složene i manje opterećene sustave.
+
+\section{Distribuirane Aplikacije}
+
+Distribuirane ili raspodijeljene aplikacije predstavljaju temelj suvremenih informacijskih sustava i usluga koje koristimo svakodnevno. Ove aplikacije koriste se u različitim industrijama i sektorima, od financija, zdravstva, obrazovanja, pa sve do zabave i medija. Njihova osnovna značajka je sposobnost paralelne obrade podataka na više računalnih čvorova i geografskih lokacija, čime se omogućuje brza i pouzdana usluga bez obzira na fluktuacije u potražnji. Dodatno, distribuirani sustav je skup neovisnih računala koji korisniku izgleda kao jedan cjeloviti sustav \citep{tanenbaum_distributed_2007}.\\
+
+Pokretanje aplikacija na različitim računalnim čvorovima znači da se svaka instanca aplikacije može specijalizirati za određeni zadatak, povećavajući tako učinkovitost i performanse sustava. Ova decentralizacija također znači da kvar jednog čvora neće onemogućiti rad cijele aplikacije. Umjesto toga, rad će biti preusmjeren na ostale čvorove, osiguravajući tako kontinuitet usluge. Upravo je ta visoka dostupnost, robustnost i brzina odziva ključna prednost distribuiranih aplikacija. Uz to, fleksibilnost skaliranja omogućuje im da se prilagode promjenjivim uvjetima potražnje, dodavanjem ili uklanjanjem računalnih čvorova prema potrebi.
+
+No, unatoč brojnim prednostima, distribuirane aplikacije donose i određene izazove. \citet{zarko_raspodijeljeni_2013} navodi kako složena pitanja poput koordinacije i sinkronizacije među čvorovima, očuvanje konzistencije podataka kroz različite komponente sustava, te upravljanje povećanim složenostima mreže zahtijevaju sofisticirane strategije i tehnike. Algoritmi i protokoli za rješavanje ovih problema moraju biti pažljivo osmišljeni kako bi se osigurao pravilan rad distribuiranog sustava. \\
+
+Unatoč ovim izazovima, distribuirane aplikacije ostaju ključan alat za postizanje visoke efikasnosti, pouzdanosti i fleksibilnosti u današnjem digitalno povezanom svijetu. Budući da tehnologija napreduje, distribuirane aplikacije postaju sve sofisticiranije, pružajući sve naprednije rješenja za suvremene poslovne i društvene izazove.
+
+\section{Povijest pokretanja aplikacija}
+
+Prvobitno su se aplikacije pokretale na izoliranim serverima, svaki posvećen isključivo posluživanju jedne aplikacije. Ova arhitektura je omogućavala da svaka aplikacija ima svoje računalo na kojem radi, često smješteno u posebnoj server-sali ili odvojenoj sobi. Ovaj pristup bio je jednostavan i lako razumljiv, omogućujući izravno mapiranje između aplikacija i odgovarajućih resursa. 
+
+No, ovaj model nije bio bez ograničenja. Prvo, to je stvorilo nedostatak fleksibilnosti u pogledu alokacije resursa, jer su se resursi često prekomjerno koristili za jednu aplikaciju, dok su ostale aplikacije patile od nedostatka resursa. Drugo, ovaj pristup bio je neučinkovit u pogledu prostora i energije, budući da svaka aplikacija zahtijeva svoj vlastiti fizički server.
+
+Uz to, održavanje takvih izoliranih sustava predstavljalo je izazov. Svaki server morao se održavati odvojeno, što je uključivalo nadogradnje hardvera, instalacije softvera, popravke i slično. Također, ovaj model nije pružao adekvatnu otpornost na kvarove - ako bi server prestao raditi, cijela aplikacija bi bila nedostupna sve dok se ne obavi popravak ili zamjena, što može rezultirati značajnim prekidima u radu.
+Stoga su se s vremenom razvile nove arhitekture, poput distribuiranih sustava i virtualizacije, koje su omogućile fleksibilniju, učinkovitiju i otporniju upotrebu računalnih resursa.
+
+\section{Pokretanje direktno na hardveru računala}
+
+Pokretanje na hardveru \engl{bare metal} znači da se aplikacije izvršavaju na namjenskom računalu, bez upotrebe virtualizacije. Ovakva konfiguracija omogućuje korištenje svih raspoloživih resursa računala, poput procesorsku snagu, memoriju i prostor za pohranu. \\
+
+Primjena ovog pristupa donosi niz prednosti poput boljih performansi zbog izravnog pristupa hardveru, bez posredničkog sloja koji donosi dodatno opterećenje \engl{overhead}. Dodatno, pokretanje na namjenskom hardveru može pružati i veću sigurnost jer se eliminiraju rizici dijeljena resursa s drugim aplikacijama.
+
+Upravljanje hardverom međutim može uzrokovati složenije i vremenski zahtjevnije, posebno kada je riječ o održavanju. Skaliranje aplikacija također predstavlja izazov jer zahtjeva nabavku novog hardvera i migraciju aplikacija na nove resurse.
+
+Unatoč tim izazovima, aplikacije koje zahtijevaju visoko-intenzivne resurse mogu značajno profitirati od prednosti koji pruža ovaj pristup.
+
+
+\section{Virtualne mašine}
+
+Virtualne mašine \engl{Virtual Machine} (VM) su sofisticirani koncept koji simulira hardver kroz softvera. One predstavljaju sloj apstrakcije između aplikacije i fizičkog hardvera na kojem se izvršava. Aplikacija se prividno izvršava na vlastitom, nezavisnom sustavu. \\
+
+Korištenje virtualnih mašina donosi niz značajnih prednosti. Prva među njima je mogućnost učinkovitijeg iskorištavanja računalnih resursa. Na jednom fizičkom računalu moguće je pokrenuti nekoliko virtualnih mašina, svaka sa svojim operativnim sustavom i aplikacijama, čime se maksimizira iskorištavanje hardverskih resursa i smanjuje potreba za nabavkom dodatnog hardvera.
+
+Još jedan bitan aspekt korištenja virtualnih mašina je izolacija. S obzirom na to da su virtualne mašine nezavisne jedinice, moguće je pokrenuti različite aplikacije na različitim operativnim sustavima na istom fizičkom računalu. Ova izolacija smanjuje rizik od međusobnog utjecaja aplikacija i povećava sigurnost jer potencijalni problemi ili napadi na jednoj virtualnoj mašini ne utječu na druge.
+
+Uz to, virtualne mašine pružaju veliku fleksibilnost i skalabilnost. Dodavanje ili uklanjanje virtualnih mašina, prema potrebama korisnika ili aplikacije, može se obaviti brzo i efikasno. Mogućnost preslikavanja \engl{snapshotting} i kloniranja virtualnih mašina olakšava sigurnosne kopije \engl{backup} i oporavak sustava, te omogućava jednostavno testiranje i razvoj.
+
+Međutim, unatoč brojnim prednostima, korištenje virtualnih mašina donosi i određeno dodatno opterećenje \engl{overhead}. Svaka VM zahtijeva određeni dio računalnih resursa za rad operativnog sustava, što može rezultirati manjom efikasnosti u odnosu na pokretanje aplikacija direktno na hardveru. Upravljanje velikim brojem virtualnih mašina također može biti složeno, ali postoje različiti alati i platforme za upravljanje virtualnim okruženjima koji mogu pomoći u tome.
+
+\section{Kontejnerizacija i Docker}
+
+Kontejnerizacija je proces pakiranja aplikacije zajedno s njenim potrebnim okruženjem i zavisnostima \engl{dependencies}, što omogućuje jednostavno izvršavanje i pokretanje aplikacije u različitim računalnim okruženjima. Kontejneri su izolirane jedinice koje sadrže sve što je potrebno za izvršavanje aplikacije, uključujući programski kod, izvršno okruženje \engl{runtime}, sistemske alate, knjižnice i postavke. \\
+
+Docker je najpoznatiji alat za kontejnerizaciju koji je postao standard u industriji. S Dockerom, programeri mogu stvoriti, pokrenuti i distribuirati aplikacije unutar kontejnera. Kontejneri stvoreni pomoću Docker-a\footnote{Kroz Docker je moguće pokrenuti kontejnere koje su kreirali različiti alati, pod uvjetom da implementiraju Open Container Initiative standard postavljen od strane Linux Fundacije. Slično tome, kontejneri koji su kreirani korištenjem Docker-a mogu se pokrenuti kroz bilo koje drugo izvršno okruženje kontejnera koje podržava Open Container Initiative. Ova inteoperabilnost omogućava veću fleksibilnost i slobodu izbora prilikom rada s kontejnerima.} mogu se pokrenuti i bilo gdje je Docker instaliran bez obzira na osnovni operativni sustav. To znači da programeri ne moraju brinuti o kompatibilnosti operativnih sustava prilikom pokretanja svojih aplikacija.
+
+Kontejnerizacija donosi brojne prednosti. Kontejneri su manji i brži od tradicionalnih virtualnih mašina jer ne zahtijevaju cijeli operativni sustav. Osim toga, kontejneri osiguravaju konzistentnost okruženja kroz razne faze razvojnog ciklusa aplikacija. Dodatno, Docker omogućuje jednostavno skaliranje aplikacija dodavanjem ili uklanjanjem kontejnera po potrebi.
+
+Kao rezultat, kontejnerizacija i Docker su postali ključni elementi modernih razvojnih ciklusa i DevOps\footnote{DevOps je skup praksi, filozofija i alata koji poboljšavaju suradnju između razvoja softvera \engl{Dev} i IT operacija \engl{Ops}} praksi, igrajući ključnu ulogu u povećanju efikasnosti i brzine isporuke softvera.
+
+\section{Računarstvo u Oblaku}
+
+Računarstvo u oblaku \engl{Cloud computing} koncept je pružanja IT\footnote{Informatička Tehnologija \engl{Information Tehnology}} usluga u kojem se resursi poput računalne snage, prostora za pohranu, aplikacije i drugi resursi pružaju kroz internet na zahtjev korisnika ovisno o njegovoj potrebi \citep{zarko_raspodijeljeni_2013}. Oblak omogućuje korisnicima da ne moraju upravljati računalnim resursima, već njima upravlja pružatelj usluga oblaka. \\
+
+Prednosti oblaka uključuju fleksibilnost, skalabilnost i troškovnu učinkovitost. Fleksibilnost dolazi od sposobnosti korisnika da brzo i jednostavno prilagode svoje resurse u skladu s potrebama. Skalabilnost se odnosi na mogućnost dodavanja ili uklanjanja resursa u skladu s promjenama u potražnji. Troškovna učinkovitost dolazi od modela gdje korisnici plaćaju samo za resurse koje koriste.
+
+Prema \citet{zarko_raspodijeljeni_2013} postoje različiti modeli oblaka: javni, privatni i hibridni. Javni oblak je gdje pružatelj usluga resurse pruža svim korisnicima preko interneta. Privatni oblak je infrastruktura koja je posvećena samo jednoj organizaciji. Hibridni oblak je mješavina javnog i privatnog oblaka, pružajući organizacijama veću fleksibilnost prilikom upravljanja svojim resursima.
+
+\subsection{Grozdovi računala}
+
+Grozdovi računala ili klasteri, predstavljaju skupinu povezanih računala koja rade zajedno na takav način da se u mnogim aspektima mogu smatrati jedinstvenim sustavom \citep{zarko_raspodijeljeni_2013}. Grozdovi računala omogućuju paralelnu obradu zadataka, visoku dostupnost usluga, ravnomjerno opterećenje i skalabilnost.
+
+Jedna od ključnih prednosti grozdova računala je visoka dostupnost usluga. U slučaju kvara jednog računala, ostala računala u klasteru mogu preuzeti njegove zadatke i osigurati neprekidno pružanje usluga. To je posebno korisno za aplikacije i usluge koje zahtijevaju kontinuiranu dostupnost.
+
+Grozdovi računala također omogućuju paralelnu obradu podataka, gdje se kompleksni zadaci mogu podijeliti na manje dijelove koje svako računalo u klasteru obrađuje istovremeno. To može značajno smanjiti vrijeme potrebno za obradu velikih količina podataka.
+
+Unatoč svim prednostima, upravljanje grozdovima računala može biti složeno i zahtijeva adekvatne alate i stručnost. Moraju se uspostaviti mehanizmi za koordinaciju između računala, ravnomjerno raspoređivanje opterećenja, otkrivanje i oporavak od kvarova, te osiguravanje konzistentnosti podataka. \\
+
+Računalni oblak \engl{Cloud}, pruža ključnu infrastrukturu koja značajno olakšava upravljanje grozdovima računala. Koristeći oblak, organizacije se mogu fokusirati na razvoj i izvršavanje svojih aplikacija bez potrebe za postavljanjem i održavanjem vlastite hardverske infrastrukture.
+
+Pružatelji usluga u oblaku, poput Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure ili Oracle Coud Infrastructure (OCI), nude usluge za upravljanje grozdovima računala koje olakšavaju postavljanje, skaliranje i održavanje. Ti se grozdovi mogu lako prilagoditi potrebama korisnika, bilo da je riječ o povećanju ili smanjenju broja računala u grozdu.
+
+Korištenje usluga u oblaku također omogućava pristup naprednim tehnologijama i alatima, poput orkestracije kontejnera, automatizacije, umjetne inteligencije i analitike podataka, koje bi bile teško dostupne ili skupe za implementaciju na vlastitoj infrastrukturi.
+
+Osim toga, pružatelji usluga u oblaku nude sofisticirane mehanizme sigurnosti, otpornosti na pogreške i oporavka podataka, čime dodatno povećavaju dostupnost i pouzdanost aplikacija koje se izvršavaju na grozdovima računala u oblaku.
+
+\subsection{Lambda funkcije}
+
+Lambda funkcije, koje su popularizirane kroz računalni oblak AWS\footnote{Amazon Web Services}, predstavljaju ključni dio koncepta bez-servernog \engl{serverless} računanja. Naziv potiče od koncepta da se programeri ne trebaju brinuti o infrastrukturi na kojoj se njihova usluga pokreće.
+
+Lambda funkcije su esencijalno blokovi koda koji su dizajnirani za obavljanje specifične zadaće i koji se mogu pokrenuti na zahtjev. One se izvršavaju samo kada su potrebne, što znači da korisnici plaćaju samo za vrijeme izvršavanja koda, a ne za stalno prisutne poslužitelje.
+
+Ove funkcije omogućuju iznimnu skalabilnost, budući da AWS automatski dodjeljuje potrebne resurse za izvršavanje funkcije, bez obzira na to je li potrebno pokrenuti jednu ili tisuće instanci. Lambda funkcije mogu se koristiti za različite zadatke, uključujući obradu podataka u stvarnom vremenu, automatizaciju zadataka, pa čak i izgradnju cijelih mikroservisnih aplikacija. \\
+
+Unatoč prednostima koje nude mikro-servisi i bez-serverna \engl{serverless} arhitektura kao što su fleksibilnost i mogućnost neovisnog skaliranja komponenti, studija provedena u sklopu članka \citet{kolny_scaling_2023} pokazuje da ove prednosti ne dolaze bez troškova. U slučaju Amazon Prime Video, originalna arhitektura usluge za nadzor audio/video sadržaja temeljila se na distribuiranom modelu mikro-servisa, koji je uključivao AWS Lambda funkcije. Međutim, ova arhitektura pokazala se skupom i s ograničenjima skaliranja.
+
+Kako bi riješili ove probleme, Amazon Prime Video je rekonstruirao uslugu u monolitnu aplikaciju, što je rezultiralo značajnim smanjenjem infrastrukturnih troškova --- čak \(90\%\). Ova promjena eliminirala je potrebu za skupim prijenosima podataka između distribuiranih komponenti i pojednostavila logiku orkestracije.
+
+\citet{kolny_scaling_2023} naglašava važnost pažljivog razmatranja pri odabiru arhitekture. Govori kako mikro-servisi i lambda funkcije mogu pružiti visoku razinu fleksibilnosti, mogu također donijeti značajne troškove i ograničenja skaliranja. Stoga, u nekim slučajevima, kao što je ovaj, monolitna arhitektura može biti isplativija opcija.
+
+
+
+\chapter{Distribuirana aplikacija --- CloudVane}
+
+CloudVane je, kao što navodi \citet{neos_cloudvane_nodate}, njihov proizvod koji pomaže upravljati i optimizirati trošak te infrastrukturu u više-oblačnom \engl{multicloud} okruženju. Glavni cilj CloudVane-a je pružiti vidljivost i kontrolu nad vašom upotrebom oblaka \engl{clouda} u cijeloj organizaciji. \\
+
+CloudVane je izgrađen na FinOps\footnote{FinOps je udruga koja se bavi kulturom upravljanja troškova usluga u oblaku. Naziv FinOps dolazi od riječi financijsko upravljanje\engl{Financial Operations} i definira prakse, principe i kulturu kako bi organizacije bolje razumjele svoje troškove u oblaku i donosile informirane poslovne odluke \citep{finops_fundation_finops_nodate}.} principima, koji se fokusiraju na razumijevanje i upravljanje troškovima oblaku i resursima kako bi se donijele informirane poslovne odluke. CloudVane sadrži alatnu ploča \engl{dashboard} koja nudi pogled na izvještaje iz oblaka, proračune, pragove proračuna i hijerarhiju organizacije kroz jedinstveni pogled. CloudVane također nudi preporuke za pravilno dimenzioniranje\footnote{Dimenzioniranje je skaliranje resursa na oblaku s obzirom na njihovu stvarnu potrošnju kako bi se smanjila neiskorištenost.}, uvide o upotrebi resursa i otkriva anomalije u troškovima. CloudVane također pomaže u planiranju rezerviranih instanci i pokazuje vam koliko ste uštedjeli na troškovima oblaka i resursima, te omogućuje automatizacije i obavijesti s ciljem smanjenja troškova. \\
+
+Na primjeru distribuirane aplikacije CloudVane, ovaj rad će demonstrirati analizu dnevničkih zapisa, objašnjenih u poglavlju\ref{sec:logs}, svih dostupnih mikro-servisa aplikacije u stvarnom vremenu \engl{real-time} sa svrhom kreiranja sustava nadgledanja i nadzora aplikacija \engl{application monitoring}. Nadalje, CloudVane je kao distribuirana aplikacija, pokrenut na infrastrukturi održavanog Kubernetes grozda \engl{managed Kubernetes cluster} na Oracle Cloud Infrastructure (OCI) oblaku. Kubernetes, opisan u poglavlju \ref{sec:k8s} pokreće sve komponente CloudVane-a koji uključuju i Apache Kafku opisanu u poglavlju \ref{sec:kafka} osim Oracle relacijske baze podataka koja se pokreće kao servis na samom OCI oblaku. Arhitektura aplikacije je opisana u poglavlju \ref{sec:architecture}, a transparentnost koju pruža Kubernetes omogućuje selidbu cijele infrastrukture na bilo koji hiper-skalabilni pružatelj usluga oblaka\footnote{Ovaj termin odnosi se na najveće pružatelje usluge oblaka poput Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure, itd... Naziv dolazi od sposobnosti brzog skaliranja računalne infrastrukture s obzirom na potražnju.} \engl{hyperscaler}.
+
+\section{Orkestrator kontejnera --- Kubernetes}
+\label{sec:k8s}
+
+\citet{luksa_kubernetes_2023} definira Kubernetes kao softverski sustav za automatizaciju implementacije \engl{deployment} i upravljanja složenim, velikim aplikacijskim sustavima sastavljenim od računalnih procesa koji rade u kontejnerima.
+Kubernetes programerima pruža sloj apstrakcije nad hardverom, što im omogućava da se usredotoče na razvoj aplikacija umjesto na upravljanje infrastrukturom.
+
+Na taj način, Kubernetes omogućuje implementaciju aplikacija potpuno transparentno, bez obzira na broj čvorova grozda i njihovu arhitekturu. Programeri ne moraju brinuti o detaljima kao što su odabir hardvera, operacijskog sustava za svaki čvor ili podjela resursa između različitih aplikacija. Kubernetes također može skalirati aplikacije na temelju opterećenja i automatski se oporavlja od pogrešaka, čime se osigurava visoka dostupnost i otpornost aplikacija. Zahvaljujući tome, aplikacije mogu nesmetano raditi čak i u slučaju otkaza hardvera ili mrežnih problema.
+
+Kubernetes se može pokrenuti direktno na hardveru računala, nudeći potpunu kontrolu i fleksibilnost u konfiguraciji i upravljanju resursima. Alternativno, Kubernetes se može koristiti kao potpuno održavana usluga \engl{managed service} na oblaku \engl{cloud}. Potpuno održavan Kubernetes uvelike olakšava postavljanje i upravljanje Kubernetes grozdovima, preuzimajući na sebe vremenski zahtjevne operativne zadatke poput skaliranja, nadogradnje, sigurnosti i ostalog održavanja.
+
+Bez obzira na to kako je pokrenut, Kubernetes donosi robustan, fleksibilan i skalabilan okvir za upravljanje kontejnerskim aplikacijama koji omogućuje transparentno i jednostavno upravljanje distribuiranim aplikacijama. \\
+
+Kao što je prethodno navedeno, svi mikro-servisi CloudVane-a, ali i Apache Kafka servisi iz poglavlja  \ref{sec:kafka} pokrenuti su na Kubernetes grozdu OCI oblaka. DevOps\footnote{DevOps, čija kratica dolazi od riječi razvoj i operacije \engl{Development \& Operations} je praksa koja kombinira softverski razvoj i IT operacije kako bi se ubrzala brzina isporuke i kvaliteta softvera\citep{courtemanche_what_nodate}.} procesi koji uključuju Jenkins\footnote{Jenkins je alat za neprekidnu integraciju koji automatizira dijelove razvojnog procesa softvera, poput izgradnje, testiranja i implementacije koda.} i njegove izgradnje \engl{builds} također se izvršavaju na Kubernetes klasteru. Jedini izuzetak je \emph{Oracle Autonomous Database for transaction processing and mixed workloads}\footnote{Relacijska baza podataka tvrtke Oracle na OCI oblaku.} (ATP) baza podataka koja je pokrenuta kao zasebna usluga na OCI oblaku.
+
+\section{Arhitektura aplikacije CloudVane}
+\label{sec:architecture}
+
+
+
+\section{Sustav za obradu podataka u stvarnom vremenu --- Apache Kafka}
+\label{sec:kafka}
+
+U suvremenom digitalnom dobu, obilje informacija i podataka koje se generiraju svakodnevno je zaista ogromno. Upravo zbog tog enormnog broja podataka, sve je prisutnija potreba za izgradnjom sofisticiranih računalnih sustava koji su sposobni za brzo i efikasno procesiranje i analizu tih informacija \citep{cubek_apache_2022}.
+
+U tom kontekstu, Apache Kafka izdvaja se kao ključni alat. Kafka je snažna, efikasna i skalabilna platforma za obradu podataka u stvarnom vremenu. Arhitektura Apache Kafke omogućuje brzu i pouzdanu obradu tokova podataka s visokom propusnošću, čineći je idealnim alatom za kompleksne i zahtjevne aplikacije.
+
+Kao dodatak brzini i efikasnosti, Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu.
+\subsection{Kafka Streams}
+
+\subsection{KSqlDB}
+
+\chapter{Nadgledanje aplikacija}
+
+\section{Dnevnički zapisi}
+\label{sec:logs}
+\subsection{Dnevnički zapisi u Javi}
+
+\section{Elastic, Logstash i Kibana (ELK)}
+
+\subsection{Elastic}
+
+\subsection{Kibana}
+
+\subsection{Logstash}
+
+\subsection{Filebeat}
+
+\chapter{Obavještavanje stanja distribuirane aplikacije u stvarnom vremenu}
 
 \chapter{Zaključak}
 Zaključak.
@@ -32,15 +198,14 @@ Zaključak.
 \begin{sazetak}
 Sažetak na hrvatskom jeziku.
 
-\kljucnerijeci{Ključne riječi, odvojene zarezima.}
+\kljucnerijeci{Kubernetees, Apache Kafka, Tokovi Podataka, Dnevnički zapisi, Obrada u stvarnom vremenu, Elastic, ELK, Nadzor aplikacija, Grozd računala}
 \end{sazetak}
 
-% TODO: Navedite naslov na engleskom jeziku.
-\engtitle{Title}
+\engtitle{Real-Time Log Analysis for Monitoring Distributed Systems}
 \begin{abstract}
 Abstract.
 
-\keywords{Keywords.}
-\end{abstract}
+\keywords{Kubernetes, Apache Kafka, Streaming, Real-Time, Logs, Elastic, ELK, Monitoring, Cluster}
+\end{abstract} 
 
 \end{document}
