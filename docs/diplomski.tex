@@ -152,11 +152,11 @@ Kubernetes se može pokrenuti direktno na hardveru računala, nudeći potpunu ko
 
 Bez obzira na to kako je pokrenut, Kubernetes donosi robustan, fleksibilan i skalabilan okvir za upravljanje kontejnerskim aplikacijama koji omogućuje transparentno i jednostavno upravljanje distribuiranim aplikacijama. \\
 
-Kao što je prethodno navedeno, svi mikro-servisi CloudVane-a, ali i Apache Kafka servisi iz poglavlja  \ref{sec:kafka} pokrenuti su na Kubernetes grozdu OCI oblaka. DevOps\footnote{DevOps, čija kratica dolazi od riječi razvoj i operacije \engl{Development \& Operations} je praksa koja kombinira softverski razvoj i IT operacije kako bi se ubrzala brzina isporuke i kvaliteta softvera\citep{courtemanche_what_nodate}.} procesi koji uključuju Jenkins\footnote{Jenkins je alat za neprekidnu integraciju koji automatizira dijelove razvojnog procesa softvera, poput izgradnje, testiranja i implementacije koda.} i njegove izgradnje \engl{builds} također se izvršavaju na Kubernetes klasteru. Jedini izuzetak je \emph{Oracle Autonomous Database for transaction processing and mixed workloads}\footnote{Relacijska baza podataka tvrtke Oracle na OCI oblaku.} (ATP) baza podataka koja je pokrenuta kao zasebna usluga na OCI oblaku.
+Kao što je prethodno spomenuto, svi mikroservisi koje koristi CloudVane, kao i Apache Kafka servisi opisani u poglavlju \ref{sec:kafka}, operiraju unutar Kubernetes klastera na Oracle Cloud Infrastructure (OCI) platformi. DevOps prakse, koje kombiniraju elemente softverskog razvoja \engl{Development} i IT operacija \engl{Operations} kako bi se poboljšala brzina isporuke i kvaliteta softvera \citep{courtemanche_what_nodate}, također su implementirane unutar ovog sustava.
 
-\section{Arhitektura aplikacije CloudVane}
-\label{sec:architecture}
+Jenkins, moćan alat za kontinuiranu integraciju koji automatizira ključne aspekte razvojnog procesa softvera, poput izgradnje, testiranja i implementacije koda, dodatno je integriran u ovaj Kubernetes klaster. Jenkins omogućuje agilne DevOps procese, pružajući automatizirane cikluse izgradnje za brzu i pouzdanu isporuku koda.
 
+Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je \emph{Oracle Autonomous Database for Transaction Processing and Mixed Workloads} (ATP), koja je implementirana kao samostalna usluga unutar OCI oblaka. Ova sofisticirana relacijska baza podataka pruža robustnu, visoko dostupnu i skalabilnu platformu za upravljanje transakcijskim i mješovitim radnim opterećenjima, što dodatno poboljšava ukupnu efikasnost i performanse CloudVane aplikacije.
 
 
 \section{Sustav za obradu podataka u stvarnom vremenu --- Apache Kafka}
@@ -166,10 +166,29 @@ U suvremenom digitalnom dobu, obilje informacija i podataka koje se generiraju s
 
 U tom kontekstu, Apache Kafka izdvaja se kao ključni alat. Kafka je snažna, efikasna i skalabilna platforma za obradu podataka u stvarnom vremenu. Arhitektura Apache Kafke omogućuje brzu i pouzdanu obradu tokova podataka s visokom propusnošću, čineći je idealnim alatom za kompleksne i zahtjevne aplikacije.
 
-Kao dodatak brzini i efikasnosti, Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu.
+Kao dodatak brzini i efikasnosti, Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu. \\
+
+Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafka kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući Kafka Brokere, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI servise.
+
+Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Broj replika svakog servisa u testnom okruženju, kao i specifična uloga svakog servisa u kontekstu obrade podataka, također je pažljivo razrađen u poglavlju \ref{sec:architecture}. Dodatni detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima. \\
+
+Ova strukturirana arhitektura, s usko povezanim servisima, omogućava CloudVane aplikaciji da efikasno upravlja velikim količinama podataka, pružajući robustan i pouzdan sustav za obradu podataka u stvarnom vremenu.
+
+\subsection{Zookeeper}
+
 \subsection{Kafka Streams}
 
-\subsection{KSqlDB}
+\subsection{kSqlDB}
+
+\subsection{Kafka Connect}
+
+\subsection{Schema Registry}
+
+\section{Arhitektura aplikacije CloudVane}
+\label{sec:architecture}
+
+% todo write
+
 
 \chapter{Nadgledanje aplikacija}
 
