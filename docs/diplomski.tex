@@ -1,5 +1,8 @@
 \documentclass[times, utf8, diplomski]{fer}
 \usepackage{booktabs}
+\usepackage{longtable, tabu}
+\usepackage{listings}
+
 
 \begin{document}
 
@@ -14,7 +17,22 @@
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{}
 
+\renewcommand{\lstlistingname}{Isječak koda}% Listing -> Algorithm
+\renewcommand{\lstlistlistingname}{Indeks isječka kodova}% List of Listings -> List of Algorithms
+
+
 \tableofcontents
+
+
+\begingroup
+\renewcommand*\listfigurename{Indeks slika}
+\renewcommand*\listtablename{Indeks tablica}
+
+\listoffigures
+
+\listoftables
+
+\endgroup
 
 \chapter{Uvod}
 
@@ -156,7 +174,14 @@ Kao što je prethodno spomenuto, svi mikroservisi koje koristi CloudVane, kao i 
 
 Jenkins, moćan alat za kontinuiranu integraciju koji automatizira ključne aspekte razvojnog procesa softvera, poput izgradnje, testiranja i implementacije koda, dodatno je integriran u ovaj Kubernetes klaster. Jenkins omogućuje agilne DevOps procese, pružajući automatizirane cikluse izgradnje za brzu i pouzdanu isporuku koda.
 
-Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je \emph{Oracle Autonomous Database for Transaction Processing and Mixed Workloads} (ATP), koja je implementirana kao samostalna usluga unutar OCI oblaka. Ova sofisticirana relacijska baza podataka pruža robustnu, visoko dostupnu i skalabilnu platformu za upravljanje transakcijskim i mješovitim radnim opterećenjima, što dodatno poboljšava ukupnu efikasnost i performanse CloudVane aplikacije.
+Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je \emph{Oracle Autonomous Database for Transaction Processing and Mixed Workloads} (ATP), koja je implementirana kao samostalna usluga unutar OCI oblaka. Ova sofisticirana relacijska baza podataka pruža robustnu, visoko dostupnu i skalabilnu platformu za upravljanje transakcijskim i mješovitim radnim opterećenjima, što dodatno poboljšava ukupnu efikasnost i performanse CloudVane aplikacije.\\
+
+
+Za implementaciju komponenti ovog rada, koristi se Kubernetes klaster različit od onoga na kojem funkcionira CloudVane testno okruženje. Konkretno Minikube, alat dizajniran za rad s Kubernetesom na lokalnoj razini, koji se izvodi kao Docker kontejner.
+
+Minikube je visoko prilagodljiv i lako dostupan alat koji pojednostavljuje proces postavljanja i testiranja Kubernetes aplikacija u izoliranoj i kontroliranoj okolini. Njegova sposobnost da simulira Kubernetes klaster unutar Docker kontejnera čini ga iznimno korisnim za razvoj i testiranje, omogućujući programerima da eksperimentiraju, prate promjene i brzo testiraju nove funkcionalnosti bez rizika za produkcijsko okruženje \citep{luksa_kubernetes_2023}.
+
+Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada, istovremeno osiguravajući stabilnost i integritet CloudVane testne okoline. Svi Kubernetes objekti koji su razvijeni u sklopu ovog rada dizajnirani su tako da se mogu lako migrirati u drugi Kubernetes klaster s minimalnim potrebnim preinakama.
 
 
 \section{Sustav za obradu podataka u stvarnom vremenu --- Apache Kafka}
@@ -164,25 +189,85 @@ Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je 
 
 U suvremenom digitalnom dobu, obilje informacija i podataka koje se generiraju svakodnevno je zaista ogromno. Upravo zbog tog enormnog broja podataka, sve je prisutnija potreba za izgradnjom sofisticiranih računalnih sustava koji su sposobni za brzo i efikasno procesiranje i analizu tih informacija \citep{cubek_apache_2022}.
 
-U tom kontekstu, Apache Kafka izdvaja se kao ključni alat. Kafka je snažna, efikasna i skalabilna platforma za obradu podataka u stvarnom vremenu. Arhitektura Apache Kafke omogućuje brzu i pouzdanu obradu tokova podataka s visokom propusnošću, čineći je idealnim alatom za kompleksne i zahtjevne aplikacije.
+U tom kontekstu, Apache Kafka izdvaja se kao ključni alat. Apache Kafka je snažna, efikasna i skalabilna platforma za obradu podataka u stvarnom vremenu. Arhitektura Apache Kafke omogućuje brzu i pouzdanu obradu tokova podataka s visokom propusnošću, čineći je idealnim alatom za kompleksne i zahtjevne aplikacije. 
+
+Originalno razvijena unutar LinkedIn-a, Kafka je bila rješenje za izazove povezane s upravljanjem velikim tokovima podataka. Dizajnirana kao visoko performantni sustav poruka, Kafka omogućava dostavljanje čistih, strukturiranih informacija o korisničkim aktivnostima i metrikama sustava u stvarnom vremenu. To čini Kafku ključnim resursom za sučeljavanje s izazovima modernog doba povezanih s obradom i analizom velikih količina podataka \citep{shapira_kafka_2021}.
 
 Kao dodatak brzini i efikasnosti, Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu. \\
 
 Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafka kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući Kafka Brokere, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI servise.
 
-Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Broj replika svakog servisa u testnom okruženju, kao i specifična uloga svakog servisa u kontekstu obrade podataka, također je pažljivo razrađen u poglavlju \ref{sec:architecture}. Dodatni detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima. \\
+Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Broj replika svakog servisa u testnom okruženju, kao i specifična uloga svakog servisa u kontekstu obrade podataka CloudVane-a, također je pažljivo razrađena u poglavlju \ref{sec:architecture}. Dodatni detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima.\\
 
-Ova strukturirana arhitektura, s usko povezanim servisima, omogućava CloudVane aplikaciji da efikasno upravlja velikim količinama podataka, pružajući robustan i pouzdan sustav za obradu podataka u stvarnom vremenu.
+Apache Kafka servisi implementirani su unutar CloudVane Kubernetes klastera korištenjem Strimzija. Strimzi je projekt otvorenog\footnote{Kubernetes operator je metoda za pakiranje, implementaciju i upravljanje Kubernetes aplikacijom.} koda koji pruža operator za pokretanje Apache Kafka na Kubernetesu pojednostavljuju postupak konfiguriranja, pokretanja i održavanja Apache Kafka klastera unutar Kubernetes okruženja. Uz CloudVane klaster, Strmzi je korišten za implementaciju Kafke i u lokalnom MiniKube klasteru.\\
 
-\subsection{Zookeeper}
+Ova strukturirana arhitektura, s usko povezanim servisima, omogućava CloudVane aplikaciji da efikasno upravlja velikim količinama podataka, pružajući robustan i pouzdan sustav za obradu podataka u stvarnom vremenu.\\
+
+Podatke u Apache Kafka možemo unijeti i iz njega izvući kroz producente i konzumente, Kafka Streams ili ksqlDB. Ove komponente su organizirane kako je prikazano na slici \ref{fig:ksqldb_streams}, gdje ksqlDB pokreće Kafka Streams, a Kafka Streams pokreće Kafka Consumer i Producer API.
+
+Producenti \engl{producers} su odgovorni za slanje poruka u Kafka teme \engl{topic}. Oni su ključni za unos podataka u Kafka sustav, gdje svaka poruka koju producent šalje sadrži ključ i vrijednost.
+
+Konzumenti \engl{consumers}, s druge strane, čitaju i obrađuju poruke iz Kafka tema. Oni su ključni za izvlačenje podataka iz Kafka sustava, omogućujući aplikacijama da konzumiraju i reagiraju na podatke u realnom vremenu.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=13cm]{images/ksql_streams_consumer.png}
+\caption[Hijerarhija Kafka alata]{Hijerarhija Kafka alata\\Slika preuzeta sa \url{https://docs.ksqldb.io/en/latest/operate-and-deploy/how-it-works/}}
+\label{fig:ksqldb_streams}
+\end{figure}
+
+Sve navedene komponente, koje će biti detaljnije objašnjene u nastavku, zajedno čine moćnu, skalabilnu i prilagodljivu platformu za obradu podataka u stvarnom vremenu. Bilo da koristite producente za izravno slanje poruka u Kafka teme, konzumente za preuzimanje i obradu poruka iz tih tema, Kafka Streams za kompleksnu obradu podataka u stvarnom vremenu, ili ksqlDB za obradu podataka koristeći upite slične SQL-u, Apache Kafka nudi sveobuhvatne alate i funkcionalnosti koje su potrebne za izgradnju robusnih i efikasnih aplikacija za obradu podataka. Ova svestranost i fleksibilnost čine Apache Kafka idealnim izborom za različite scenarije obrade podataka, od jednostavnih do izuzetno složenih.
+
+\subsection{Apache Zookeeper}
+
+Apache ZooKeeper je distribuirana usluga za koordinaciju, otvorenog je koda i koriste ju distribuirane aplikacije. Razvijen je od strane Apache Fundacije i prvi puta izdan u 2008. godini.
+
+ZooKeeper se često koristi za održavanje konfiguracija, pružanje distribuiranog sinkroniziranja, praćenje statusa čvorova u klasteru i pružanje grupnih usluga \citep{hunt_zookeeper_nodate}. Primjerice, u slučaju Apache Kafka, ZooKeeper se koristi za upravljanje i koordinirati brokerima i potrošačima.\\
+
+Međutim, Apache Kafka je nedavno (u vrijeme pisanja ovoga rada) prešla sa korištenja ZooKeeper-a na novi protokol konsenzusa nazvan Kafka Raft (Kraft).
+
+Kako \citet{chandrakant_kafkas_2022} navodi, promjena s ZooKeepera na Kraft ima za cilj pojednostaviti arhitekturu Kafke i učiniti je moćnijom. Kraft je varijanta Raft konsenzusnog protokola temeljena na događajima i promjenu koju uvodi smanjuje prozor nedostupnosti kod pogrešaka Kafka Brokera\footnote{Kafka Broker je poslužitelj u distribuiranom sustavu Kafka.} jer može nadoknaditi propuštene događaje iz dnevnika nakon ponovnog pridruživanja. 
+
+-Promjena na Kraft očekuje donijeti značajne koristi zajednici Apache Kafke. Administratori sustava će lakše nadzirati, administrirati i podržavati Kafka, a programeri će se morati nositi s jednostavnijim sigurnosnim modelom za cijeli sustav. Novo upravljanje metapodacima također znatno poboljšava performanse Apache Kafke, omogućujući kontroleru da se brže prebaci na rezervu i obradi mnogo veći broj particija po klasteru.
+
 
 \subsection{Kafka Streams}
+\label{sec:kstream}
 
-\subsection{kSqlDB}
+Kafka Streams je lagana, ali moćna Java biblioteka za obogaćivanje, transformiranje i obradu tokova podataka u stvarnom vremenu \citep{seymour_mastering_2021}. Ova biblioteka omogućuje obradu događaja \engl{events} iz Kafka tema \engl{topic}, uključujući različite operacije poput agregacija \engl{stream aggregation}, spajanja tokova \engl{stream joining}, filtriranja poruka, itd., koje se zatim nakon definiranih operacija šalju u novu Kafka temu. \\
+
+Kafka Stream pruža jednostavan API za obradu podataka, omogućujući korisnicima da se usredotoče na logiku obrade podataka bez potrebe za upravljanjem infrastrukturom. Jedna od ključnih prednosti Kafka Streams biblioteke je njena sposobnost da obradi podatke u stvarnom vremenu. 
+Za razliku od obrade u serijama \engl{batch}, koja obrađuje podatke u određenim vremenskim intervalima, Kafka Streams omogućuje obradu podataka kako oni dolaze, što rezultira nižim latencijama i omogućuje aplikacijama da pruže ažurirane informacije u realnom vremenu \citep{seymour_mastering_2021}.
+
+Kafka Streams također podržava "točno-jednom" \engl{exactly-once} semantiku obrade, što znači da će svaka poruka biti obrađena točno jednom, čime se eliminira mogućnost dvostrukog obrade istih podataka \citep{narkhede_exactly-once_2017}.
+Osim toga, Kafka Streams biblioteka je dizajnirana tako da bude lako skalabilna. Aplikacije mogu biti horizontalno skalabilne dodavanjem više instanci aplikacije, a Kafka Streams će automatski uravnotežiti obradu podataka između njih. \\
+
+Jedna od naprednih funkcionalnosti Kafka Streams biblioteke je prozoriranje \engl{windowing}, koje omogućuje obradu podataka unutar određenog vremenskog intervala, poznatog kao prozor. Prozoriranje je posebno korisno kada se podaci trebaju agregirati na temelju vremenskih intervala, kao što su minuta, sat ili dan. Postoje tri glavne vrste prozora u Kafka Streams biblioteci windows čije se karakteristike mogu vidjeti u tablici \ref{tbl:windows}. Ove vrste prozora omogućuju složene analitičke operacije, poput računanja pokretnih prosjeka ili računanja agregata u određenom vremenskom intervalu.
+
+\begin{table}[htb]
+\caption{Vrste prozora u Kafka Streams biblioteci}
+\label{tbl:windows}
+\centering
+\begin{tabular}{l|l|r} \toprule
+Vrsta prozora & Naziv na engl. & Karakteristika prozora \\ \midrule
+Prevrtajući prozor & Tumbling window & Ne preklapa se, imaju veličinu\\
+Skakući prozor & Hopping window & Preklapa se, ima veličinu i iznos koliko skače\\
+Sjednički prozor & Session window & Određen duljinom neaktivnosti\\
+Klizeći prozor & Sliding window & Ima veličinu i klizi \\ \bottomrule
+\end{tabular}
+\end{table} 
+
+CloudVane trenutno ne koristi biblioteku Kafka Streams za obradu tokova podataka, već se oslanja na ksqlDB servis, koji je detaljno opisan u poglavlju \ref{sec:ksql}. Međutim, za potrebe ovog rada, opisanog u poglavlju \ref{sec:realTimeMonitoring}, kreiran je Kafka Stream koji filtrira i agregira poruke u Kafka temi koristeći prevrtajući prozor.
+
+
+\subsection{ksqlDB}
+\label{sec:ksql}
 
 \subsection{Kafka Connect}
+\label{sec:connect}
 
 \subsection{Schema Registry}
+\label{sec:schema}
 
 \section{Arhitektura aplikacije CloudVane}
 \label{sec:architecture}
@@ -207,6 +292,7 @@ Ova strukturirana arhitektura, s usko povezanim servisima, omogućava CloudVane 
 \subsection{Filebeat}
 
 \chapter{Obavještavanje stanja distribuirane aplikacije u stvarnom vremenu}
+\label{sec:realTimeMonitoring}
 
 \chapter{Zaključak}
 Zaključak.

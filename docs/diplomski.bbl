@@ -1,9 +1,16 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chandrakant(2022)]{chandrakant_kafkas_2022}
+Kumar Chandrakant.
+\newblock Kafka’s {Shift} from {ZooKeeper} to {Kraft} {\textbar} {Baeldung},
+  Studeni 2022.
+\newblock URL
+  \url{https://www.baeldung.com/kafka-shift-from-zookeeper-to-kraft}.
 
 \bibitem[Courtemanche et~al.()Courtemanche, Mell, i
   Gillis]{courtemanche_what_nodate}
@@ -16,6 +23,10 @@ Meredith Courtemanche, Emily Mell, i Alexander Gillis.
 Finops Finops~Fundation.
 \newblock {FinOps} {Foundation} - {What} is {FinOps}?
 \newblock URL \url{https://www.finops.org/introduction/what-is-finops/}.
+
+\bibitem[Hunt et~al.()Hunt, Konar, Junqueira, i Reed]{hunt_zookeeper_nodate}
+Patrick Hunt, Mahadev Konar, Flavio~P Junqueira, i Benjamin Reed.
+\newblock {ZooKeeper}: {Wait}-free coordination for {Internet}-scale systems.
 
 \bibitem[Kolny(2023)]{kolny_scaling_2023}
 Marcin Kolny.
@@ -32,10 +43,31 @@ Marko Lukša.
 \newblock ISBN 978-1-61729-761-8.
 \newblock Google-Books-ID: \_YrwzgEACAAJ.
 
+\bibitem[Narkhede(2017)]{narkhede_exactly-once_2017}
+Neha Narkhede.
+\newblock Exactly-once {Semantics} is {Possible}: {Here}'s {How} {Apache}
+  {Kafka} {Does} it, Lipanj 2017.
+\newblock URL
+  \url{https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/}.
+
 \bibitem[Neos()]{neos_cloudvane_nodate}
 Neos.
 \newblock {CloudVane}.
 \newblock URL \url{https://www.neos.hr/solution/cloudvane/}.
+
+\bibitem[Seymour(2021)]{seymour_mastering_2021}
+Mitch Seymour.
+\newblock \emph{Mastering {Kafka} {Streams} and {ksqlDB}}.
+\newblock "O'Reilly Media, Inc.", Velja\v{c}a 2021.
+\newblock ISBN 978-1-4920-6246-2.
+
+\bibitem[Shapira et~al.(2021)Shapira, Palino, Sivaram, i
+  Petty]{shapira_kafka_2021}
+Gwen Shapira, Todd Palino, Rajini Sivaram, i Krit Petty.
+\newblock \emph{Kafka: {The} {Definitive} {Guide}}.
+\newblock O'Reilly Media, Studeni 2021.
+\newblock ISBN 978-1-4920-4303-4.
+\newblock Google-Books-ID: MstMEAAAQBAJ.
 
 \bibitem[Tanenbaum i Steen(2007)]{tanenbaum_distributed_2007}
 Andrew~S. Tanenbaum i Maarten~van Steen.
