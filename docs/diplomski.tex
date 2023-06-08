@@ -1,6 +1,7 @@
 \documentclass[times, utf8, diplomski]{fer}
 \usepackage{booktabs}
-\usepackage{longtable, tabu}
+\usepackage[croatian]{babel}
+\usepackage{tabularray}
 \usepackage{listings}
 
 
@@ -44,7 +45,7 @@ Ovaj rad proučavati će Apache Kafka  i ELK platformu istražujući kako se mog
 
 Također rad će razmatrati kako se pouzdanost i brzina obrade podataka mogu poboljšati kako bi se sustav mogao pravovremeno odazvati na probleme. Očekuje se da će ovaj rad pružiti dublje razumijevanje važnosti i mogućnosti analize dnevničkih zapisa u raspodijeljenim sustavima, kao i uloge Kafka platforme u tom kontekstu.
 
-\chapter{Arhitektura aplikacija: Raspodijeljeni i monolitni sustavi te načini pokretanja aplikacija i Oblak}
+\chapter{Arhitektura aplikacija: Raspodijeljeni i monolitni sustavi te načini pokretanja aplikacija}
 
 \section{Monolitne aplikacije}
 
@@ -183,7 +184,7 @@ Minikube je visoko prilagodljiv i lako dostupan alat koji pojednostavljuje proce
 
 Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada, istovremeno osiguravajući stabilnost i integritet CloudVane testne okoline. Svi Kubernetes objekti koji su razvijeni u sklopu ovog rada dizajnirani su tako da se mogu lako migrirati u drugi Kubernetes klaster s minimalnim potrebnim preinakama.
 
-
+\clearpage
 \section{Sustav za obradu podataka u stvarnom vremenu --- Apache Kafka}
 \label{sec:kafka}
 
@@ -197,7 +198,7 @@ Kao dodatak brzini i efikasnosti, Kafka se ističe i svojom skalabilnošću. U m
 
 Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafka kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući Kafka Brokere, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI servise.
 
-Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Broj replika svakog servisa u testnom okruženju, kao i specifična uloga svakog servisa u kontekstu obrade podataka CloudVane-a, također je pažljivo razrađena u poglavlju \ref{sec:architecture}. Dodatni detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima.\\
+Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima.Specifična uloga svakog servisa u kontekstu obrade podataka CloudVane-a u testnom okruženju također je pažljivo razrađena u poglavlju \ref{sec:architecture}. Dodatni detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima.\\
 
 Apache Kafka servisi implementirani su unutar CloudVane Kubernetes klastera korištenjem Strimzija. Strimzi je projekt otvorenog\footnote{Kubernetes operator je metoda za pakiranje, implementaciju i upravljanje Kubernetes aplikacijom.} koda koji pruža operator za pokretanje Apache Kafka na Kubernetesu pojednostavljuju postupak konfiguriranja, pokretanja i održavanja Apache Kafka klastera unutar Kubernetes okruženja. Uz CloudVane klaster, Strmzi je korišten za implementaciju Kafke i u lokalnom MiniKube klasteru.\\
 
@@ -231,6 +232,7 @@ Kako \citet{chandrakant_kafkas_2022} navodi, promjena s ZooKeepera na Kraft ima 
 -Promjena na Kraft očekuje donijeti značajne koristi zajednici Apache Kafke. Administratori sustava će lakše nadzirati, administrirati i podržavati Kafka, a programeri će se morati nositi s jednostavnijim sigurnosnim modelom za cijeli sustav. Novo upravljanje metapodacima također znatno poboljšava performanse Apache Kafke, omogućujući kontroleru da se brže prebaci na rezervu i obradi mnogo veći broj particija po klasteru.
 
 
+\clearpage
 \subsection{Kafka Streams}
 \label{sec:kstream}
 
@@ -259,21 +261,130 @@ Klizeći prozor & Sliding window & Ima veličinu i klizi \\ \bottomrule
 
 CloudVane trenutno ne koristi biblioteku Kafka Streams za obradu tokova podataka, već se oslanja na ksqlDB servis, koji je detaljno opisan u poglavlju \ref{sec:ksql}. Međutim, za potrebe ovog rada, opisanog u poglavlju \ref{sec:realTimeMonitoring}, kreiran je Kafka Stream koji filtrira i agregira poruke u Kafka temi koristeći prevrtajući prozor.
 
-
+\clearpage
 \subsection{ksqlDB}
 \label{sec:ksql}
 
+KsqlDB je specializirana baza podataka za obradu tokova događaja \engl{event streaming database}. Ova platforma značajno pojednostavljuje implementaciju, pokretanje i održavanje aplikacija za obradu tokova podataka integrirajući dvije ključne komponente Kafka ekosustava: Kafka Connect i Kafka Streams \citep{seymour_mastering_2021}.
+
+Kafka Connect, opisan u poglavlju \ref{sec:connect}, je servis koji omogućuje jednostavno povezivanje Kafka s drugim sustavima, bilo da se radi o izvorima podataka za unos u Kafka ili odredištima za izvoz podataka iz Kafka. Integracija Kafka Connecta u ksqlDB omogućuje korisnicima da lako povežu svoje aplikacije s različitim izvorima i odredištima podataka.
+
+Kafka Streams, opisan u poglavlju \ref{sec:kstream}, je biblioteka za obradu podataka koja omogućuje obradu i analizu podataka u stvarnom vremenu. Integracija Kafka Streamsa u ksqlDB omogućuje korisnicima da koriste moćne funkcionalnosti obrade podataka koje Kafka Streams pruža, ali s jednostavnošću upita sličnim SQL-u.
+
+KsqlDB, kombinirajući ove dvije komponente, pruža snažnu platformu za obradu tokova podataka. Korisnici mogu jednostavno implementirati složene obrade podataka koristeći poznati SQL jezik, dok ksqlDB obavlja teški posao povezivanja s izvorima i odredištima podataka i obrade podataka u stvarnom vremenu. Ova integracija omogućuje korisnicima da se usredotoče na logiku svojih aplikacija, umjesto na složenosti upravljanja infrastrukturom obrade podataka. \\
+
+CloudVane se oslanja na ksqlDB klaster za obradu, agregaciju i manipulaciju tokova podataka koje prikuplja od podržanih pružatelja oblaka. ksqlDB ne samo da omogućuje agregaciju podataka, već također provodi filtriranje i transformaciju podataka, pružajući CloudVaneu snažan alat za efikasnu i efektivnu obradu podataka.
+
+\clearpage
 \subsection{Kafka Connect}
 \label{sec:connect}
 
-\subsection{Schema Registry}
+Kafka Connect je integralni dio Apache Kafka ekosustava i pruža skalabilan, pouzdan način za kopiranje podataka između Kafka i drugih skladišta podataka \citep{shapira_kafka_2021}.
+
+Kafka Connect je dizajniran da podrži veliki broj izvora \engl{source} i odredišta \engl{sink} podataka, omogućujući korisnicima da jednostavno povežu Kafka s različitim sustavima za skladištenje podataka. To uključuje tradicionalne baze podataka, datotečne sustave, usluge oblaka i mnoge druge.
+
+Jedna od ključnih funkcionalnosti Kafka Connecta je njegova sposobnost da se lako skalira. To znači da može podržati velike količine podataka i veliki broj veza, što ga čini idealnim za velike, podatkovno intenzivne aplikacije.
+
+Uz to, Kafka Connect podržava neke transformacije podataka, omogućujući korisnicima da prilagode podatke kako bi bolje odgovarali njihovim specifičnim potrebama pri ulazu ili izlazu iz Apache Kafke. To može uključivati promjenu formata podataka, dodavanje ili uklanjanje polja, ili nekoliko drugih vrsta manipulacije podacima.
+
+Ukupno gledano, Kafka Connect pruža snažan, fleksibilan način za povezivanje Kafka s različitim skladištima podataka, omogućujući korisnicima da maksimalno iskoriste svoje podatke. \\
+
+U kontekstu CloudVane aplikacije, Kafka Connect se koristi za prijenos podataka koji su agregirani putem ksqlDB-a u ciljnu bazu podataka, konkretno Oracle ATP (Autonomous Transaction Processing) bazu.
+
+Ova funkcionalnost omogućava CloudVaneu da efikasno i pouzdano prenosi obrađene i agregirane podatke iz Kafka ekosustava u Oracle ATP, što dalje omogućava naprednu analizu i obradu tih podataka. Korištenje Kafka Connecta za ovu svrhu osigurava da se podaci prenose na siguran i pouzdan način, uz održavanje visoke razine performansi i skalabilnosti.
+
+Ova integracija između Kafka Connecta, ksqlDB-a i Oracle ATP baze podataka omogućava CloudVaneu da maksimalno iskoristi svoje podatke, pružajući mu snažne alate za obradu podataka u stvarnom vremenu i njihovo pohranjivanje za daljnju analizu i obradu.
+
+\clearpage
+\subsection{Avro serializacija i Schema registry}
 \label{sec:schema}
 
+Avro je format serijalizacije podataka neovisan od programskom jeziku što omogućuje njegovu široku primjenu u različitim programskim okruženjima \citep{shapira_kafka_2021}. Jedna od ključnih prednosti Avroa je njegova sposobnost smanjenja mrežnog prometa kroz odvajanje sheme podataka od samih vrijednosti i korištenje binarnog formata. Ova značajka omogućuje efikasno upravljanje velikim količinama podataka, što je često ključno u sustavima za obradu podataka u stvarnom vremenu.
+
+Avro također podržava jaku tipizaciju \engl{strong typing}, što znači da svaki podatak ima strogo definiran tip. Ova značajka pomaže u sprječavanju pogrešaka i poboljšava pouzdanost obrade podataka, jer se mogu izbjeći nekompatibilnosti ili nesporazumi oko formata ili strukture podataka.
+
+Za rad s Apache Kafka sustavom, Avro se često koristi u kombinaciji s Apache Schema Registry servisom. Schema Registry je servis koji pomaže u upravljanju shemama i provođenju pravila o shemama, osiguravajući da svi podaci koji se upisuju u Kafka teme prate pre-definiranu shemu. Ovo je ključno za održavanje kompatibilnosti podataka kako se sustav razvija, jer omogućuje promjene u formatu podataka bez gubitka kompatibilnosti s postojećim podacima. \\
+
+Sveukupno, kombinacija Avroa i Schema Registryja pruža robustan okvir za upravljanje i obradu strukturiranih podataka unutar Apache Kafka sustava. Ove tehnologije omogućuju korisnicima da efikasno i pouzdano upravljaju velikim količinama podataka, istovremeno održavajući visoku razinu pouzdanosti i kompatibilnosti. Upravo iz tih razloga, CloudVane aplikacija koristi Avro format za pohranu podataka u Kafka temama i Schema Registry servis za održavanje i upravljanje shemama.
+
+Ova praksa omogućuje CloudVaneu da maksimalno iskoristi prednosti koje Apache Kafka pruža, uključujući skalabilnost, brzinu i pouzdanost. Korištenje Avro formata osigurava da su podaci kompaktni i dobro strukturirani, što poboljšava performanse i omogućuje efikasnu obradu podataka. Istovremeno, upotreba Schema Registry servisa osigurava da su sve sheme podataka dosljedno upravljane i održavane, što pomaže u održavanju kvalitete podataka i kompatibilnosti kroz vrijeme.
+
+\clearpage
 \section{Arhitektura aplikacije CloudVane}
 \label{sec:architecture}
 
-% todo write
+CloudVane, kako je prethodno navedeno, je distribuirana aplikacija koja se izvodi na Oracle Kubernetes Engine (OKE) platformi. Osim toga, CloudVane je primjer mikroservisne arhitekture, što znači da se sastoji od brojnih servisa, svaki s određenim zadacima unutar cjelokupnog sustava. Ovi servisi su detaljno opisani u tablici \ref{tbl:cloudvaneServices} i \ref{tbl:kafkaServices}, a arhitektura sustava prikazana je na slici \ref{fig:cloudvaneArch}.
 
+Ova struktura omogućuje visoku razinu modularnosti i fleksibilnosti. Svaki servis može se razvijati, skalirati i održavati neovisno o ostalima, što omogućuje brzi razvoj i lako ažuriranje. Također, ova arhitektura omogućuje bolju iskoristivost resursa, jer svaki servis može biti skaliran prema svojim specifičnim potrebama.
+
+U kontekstu CloudVane aplikacije, ova mikroservisna arhitektura omogućuje efikasno upravljanje i obradu velikih količina podataka. Svaki servis može se specijalizirati za određeni aspekt obrade podataka, što rezultira visokom performansom i pouzdanošću cjelokupnog sustava. Detaljan opis svakog CloudVane servisa može se pronaći u tablici \ref{tbl:cloudvaneServices}.
+
+Uzimajući u obzir da CloudVane koristi usluge Apache Kafke, te usluge su smještene u zasebnom Kubernetes prostoru imena\footnote{Kubernetes prostor imena \engl{namespace} je mehanizam za izolaciju resursa klastera.} \engl{namespace} u odnosu na glavne servise CloudVanea. Apache Kafka servisi opisani su u tablici \ref{tbl:kafkaServices}, a protok podataka kroz CloudVane sustav je prikazan na slici \ref{fig:dataCloudvane}.
+
+Ova organizacijska struktura prikazana na slici \ref{fig:cloudvaneArch}, koja uključuje odvajanje produkcijskog klastera od klastera za razvoj i testiranje, omogućuje jasnu segregaciju i izolaciju resursa među različitim komponentama sustava. Takva struktura ne samo da pojačava sigurnost i upravljivost sustava, već i olakšava skaliranje i održavanje svake komponente neovisno jedna o drugoj. Osim toga, ovakva organizacija pruža bolju kontrolu nad resursima te olakšava praćenje i dijagnostiku problema unutar sustava. U konačnici, ovakav pristup omogućuje efikasnije upravljanje resursima i optimizaciju performansi, čime se poboljšava ukupna pouzdanost i efikasnost CloudVane aplikacije.
+
+\clearpage
+\begin{longtblr}[
+  	caption = {CloudVane servisi na Kubernetesu},
+	label = {tbl:cloudvaneServices},
+	]{
+	colspec = {X[1,l]|X[1,c]}, 
+	rowhead = 1,
+	}
+	\hline
+	Naziv servisa & Opis servisa \\
+	\hline
+	CloudVane Actioner & Upravlja akcijama na oblaku\\
+	CloudVane API & REST poslužitelj i autorizacija\\
+	CloudVane Back & Spring poslužiteljske strane\\
+	CloudVane Chargeback & Omogućuje izradu izvještaja o potrošnji\\
+	CloudVane Config & Spring Config server\\
+	CloudVane Datacollector Kafka & Dohvaća podatke iz oblaka, obrađuje ih i prosljeđuje u Apache Kafku\\
+	CloudVane Datacollector & Dohvaća podatke iz oblaka, obrađuje ih i pohranjuje direktno u bazu podataka\\
+	CloudVane Front & Angular poslužitelj klijentske strane \\
+	CloudVane Predictioner API & REST poslužitelj predikcijskog sustava\\
+	CloudVane Predicioner Worker & Sustav umjetne inteligencije koji računa predikcije\\
+	CloudVane Scheduler & Rasporeditelj zadataka CloudVanea\\
+	CloudVane User Management & Sustav za upravljanje korisnicima i pravima na platformi \\
+	CloudVane Vault & Sustav za sigurnu pohranu korisničkih kredencijala \\
+	\hline
+
+\end{longtblr}
+
+\begin{longtblr}[
+	caption = {Kafka servisi na Kubernetesu},
+	label = {tbl:kafkaServices},
+	]{
+		colspec = {X[1,l]|X[1,c]}, 
+		rowhead = 1,
+	}
+	\hline
+	Naziv Kafka servisa & Opis servisa \\
+	\hline
+	Kafka Broker & Poslužuje Apache Kafku\\
+	Kafka Connect klaster & Upis tokova u bazu podataka\\
+	ksqlDB & Obrađuje tokove podataka\\
+	Schema Registry & Upravlja shemama podataka
+	\hline
+	
+\end{longtblr}
+
+\clearpage
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=15cm]{images/CloudVaneArchitecture.png}
+	\caption[Arhitektura CloudVane sustava]{Arhitektura CloudVane sustava}
+	\label{fig:cloudvaneArch}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=15cm]{images/CloudVaneData.png}
+	\caption[Tok podataka CloudVane sustava]{Tok podataka \engl{data pipeline} CloudVane sustava}
+	\label{fig:dataCloudvane}
+\end{figure}
+
+U kontekstu ovog istraživanja, svi dnevnički zapisi prethodno opisanih servisa, detaljno pojašnjeni u poglavlju \ref{sec:logs}, bit će preusmjereni iz CloudVane klastera u Apache Kafku, smještenu na lokalnom Minikube klasteru. Ova će organizacija omogućiti učinkovitu obradu zapisa te njihovu upotrebu za generiranje rezultata ovoga rada.
 
 \chapter{Nadgledanje aplikacija}
 
