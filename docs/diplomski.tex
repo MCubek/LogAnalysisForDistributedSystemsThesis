@@ -2,7 +2,50 @@
 \usepackage{booktabs}
 \usepackage[croatian]{babel}
 \usepackage{tabularray}
+
 \usepackage{listings}
+\usepackage{color}
+\usepackage{adjustbox}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{punctuation}{rgb}{0.56,0,0.14}
+
+\lstdefinelanguage{json}{
+	basicstyle=\normalfont\ttfamily,
+	showstringspaces=false,
+	breaklines=true,
+	literate=
+	*{0}{{{\color{red}0}}}{1}
+	{1}{{{\color{red}1}}}{1}
+	{2}{{{\color{red}2}}}{1}
+	{3}{{{\color{red}3}}}{1}
+	{4}{{{\color{red}4}}}{1}
+	{5}{{{\color{red}5}}}{1}
+	{6}{{{\color{red}6}}}{1}
+	{7}{{{\color{red}7}}}{1}
+	{8}{{{\color{red}8}}}{1}
+	{9}{{{\color{red}9}}}{1}
+	{:}{{{\color{punctuation}:}}}{1}
+	{,}{{{\color{punctuation},}}}{1}
+	{\{}{{{\color[rgb]{0.13,0.55,0.13}\{}}}{1}
+	{\}}{{{\color[rgb]{0.13,0.55,0.13}\}}}}{1}
+	{[}{{{\color[rgb]{0.13,0.55,0.13}[}}}{1}
+	{]}{{{\color[rgb]{0.13,0.55,0.13}]}}}{1},
+}
+
+\lstdefinelanguage{yaml}{
+	keywords={true,false,null,y,n},
+	keywordstyle=\color{blue}\bfseries,
+	basicstyle=\ttfamily\small,
+	sensitive=false,
+	comment=[l]{\#},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
 
 
 \begin{document}
@@ -55,7 +98,7 @@ Glavna prednost monolitne arhitekture leži u njenom centraliziranom pristupu ko
 
 Ipak, monolitne aplikacije nisu bez nedostataka. Jedan od ključnih izazova je skaliranje: kako raste opterećenje na aplikaciju, monolitne aplikacije omogućavaju samo vertikalno skaliranje, što znači povećanje resursa na postojećem serveru. Horizontalno skaliranje, koje podrazumijeva dodavanje dodatnih servera, nije moguće. Također, ažuriranje ili mijenjanje bilo kojeg segmenta aplikacije često zahtijeva ponovnu implementaciju \engl{deployment} cijelog sustava, što može dovesti do privremene nedostupnosti usluge. \\
 
-Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u IT industriji. U mnogim slučajevima njihova jednostavnost, kombinirana s potencijalnom uštedom u mrežnom prometu, čini ih atraktivnom opcijom za manje složene i manje opterećene sustave.
+Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u računalnoj industriji. U mnogim slučajevima njihova jednostavnost, kombinirana s potencijalnom uštedom u mrežnom prometu, čini ih atraktivnom opcijom za manje složene i manje opterećene sustave.
 
 \section{Distribuirane Aplikacije}
 
@@ -152,6 +195,7 @@ Kako bi riješili ove probleme, Amazon Prime Video je rekonstruirao uslugu u mon
 
 
 \chapter{Distribuirana aplikacija --- CloudVane}
+\label{sec:cloudvane}
 
 CloudVane je, kao što navodi \citet{neos_cloudvane_nodate}, njihov proizvod koji pomaže upravljati i optimizirati trošak te infrastrukturu u više-oblačnom \engl{multicloud} okruženju. Glavni cilj CloudVane-a je pružiti vidljivost i kontrolu nad vašom upotrebom oblaka \engl{clouda} u cijeloj organizaciji. \\
 
@@ -386,30 +430,413 @@ Ova organizacijska struktura prikazana na slici \ref{fig:cloudvaneArch}, koja uk
 
 U kontekstu ovog istraživanja, svi dnevnički zapisi prethodno opisanih servisa, detaljno pojašnjeni u poglavlju \ref{sec:logs}, bit će preusmjereni iz CloudVane klastera u Apache Kafku, smještenu na lokalnom Minikube klasteru. Ova će organizacija omogućiti učinkovitu obradu zapisa te njihovu upotrebu za generiranje rezultata ovoga rada.
 
-\chapter{Nadgledanje aplikacija}
+\chapter{Nadziranje aplikacija}
 
+Nadziranje \engl{monitoring}, definirano kao sustavno promatranje i provjera ponašanja i izlaza sustava te njegovih komponenti kroz vrijeme \citep{monitorama_monitorama_2016}, ključni je element upravljanja informatičkim sustavima i aplikacijama. Ova strateška praksa, koja se sastoji od stalnog nadzora i analize, omogućuje održavanje optimalnih performansi, stabilnosti i pouzdanosti digitalnih resursa.
+
+Nadzor aplikacija nije samo proces identifikacije i rješavanja problema. On nudi dragocjene uvide koji omogućuju temeljitiju optimizaciju sustava, poboljšanje korisničkog iskustva i osiguranje da sve digitalne komponente funkcionalno integriraju. Sastoji se od kontinuirane provjere, identifikacije anomalija i promptnog rješavanja problema prije nego što se pretvore u kritične situacije. Kroz ovaj proaktivni pristup, nadzor postaje ključan instrument za održavanje visoke razine usluge i postizanje operativne izvrsnosti.\\
+
+U ovom poglavlju rada detaljno se istražuje nadzor distribuirane aplikacije CloudVane, koja je opisana u poglavlju \ref{sec:cloudvane}, s posebnim naglaskom na kontekst dnevničkih zapisa prikazanih u poglavlju \ref{sec:logs}. Upotrebom ELK-a, čije su komponente i funkcionalnosti predstavljene u poglavlju \ref{sec:elk}, ilustrirat će se korištenje sofisticiranih alata za izdvajanje dnevničkih zapisa iz distribuiranih aplikacija unutar Kubernetes grozda. Detaljno će se obraditi procesi prikaza, transformacije i unosa dvnevničkih zapisa u Apache Kafku. Naposljetku, u završnom poglavlju \ref{sec:streamingMonitoring} rad će se fokusirati na nadzor u stvarnom vremenu, pružajući cjelovit prikaz ovog kompleksnog, ali ključnog aspekta upravljanja modernim računalnim sustavima.
+
+\clearpage
 \section{Dnevnički zapisi}
 \label{sec:logs}
-\subsection{Dnevnički zapisi u Javi}
+
+Dnevnički zapisi aplikacija \engl{application logs} ključna su komponenta koja pruža detaljan uvid u rad aplikacije i ključni su za otkrivanje i rješavanje problema, ali i za optimizaciju performansi aplikacije.
+
+Dnevnički zapisi aplikacija sastoje se od sekvencijalno zapisanih događaja koji se događaju unutar aplikacije. Ti događaji mogu biti različite vrste, uključujući informacije o radnji koju je korisnik poduzeo, statusu aplikacije, greškama, upozorenjima i drugim relevantnim informacijama. Dnevnički zapisi pružaju sveobuhvatnu sliku o tome što se događa unutar aplikacije u svakom trenutku.
+
+U kontekstu mikroservisnih arhitektura, kao što je to slučaj s CloudVane aplikacijom, dnevnički zapisi su posebno važni. Budući da je svaki mikroservis odgovoran za svoj dio funkcionalnosti, dnevnički zapisi svakog mikroservisa pružaju uvid u njegov rad. Ako dođe do problema, dnevnički zapisi mogu pomoći u identificiranju koja je komponenta uzrokovala problem.
+
+Međutim, upravljanje dnevničkim zapisima u mikroservisnom okruženju može biti izazovno.. Jedan od najizraženijih je problem agregiranja i pretraživanja dnevničkih zapisa. S obzirom na to da je aplikacija raspoređena na više čvorova unutar Kubernetes grozda, logički i fizički izolirani, konzolidacija i pretraživanje informacija postaje kompleksan zadatak \citep{newman_building_2015}.
+
+U takvom distribuiranom okruženju, svaka komponenta ili mikroservis generira svoje dnevničke zapise. S obzirom na to da su ovi dnevnički zapisi disperzirani preko različitih čvorova, njihova centralizacija zahtijeva robusna i skalabilna rješenja. Bez odgovarajućih alata i strategija, pretraživanje tih zapisa na jednom mjestu može biti prilično izazovno i vremenski zahtjevno. Osim toga, pitanje je i kako oblikovati i strukturirati te zapise na način da pružaju korisne informacije. Različiti mikroservisi mogu imati različite strukture dnevničkih zapisa. Zahtijeva se strategija koja ne samo da agregira ove zapise, već ih i standardizira i strukturira za laku analizu i dijagnostiku. \\
+
+U nastavku poglavlja, fokus će se postaviti na dnevničke zapise programskog jezika Java, što je tematika poglavlja \ref{sec:java}. Fokus na programski jezik Javu proizlazi iz činjenice da je većina servisa unutar distribuirane aplikacije CloudVane upravno razvijena ovim programskim jezikom. Iako i drugi programski jezici nude slične alate za konfiguraciju i upravljanje dnevničkim zapisima, specifičnosti Jave u ovom kontekstu su od posebne važnosti zbog potrebnih konfiguracija. Također, posvetiti će se pažnja ELK alatima, što je centralna tema poglavlja \ref{sec:elk}. Ova dva aspekta čine ključne komponente istraživanja i analize nadzora aplikacija unutar distribuiranih sustava.
+
+
+\subsection{Dnevnički zapisi u programskom jeziku Java}
+\label{sec:java}
+
+CloudVane koristi Logback biblioteku za svoje dnevničke potrebe, koristeći SLF4J apstrakciju. Logback je konfiguriran da ispisuje dnevničke zapise u JSON formatu, što olakšava njihovu obradu, posebno u distribuiranom sustavu gdje različite usluge generiraju zapise. Primjer konfiguracije Logbacka prikazan je u isječku \ref{lst:logback_xml}.
+
+JSON (JavaScript Object Notation) je format koji je lagan za čitanje i pisanje za ljude, a jednostavan za strojeve za obradu. Korištenje JSON formata omogućuje lakšu analizu i obradu dnevničkih zapisa.
+
+Primjer jednog dnevničkog zapisa prikazan je u isječku \ref{lst:cloudvaneLog}. Ovaj zapis ilustrira kako se informacije strukturiraju u JSON formatu.
+
+Osim Logbacka, postoji i Log4j biblioteka, koja je također popularna opcija za dnevničke zapise u Java aplikacijama. Međutim, u kontekstu CloudVane aplikacije, Logback je odabran zbog svoje snažne integracije s SLF4J apstrakcijom i fleksibilnosti u konfiguraciji.
+
 
 \section{Elastic, Logstash i Kibana (ELK)}
+\label{sec:elk}
+
+ELK Stack, akronim koji označava ElasticSearch, Logstash i Kibana, predstavlja snažan skup alata sposoban za prikupljanje, pohranu, analizu i vizualizaciju podataka u realnom vremenu. Najčešće se koristi za upravljanje logovima i praćenje događaja, što ga čini nezamjenjivim alatom za sigurnosne analize, poslovnu inteligenciju i efikasno pretraživanje podataka.. 
+
+U ovom poglavlju se detaljno razmatraju funkcionalnosti svake pojedinačne komponente ELK Stacka, te se demonstrira proces njegove implementacije na lokalni Minikube Kubernetes grozd. Svrha ovog koraka je prilagodba sustava specifičnim potrebama projekta. Arhitektura integriranog sustava prikazana je na dijagramu \ref{fig:archDiagram}, dok je dijagram podataka prikazan na \ref{fig:dataDiagram}.
+
 
 \subsection{Elastic}
+\label{sec:elastic}
 
-\subsection{Kibana}
+Elasticsearch je distribuirani sustav za pretragu i analizu podataka u stvarnom vremenu. Omogućava istraživanje podataka na brz i skalabilan način koji do sada nije bio ostvariv. Koristi se za pretragu cijelog teksta, strukturiranu pretragu, analitiku i kombinaciju sve tri funkcionalnosti \citep{gormley_elasticsearch_2015}.
+
+Zasnovan na Apache Luceneu\footnote{Apache Lucene je snažan sustav za pretraživanje teksta otvorenog koda koji se koristi u brojnim aplikacijama za pretragu i analizu podataka.}, Elasticsearch pruža distribuirani sustav za pretragu teksta s HTTP sučeljem. Ovo sučelje omogućuje jednostavan pristup i manipulaciju podacima kroz standardizirane HTTP protokole. \\
+
+U okviru ELK Stacka, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U ovom slučaju, to su dnevnički zapisi prikupljeni pomoću Logstasha, komponente koja je zadužena za prikupljanje, transformaciju i slanje podataka u Elasticsearch. Logstash je detaljno opisan u poglavlju \ref{sec:logstash}.\\
+
+Elasticsearch ne samo da omogućava pohranu podataka, već nudi i mogućnosti za njihovu detaljnu analizu i pretragu. Ove mogućnosti, u kombinaciji s skalabilnošću i brzinom koju pruža, čine Elasticsearch idealnim izborom za upravljanje velikim količinama podataka u stvarnom vremenu \engl{real-time}.
 
 \subsection{Logstash}
+\label{sec:logstash}
+
+Logstash je otvorenog koda i predstavlja moćan sustav za obradu podataka. Njegova glavna svrha je izvlačenje podataka iz različitih izvora, njihova transformacija i obogaćivanje te naknadno slanje prema odredištu \citep{konda_elasticsearch_2023}. Zahvaljujući svojoj arhitekturi baziranoj na tokovima podataka, svaki događaj koji prolazi kroz Logstash obrađuje se prema unaprijed konfiguriranim pravilima. Time se postiže kontinuirana obrada podataka u stvarnom vremenu.\\
+
+U kontekstu ovog rada, Logstash ima ključnu ulogu u prikupljanju dnevničkih zapisa iz nekoliko Apache Kafka tema \engl{topic} te njihovom unosu u Elasticsearch indeks. Konfiguracija je prikazana u isječku koda \ref{lst:logstash}. 
+
+Indeks u Elasticsearch kontekstu je osnovna jedinica za pretragu. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim jedinstvenim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom radu, indeks se koristi za organiziranje i skladištenje dnevničkih zapisa, omogućavajući njihovu brzu i efikasnu pretragu.
+
+\subsection{Kibana}
+\label{sec:kibana}
+
+\citet{gormley_elasticsearch_2015} navode da je Kibana višenamjenska web konzola koja nudi niz opcija, od izvršavanja upita do razvoja nadzornih ploča, grafova i vizualizacija dijagrama za detaljnu analizu i agregacije. Međutim, za komunikaciju s Elasticsearch-om i pozivanje API-ja nije nužno koristiti Kibanu. Na primjer, API-je možemo pozivati koristeći cURL, Postman ili klijente izvornog jezika.\\
+
+Kibana, kao alat za vizualizaciju i istraživanje podataka, u ovom radu koristi se kao sučelje na kojem se mogu kreirati intuitivni grafikoni i izvješća. Ovi elementi omogućuju interaktivno navigiranje kroz velike količine dnevničkih zapisa. S Kibanom je moguće konfigurirati nadzorne ploče koje pružaju vizualne sažetke podataka i omogućuju detaljno istraživanje specifičnih događaja. Primjer prikaza alata Kibane s dnevničkim zapisima može se vidjeti na slici \ref{fig:kibana}.\\
+
+Kibana pruža mogućnost vizualizacije podataka pohranjenih u Elasticsearchu koristeći njene snažne mogućnosti upita i filtriranja. Time se omogućuje detaljna analiza specifičnih metrika ili trendova. Ova funkcionalnost je ključna za učinkovito analiziranje i razumijevanje obimnih podatkovnih setova, kao što su dnevnički zapisi koje obrađuje ovaj rad.
 
 \subsection{Filebeat}
+\label{sec:filebeat}
 
-\chapter{Obavještavanje stanja distribuirane aplikacije u stvarnom vremenu}
-\label{sec:realTimeMonitoring}
+Filebeat je alat za prikupljanje podataka čiji je glavni zadatak skupljanje i centralizacija dnevničkih zapisa. Njegova uloga u ELK Stacku je da nadzire specifične datoteke s dnevničkim zapisima, prikuplja ih i zatim prosljeđuje izravno u Elasticsearch indeks ili Logstash za daljnju obradu. Filebeat je samo jedan od mnogih alata u sklopu Beats platforme\footnote{Beats je platforma koja se sastoji od niza alata za prikupljanje podataka, uključujući dnevničke zapise, mrežni promet, metrike i slično. Svi alati unutar Beats platforme razvijeni su s ciljem jednostavnosti i učinkovitosti.}, koju je razvila tvrtka Elastic. Zbog svog dizajna koji naglašava jednostavnost i minimalnu potrošnju resursa, Filebeat je iznimno pogodan za distribuirane okoline poput Kubernetesa.\\
+
+Iako Logstash nudi moćne mogućnosti obrade podataka, Filebeat je specijaliziran za biti lagan i brz, s naglaskom na efikasno prikupljanje dnevničkih zapisa i njihovo brzo prosljeđivanje do odredišta. To znači da se Filebeat može pokrenuti bez da se to značajno odrazi na performanse. Filebeat i Logstash često se koriste u tandemu; Filebeat je odgovoran za prikupljanje i prosljeđivanje dnevničkih zapisa, a Logstash ih zatim obrađuje i obogaćuje prije konačnog indeksiranja u Elasticsearchu.\\
+
+U okviru ovog rada, Filebeat je implementiran na CloudVane Kubernetes klasteru te je konfiguriran da prikuplja logove s CloudVane servisa. Nakon prikupljanja, ti se logovi prosljeđuju preko interneta na lokalni Minikube Kubernetes klaster, točnije u specifične Apache Kafka teme. Detalji ove konfiguracije prikazani su u isječku koda \ref{lst:filebeat}.
+
+\subsection{Implementacija ELK-a na Kubernetes grozdu}
+\label{sec:elk_impl}
+
+U ovom radu, ElasticSearch, Kibana i Logstash implementirani su u lokalnom Kubernetes klasteru koristeći Elasticove prilagođene resurse \engl{Custom Resource Definitions} - CRD\footnote{CRDovi pružaju snažan okvir za stvaranje i upravljanje prilagođenim resursima, omogućujući korisnicima da stvore nove vrste resursa koje se mogu koristiti kao izvorni.}.
+
+Elastic, tvrtka koja razvija ElasticSearch, Kibana i Logstash, pruža skup CRDova za te aplikacije. Ovi CRDovi omogućuju korisnicima da jednostavno implementiraju i upravljaju tim aplikacijama u Kubernetes okruženju, pružajući integrirane mogućnosti za konfiguraciju, skaliranje, sigurnost i monitoriranje.
+
+U kontekstu ovog rada, koristeći Elasticove CRDove, ElasticSearch, Kibana i Logstash pokrenuti su kao zasebni kontejneri unutar Kubernetes klastera. Svaki od ovih kontejnera može se skalirati neovisno, omogućujući fleksibilnu i robusnu infrastrukturu za rad s podacima.
+
+\chapter{Nadziranje stanja distribuiranog sustava u stvarnom vremenu}
+\label{sec:streamingMonitoring}
+
+Placeholder
 
 \chapter{Zaključak}
 Zaključak.
 
 \bibliography{literatura}
 \bibliographystyle{fer}
+
+
+\lstset{
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
+
+\appendix
+\chapter{Isječci programskog koda}
+\label{sec:code}
+
+
+\begin{lstlisting}[caption={Primjer dnevničkog zapisa CloudVane servisa}
+		,label={lst:cloudvaneLog}
+		,language=json]
+{
+	"@timestamp": "2023-06-11T20:32:51.032Z",
+	"@version": "1",
+	"message": "Calling data_collector.prepare_cost_history for cloud account id: 76.",
+	"logger_name": "hr.neos.cloudvane.datacollector.predictioner. PredictionerService",
+	"thread_name": "scheduling-1",
+	"level": "INFO",
+	"level_value": 20000
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Konfiguracija Logback-a}
+	,label={lst:logback_xml}
+	,language=XML]
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<contextName>cloudvane-dc-kafka</contextName>
+
+<!-- Include CONSOLE_LOG_PATTERN -->
+<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+<appender name="CONSOLE_PATTERN" class="ch.qos.logback.core.ConsoleAppender">
+<layout class="ch.qos.logback.classic.PatternLayout">
+<Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+</layout>
+</appender>
+
+<appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+</appender>
+
+<springProfile name="local">
+<root level="INFO">
+<appender-ref ref="CONSOLE_PATTERN" />
+</root>
+</springProfile>
+
+<springProfile name="dev,dev-test,test,prod">
+<root level="INFO">
+<appender-ref ref="CONSOLE_JSON" />
+</root>
+</springProfile>
+</configuration>
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Primjer dnevničkog zapisa sa CloudVane servisa sa metapodacima}
+		,label={lst:cloudvaneLog}
+		,language=json]
+{
+	"@timestamp": "2023-05-03T17:00:04.068Z",
+	"@metadata": {
+		"beat": "filebeat",
+		"type": "_doc",
+		"version": "8.7.1"
+	},
+	"log": {
+		"offset": 294991,
+		"file": {
+			"path": "/var/log/containers/cloudvane-datacollector..."
+		}
+	},
+	"level_value": 20000,
+	"logger_name": "hr.neos.cloudvane.datacollector.collector.cloud.azure.
+	AzureCollectionService",
+	"ecs": {
+		"version": "8.0.0"
+	},
+	"host": {
+		"ip": [
+		"10.244.1.90",
+		"fe80::8bf:80ff:fe5f:3832"
+		],
+		"mac": [
+		"0A-BF-80-5F-38-32"
+		],
+		"hostname": "filebeat-kafka-matej-44gl2",
+		"architecture": "x86_64",
+		"os": {},
+		"containerized": true,
+		"name": "filebeat-kafka-matej-44gl2"
+	},
+	"stream": "stdout",
+	"input": {
+		"type": "container"
+	},
+	"instana.trace.id": "adf2108f84007f73",
+	"level": "INFO",
+	"container": {
+		"id": "a248de8e52ca95d0591cd220cd4f
+		438488e4765bc1de51644c4c7621784b9e45",
+		"runtime": "cri-o",
+		"image": {
+			"name": "fra.ocir.io/frpf7jvyycgx/cv-kafka/openjdk-17/
+			cloudvane-datacollector:1fc43..."
+		}
+	},
+	"message": "Fetching AZURE cost file list from URL: 
+	https://storageaccounttestcv.blob.core.windows.net/
+	dailycontainer?restype=container&comp=list",
+	"agent": {
+		"ephemeral_id": "5c71c9f5-3073-4b71-90a8-04ef13492db4",
+		"id": "18a62338-ce41-4a14-9d6d-e9f6887041b0",
+		"name": "filebeat-kafka-matej-44gl2",
+		"type": "filebeat",
+		"version": "8.7.1"
+	},
+	"@version": "1",
+	"thread_name": "scheduling-1",
+	"kubernetes": {
+		"labels": {
+			"app": "cloudvane-datacollector-kafka",
+			"client": "test",
+			"pod-template-hash": "75f86b6d7c"
+		},
+		"container": {
+			"name": "cloudvane-datacollector"
+		},
+		"node": {
+			"labels": {	},
+			"hostname": "10.38.1.11",
+			"name": "10.38.1.11",
+			"uid": "9c999e81-cafc-405c-936c-8c45183351b5"
+		},
+		"pod": {
+			"ip": "10.244.1.5",
+			"name": "cloudvane-datacollector-kafka-test-75f86b6d7c-g2kgb",
+			"uid": "1a2ff384-ac41-47d0-815d-43c27591cff7"
+		},
+		"namespace": "cloudvane-test",
+		"namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+		"namespace_labels": {
+			"kubernetes_io/metadata_name": "cloudvane-test"
+		},
+		"replicaset": {
+			"name": "cloudvane-datacollector-kafka-test-75f86b6d7c"
+		}
+	},
+	"indexName": "cloudvane-datacollector-kafka"
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Konfiguacija Logstasha na lokalnom Kubernetes grozdu}
+	,label={lst:logstash}]
+input {
+	kafka {
+		bootstrap_servers => "masters-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+		topics_pattern => "^logs.*"
+		group_id => "logstash"
+		codec => "json"
+		decorate_events => "extended"
+	}
+}
+filter {
+	mutate {
+		add_field => { "topic" => "%{[@metadata][kafka][topic]}" }
+	}
+}
+output {
+	elasticsearch {
+		
+		hosts => ["https://masters-es-internal-http.elk.svc.cluster.local:9200"]
+		index => "k8s-%{topic}"
+		
+		ssl => true
+		ssl_certificate_verification => false
+		user => "elastic"
+		password => "ELASTIC_PASSWORD"
+		
+		ilm_enabled => false
+	}
+}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Konfiguacija Filebeata na CloudVane Kubernetes grozdu}
+	,label={lst:filebeat}
+	,language=yaml]
+filebeat.inputs:
+- type: container
+format: cri
+paths:
+- /var/log/containers/*.log
+processors:
+- decode_json_fields:
+fields: [ "message" ]
+target: ""
+overwrite_keys: true
+- add_kubernetes_metadata:
+in_cluster: true
+host: ${NODE_NAME}
+matchers:
+- logs_path:
+logs_path: /var/log/containers/
+- script:
+lang: javascript
+source: >
+function process(event) {
+	var appName=event.Get("kubernetes.labels.app");
+	if (appName!==null && appName.indexOf("cloudvane") !== -1)
+	{
+		event.Put("indexName",event.Get("kubernetes.labels.app"));
+	}
+	else if (appName!==null && appName.indexOf("kafka")!== -1)
+	{
+		event.Put("indexName","cloudvane-".concat(event.Get("kubernetes.labels.app")));
+	}
+	else
+	{
+		event.Put("indexName","other");
+	}
+	var input = event.Get("message");
+	input = input.replace(/RequestId:[^ ]*/g, "");
+	input = input.replace(/Time:[^ ]*/g, "");
+	input = input.replace(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}/g, "");
+	input = input.replace(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}/g, "");
+	var kafkaKey = {
+		"message": input,
+		"service": event.Get("indexName"),
+		"kubernetes": {
+			"namespace": event.Get("kubernetes.namespace"),
+			"pod": event.Get("kubernetes.pod.name")
+		}
+	};
+	event.Put("kafkaKey", JSON.stringify(kafkaKey));
+}    
+- drop_event:
+when:
+not:
+or:
+- equals:
+kubernetes.namespace: "cloudvane-test"
+- equals:
+kubernetes.namespace: "kafka-test"
+- type: log
+paths:
+- /var/log/containers/*.out
+processors:
+- decode_json_fields:
+fields: [ "message" ]
+target: ""
+overwrite_keys: true
+- script:
+lang: javascript
+source: >
+function process(event) {
+	event.Put("indexName","usage");
+	var kafkaKey = {
+		"message": event.Get("message"),
+		"service": event.Get("indexName"),
+	};
+	event.Put("kafkaKey", JSON.stringify(kafkaKey));
+}
+processors:
+- add_host_metadata:
+setup.template:
+name: k8s
+pattern: k8s-*
+setup.ilm.enabled: false
+output.kafka:
+hosts: [ "MY_PUBLIC_IP:30096" ]
+version: '2.6.0'
+key: '%{[kafkaKey]}'
+topic: 'logs-%{[indexName]}-%{[kubernetes.namespace]}'
+partition.round_robin:
+reachable_only: false
+required_acks: 1
+batch.max_events: 2048
+compression: snappy
+max_message_bytes: 1000000
+ssl.enabled: true
+ssl.certificate_authorities: [ '/etc/filebeat/ssl/ca.pem' ]
+ssl.certificate: '/etc/filebeat/ssl/certificate.pem'
+ssl.key: '/etc/filebeat/ssl/key.pem'
+\end{lstlisting}
+
 
 \begin{sazetak}
 Sažetak na hrvatskom jeziku.

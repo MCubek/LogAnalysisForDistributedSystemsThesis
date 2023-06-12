@@ -1,4 +1,4 @@
-\begin{thebibliography}{13}
+\begin{thebibliography}{17}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -24,6 +24,13 @@ Finops Finops~Fundation.
 \newblock {FinOps} {Foundation} - {What} is {FinOps}?
 \newblock URL \url{https://www.finops.org/introduction/what-is-finops/}.
 
+\bibitem[Gormley i Tong(2015)]{gormley_elasticsearch_2015}
+Clinton Gormley i Zachary Tong.
+\newblock \emph{Elasticsearch: {The} {Definitive} {Guide}}.
+\newblock O'Reilly, 2015.
+\newblock ISBN 978-1-4493-5854-9.
+\newblock Google-Books-ID: 2tQBoQEACAAJ.
+
 \bibitem[Hunt et~al.()Hunt, Konar, Junqueira, i Reed]{hunt_zookeeper_nodate}
 Patrick Hunt, Mahadev Konar, Flavio~P Junqueira, i Benjamin Reed.
 \newblock {ZooKeeper}: {Wait}-free coordination for {Internet}-scale systems.
@@ -36,12 +43,25 @@ Marcin Kolny.
   \url{https://www.primevideotech.com/video-streaming/scaling-up-the-prime-video-audio-video-monitoring-service-and-reducing-costs-by-90}.
 \newblock Section: Video Streaming.
 
+\bibitem[Konda(2023)]{konda_elasticsearch_2023}
+Madhusudhan Konda.
+\newblock \emph{Elasticsearch in {Action}, {Second} {Edition}}.
+\newblock Manning, Svibanj 2023.
+\newblock ISBN 978-1-61729-985-8.
+\newblock Google-Books-ID: c7OyzgEACAAJ.
+
 \bibitem[Lukša(2023)]{luksa_kubernetes_2023}
 Marko Lukša.
 \newblock \emph{Kubernetes in {Action}, {Second} {Edition}}.
 \newblock Manning, Kolovoz 2023.
 \newblock ISBN 978-1-61729-761-8.
 \newblock Google-Books-ID: \_YrwzgEACAAJ.
+
+\bibitem[Monitorama(2016)]{monitorama_monitorama_2016}
+Monitorama.
+\newblock Monitorama {PDX} 2016 - {Greg} {Poirier} - {Monitoring} is {Dead}.
+  {Long} {Live} {Monitoring}, Srpanj 2016.
+\newblock URL \url{https://vimeo.com/173610062}.
 
 \bibitem[Narkhede(2017)]{narkhede_exactly-once_2017}
 Neha Narkhede.
@@ -54,6 +74,13 @@ Neha Narkhede.
 Neos.
 \newblock {CloudVane}.
 \newblock URL \url{https://www.neos.hr/solution/cloudvane/}.
+
+\bibitem[Newman(2015)]{newman_building_2015}
+Sam Newman.
+\newblock \emph{Building {Microservices}}.
+\newblock O'Reilly Media, Velja\v{c}a 2015.
+\newblock ISBN 978-1-4919-5035-7.
+\newblock Google-Books-ID: 1uUDoQEACAAJ.
 
 \bibitem[Seymour(2021)]{seymour_mastering_2021}
 Mitch Seymour.

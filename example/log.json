@@ -1,0 +1,9 @@
+{
+  "@timestamp": "2023-06-11T20:32:51.032Z",
+  "@version": "1",
+  "message": "Calling data_collector.prepare_cost_history for cloud account id: 76.",
+  "logger_name": "hr.neos.cloudvane.datacollector.predictioner.PredictionerService",
+  "thread_name": "scheduling-1",
+  "level": "INFO",
+  "level_value": 20000
+}

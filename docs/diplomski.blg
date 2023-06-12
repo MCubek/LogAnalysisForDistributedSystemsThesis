@@ -11,45 +11,45 @@ Warning--empty year in hunt_zookeeper_nodate
 Warning--empty year in neos_cloudvane_nodate
 Warning--empty journal in cubek_apache_2022
 Warning--empty publisher in zarko_raspodijeljeni_2013
-You've used 13 entries,
+You've used 17 entries,
             2773 wiz_defined-function locations,
-            663 strings with 7018 characters,
-and the built_in function-call counts, 4664 in all, are:
-= -- 381
-> -- 248
-< -- 10
-+ -- 88
-- -- 75
-* -- 327
-:= -- 741
-add.period$ -- 46
-call.type$ -- 13
-change.case$ -- 60
-chr.to.int$ -- 13
-cite$ -- 34
-duplicate$ -- 232
-empty$ -- 417
-format.name$ -- 90
-if$ -- 960
+            685 strings with 7571 characters,
+and the built_in function-call counts, 5974 in all, are:
+= -- 494
+> -- 299
+< -- 14
++ -- 107
+- -- 90
+* -- 404
+:= -- 954
+add.period$ -- 64
+call.type$ -- 17
+change.case$ -- 74
+chr.to.int$ -- 17
+cite$ -- 42
+duplicate$ -- 307
+empty$ -- 545
+format.name$ -- 111
+if$ -- 1236
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 12
-newline$ -- 80
-num.names$ -- 52
-pop$ -- 173
+missing$ -- 18
+newline$ -- 106
+num.names$ -- 68
+pop$ -- 216
 preamble$ -- 1
-purify$ -- 51
+purify$ -- 64
 quote$ -- 0
-skip$ -- 174
+skip$ -- 224
 stack$ -- 0
-substring$ -- 26
-swap$ -- 18
+substring$ -- 34
+swap$ -- 25
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 118
+type$ -- 147
 warning$ -- 8
-while$ -- 39
+while$ -- 51
 width$ -- 0
-write$ -- 174
+write$ -- 234
 (There were 8 warnings)
