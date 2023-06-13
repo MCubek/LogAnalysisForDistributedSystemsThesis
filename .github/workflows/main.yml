@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
 
 jobs:
   build_latex:
@@ -15,10 +13,8 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Change working directory
-      run: cd docs
-
     - name: Build LaTeX document
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: diplomski.tex
+        root_file: docs/diplomski.tex
+        work_in_root_file_dir: true
