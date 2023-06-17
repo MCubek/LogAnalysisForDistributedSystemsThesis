@@ -16,5 +16,6 @@ jobs:
     - name: Build LaTeX document
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: docs/diplomski.tex
+        root_file: diplomski.tex
         work_in_root_file_dir: true
+        context: docs
