@@ -8,35 +8,34 @@ Warning--empty year in finops_fundation_finops_nodate
 Warning--empty journal in hunt_zookeeper_nodate
 Warning--empty year in hunt_zookeeper_nodate
 Warning--empty year in hunt_zookeeper_nodate
-Warning--empty year in neos_cloudvane_nodate
 Warning--empty journal in cubek_apache_2022
 Warning--empty publisher in zarko_raspodijeljeni_2013
 You've used 17 entries,
             2773 wiz_defined-function locations,
-            685 strings with 7571 characters,
-and the built_in function-call counts, 5974 in all, are:
-= -- 494
+            685 strings with 7569 characters,
+and the built_in function-call counts, 5975 in all, are:
+= -- 495
 > -- 299
 < -- 14
 + -- 107
 - -- 90
 * -- 404
-:= -- 954
+:= -- 955
 add.period$ -- 64
 call.type$ -- 17
 change.case$ -- 74
 chr.to.int$ -- 17
-cite$ -- 42
+cite$ -- 41
 duplicate$ -- 307
 empty$ -- 545
 format.name$ -- 111
-if$ -- 1236
+if$ -- 1237
 int.to.chr$ -- 1
 int.to.str$ -- 1
 missing$ -- 18
 newline$ -- 106
 num.names$ -- 68
-pop$ -- 216
+pop$ -- 215
 preamble$ -- 1
 purify$ -- 64
 quote$ -- 0
@@ -48,8 +47,8 @@ text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 147
-warning$ -- 8
+warning$ -- 7
 while$ -- 51
 width$ -- 0
-write$ -- 234
-(There were 8 warnings)
+write$ -- 235
+(There were 7 warnings)

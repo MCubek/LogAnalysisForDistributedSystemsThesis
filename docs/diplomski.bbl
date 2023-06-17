@@ -70,9 +70,9 @@ Neha Narkhede.
 \newblock URL
   \url{https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/}.
 
-\bibitem[Neos()]{neos_cloudvane_nodate}
+\bibitem[Neos(2023)]{neos_cloudvane_2023}
 Neos.
-\newblock {CloudVane}.
+\newblock {CloudVane}, 2023.
 \newblock URL \url{https://www.neos.hr/solution/cloudvane/}.
 
 \bibitem[Newman(2015)]{newman_building_2015}
