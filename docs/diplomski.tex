@@ -83,7 +83,7 @@
 
 \chapter{Uvod}
 
-Informacijski sustavi s vremenom postaju složeniji, te su samim time izazovniji u pogledu održavanja i nadzora. U svijetu složenih informatičkih sustava, dnevnički zapisi imaju ključnu ulogu u praćenu i održavanju kvalitete svih aplikacija. Međutim, u okruženju raspodijeljenih sustava, gdje su aplikacije pokrenute na različitim čvorovima računalnih grozdova ili računalima, pregledavanje dnevničkih zapisa svih servisa postaje iznimno zahtjevan zadatak. Ova teza, pod nazivom \emph{"Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu"}, proučava upotrebu \emph{Apache Kafka} platforme, \emph{ELK} platforme i \emph{OpenAI API-ja} za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.\\
+Informacijski sustavi s vremenom postaju složeniji, te su samim time izazovniji u pogledu održavanja i nadzora. U svijetu složenih informatičkih sustava, dnevnički zapisi imaju ključnu ulogu u praćenu i održavanju kvalitete svih aplikacija. Međutim, u okruženju raspodijeljenih sustava, gdje su aplikacije pokrenute na različitim čvorovima računalnih grozdova ili računalima, pregledavanje dnevničkih zapisa svih servisa postaje iznimno zahtjevan zadatak. Ova teza, pod nazivom \emph{\glqq Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu\grqq}, proučava upotrebu \emph{Apache Kafka} platforme, \emph{ELK} platforme i \emph{OpenAI API-ja} za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.\\
 
 Nadzor nad dnevničkim zapisima omogućuje otkrivanje anomalija, detektiranje negativnih učinaka na performanse i drugih problema koji mogu utjecati na kvalitetu usluge. Cilj ove teze je istražiti mogućnosti Kafka platforme za analizu dnevničkih zapisa, s posebnim naglaskom na detekciju i nadzor anomalija u raspodijeljenim sustavima.
 
@@ -318,6 +318,18 @@ Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskrip
 \end{description}
 
 \clearpage
+\subsection{Minikube}
+\label{sec:minikube}
+
+Za implementaciju komponenti ovog rada, koristi se Kubernetes klaster različit od onoga na kojem funkcionira CloudVane testno okruženje. Konkretno \textbf{Minikube}, alat dizajniran za rad s Kubernetesom na lokalnoj razini, koji se izvodi kao Docker kontejner.
+
+Minikube je visoko prilagodljiv i lako dostupan alat koji pojednostavljuje proces postavljanja i testiranja Kubernetes aplikacija u izoliranoj i kontroliranoj okolini. Njegova sposobnost da simulira Kubernetes klaster unutar Docker kontejnera čini ga iznimno korisnim za razvoj i testiranje, omogućujući programerima da eksperimentiraju, prate promjene i brzo testiraju nove funkcionalnosti bez rizika za produkcijsko okruženje \citep{luksa_kubernetes_2023}. \\
+
+Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada, istovremeno osiguravajući stabilnost i integritet CloudVane testne okoline. 
+
+Minikube, zbog činjenice da je pokrenut kao Docker kontejner sadrži samo jedan računalni čvor u Kubernetes grozdu kojeg stvara. Međutim, svi Kubernetes objekti koji su razvijeni u sklopu ovog rada dizajnirani i pokrenuti u Minikube-u mogu se lako migrirati u drugi Kubernetes klaster s minimalnim potrebnim preinakama.
+
+\clearpage
 \section{Sustav za obradu podataka u stvarnom vremenu --- Apache Kafka}
 \label{sec:kafka}
 
@@ -358,6 +370,8 @@ U Kafka sustavu, podaci se u Kafka teme unose kroz producente i iz njih se izvla
 	
 	\item[Konzumenti \engl{Consumers} :] su odgovorni za čitanje i obradu poruka iz Kafka tema. Svaki konzument prati svoju trenutnu poziciju, odnosno offset, u svakoj particiji teme, što označava do kojeg je zapisa došao u svom čitanju.
 \end{description}
+
+Da bi se omogućio kontinuirani tok podataka, Kafka koristi Consumer API za konzumente i Producer API za producente. Ovi API-ji omogućuju konzistentno i efikasno slanje, čitanje i obradu poruka unutar Kafka ekosustava.
 
 Konzumenti u Kafki mogu biti konfigurirani da slijede jedan od tri modela dostave:
 
@@ -407,8 +421,15 @@ Osim toga, Kafka Streams biblioteka je dizajnirana tako da bude lako skalabilna.
 
 \subsubsection{Agregacije u Kafka Streams}
 
-TODO
-%TODO
+Agregacije predstavljaju ključni aspekt obrade tokova podataka, pružajući korisnicima mogućnost izračunavanja statistika i izvlačenja korisnih informacija iz primljenih podataka. U osnovi, one omogućuju kombiniranje više ulaznih poruka u jednu izlaznu poruku \citep{seymour_mastering_2021}.\\
+
+Kafka Streams podržava širok spektar agregacijskih operacija. Ovo uključuje standardne matematičke funkcije, poput suma, minimuma i maksimuma, ali i korisnički definirane funkcije poput \emph{aggregate} i \emph{reduce}.
+
+Agregacije se u Kafka Streams biblioteci provode na temelju \emph{ključa} Kafka poruke. Ukoliko ključ poruke ne odgovara vrijednosti prema kojoj je potrebno agregirati, Kafka Streams nudi proces promjene ključa \engl{rekeying}. Međutim, ovaj proces rezultira stvaranjem nove Kafka teme.
+
+Važan komponenta Kafka Streams prilikom obrade agregacija jest baza podataka \emph{RocksDB}. RocksDB se koristi kao lokalna baza podataka za brzo pohranjivanje i pristup podacima koji su ključni za agregacijske operacije. Stanje Kafka Streams aplikacije se također pohranjuje trajno u specijaliziranu Kafka temu, što omogućava otpornost na greške i olakšava oporavak.\\
+
+Uz mogućnost provođenja agregacija na tokovima podataka, Kafka Streams biblioteka omogućava korisnicima transformaciju velikih količina podataka u korisne informacije. Ove informacije mogu biti od presudne važnosti za donošenje informiranih odluka.
 
 \subsubsection{Prozori u Kafka Streams}
 
@@ -733,14 +754,20 @@ Konačno, kako bi korisnici bili u stvarnom vremenu informirani o svim greškama
 Ova visoko integrirana arhitektura omogućuje proaktivni pristup upravljanju distribuiranim aplikacijama, omogućujući korisnicima da brzo reagiraju na probleme i osiguraju maksimalnu učinkovitost i pouzdanost svojih aplikacija.
 
 
-\section{Lokalna Kubernetes okolina}
+\section{Kubernetes infrastruktura rješenja}
 \label{sec:localKubernetes}
 
-Za implementaciju komponenti ovog rada, koristi se Kubernetes klaster različit od onoga na kojem funkcionira CloudVane testno okruženje. Konkretno \textbf{Minikube}, alat dizajniran za rad s Kubernetesom na lokalnoj razini, koji se izvodi kao Docker kontejner.
+Kao što je prethodno istaknuto, i prema dijagramu \ref{fig:archDiagram}, sve komponente ovog rješenja implementirane su na lokalnom Kubernetes Minikube klasteru. Jedini izuzetak je Filebeat servis, koji je pokrenut na CloudVane Kubernetes klasteru, što je detaljnije objašnjeno u poglavlju \ref{sec:filebeat}.\\
 
-Minikube je visoko prilagodljiv i lako dostupan alat koji pojednostavljuje proces postavljanja i testiranja Kubernetes aplikacija u izoliranoj i kontroliranoj okolini. Njegova sposobnost da simulira Kubernetes klaster unutar Docker kontejnera čini ga iznimno korisnim za razvoj i testiranje, omogućujući programerima da eksperimentiraju, prate promjene i brzo testiraju nove funkcionalnosti bez rizika za produkcijsko okruženje \citep{luksa_kubernetes_2023}.\\
+Na Kubernetes klasteru stvorena su dva dodatna Namespace-a. Prvi, pod imenom \emph{\glqq kafka\grqq}, sadrži Kafka servise Strimzi operatora, Schema Registry, Kafka UI, te prateće Service objekte za mrežnu komunikaciju s Kafkom. Drugi, imenovan \emph{\glqq elk\grqq}, sadrži ELK servise, uključujući Logstash, Kibanu i ElasticSearch. U \emph{zadanom} \engl{default} Namespace-u nalazi se Kafka Streams aplikacija, uz koju je pokrenut i servis za obogaćivanje i servis za notifikacije.
 
-Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada, istovremeno osiguravajući stabilnost i integritet CloudVane testne okoline. Svi Kubernetes objekti koji su razvijeni u sklopu ovog rada dizajnirani su tako da se mogu lako migrirati u drugi Kubernetes klaster s minimalnim potrebnim preinakama.
+Sve usluge koje su pokrenute na Minikube klasteru konfigurirane su s jednom replikom, s obzirom na to da Minikube klaster sastoji se od jednog čvora, kao što je navedeno u poglavlju \ref{sec:minikube}. U produkcijskom okruženju broj replika može se povećati jednostavnim izmjenama parametara u konfiguraciji Kubernetes objekata.\\
+
+Za potrebe pristupa Apache Kafka brokeru s interneta, bilo je nužno konfigurirati Strimzi Kafka objekt i omogućiti pristup preko TLS-a. Dodatno, bilo je potrebno kreirati Kafka User objekt, na temelju kojeg Strimzi generira kredencijale za autentifikaciju u obliku Secreta. Ti se kredencijali zatim izvlače i kao novi Secret pohranjuju u CloudVane Kubernetes klaster, omogućavajući Filebeatu slanje dnevničkih zapisa u Minikube klaster.\\
+
+ELK alati uključujući ElasticSearch, Filebeat i Kibanu, također generiraju kredencijale za pristup u obliku Secreta. Iz Secreta je potrebno izvući te podatke kako bi se omogućila autentifikacija u Kibanu. Logstash primjenjuje konfiguraciju za čitanje iz Kafka tema i pisanje u ElasticSearch u obliku ConfigMap-a, čiji je sadržaj prikazan u isječku \ref{lst:logstash}.\\
+
+Konačno, servisi za obogaćivanje, notifikacije i Kafka Streams aplikacija pokrenuti su kao Deployment objekti. Servis za obogaćivanje i servis za notifikacije dobivaju konfiguraciju i tajne (API ključeve i druge kredencijale) u obliku ConfigMap i Secret objekata. Ove aplikacije imaju Dockerfile u svom izvornom kodu, prikazan za primjer Kafka Streams aplikacije u isječku \ref{lst:streamsDockerfile}, koji opisuje postupak kreiranja kontejnera iz izvornog koda. Slike kontejnera se nakon izgradnje pakiraju i objavljuju na Docker Hub repozitoriju, što omogućuje Kubernetes klasteru da ih preuzme i pokrene prilikom kreiranja Deployment objekta.
 
 \section{Pohrana dnevničkih zapisa u Apache Kafku}
 \label{sec:kafkaImpl}
@@ -748,7 +775,7 @@ Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata o
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=15cm]{images/kafka-ui.png}
-	\caption[Teme na lokalnom Apache Kafka grozdu]{Teme \engl{topics} na lokalnom Apache Kafka grozdu}
+	\caption[Teme na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa]{Teme \engl{topics} na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa}
 	\label{fig:kafkaui}
 \end{figure}
 
@@ -763,9 +790,9 @@ label = {tbl:topics},
 \hline
 Ime Kafka teme & Sadržaj podataka u temi \\
 \hline
-logs-cloudvane-*-cloudvane-test & Dnevnički zapisi pojedinog CloudVane mikroservisa \\ 
+logs-cloudvane-*-cloudvane-test & Dnevnički zapisi pojedinog CloudVane mikro-servisa \\ 
 aggregated-errors & Agregirani dnevnički zapisi grešaka u koje upisuje Kafka Streams aplikacija\\
-enriched-errors & Agregirani dnevnički zapisi grešaka sa dodatkom o potencijalnom rješenju u koje upisuje Python servis koji obogaćuje grešku umjetnom inteligencijom\\
+enriched-errors & Agregirani dnevnički zapisi grešaka sa dodatkom o potencijalnom rješenju u koje upisuje Python servis koji obogaćuje grešku pomoću umjetne inteligencije\\
 error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spremanje podataka potrebnih za agregacije\\
 \_consumer\_offsets & Interna tema Apache kafka za spremanje pozicije čitanja \\
 \_schemas & Interna tema za Schema Registry servis za pohranu shema\\
@@ -1127,6 +1154,24 @@ ssl.certificate_authorities: [ '/etc/filebeat/ssl/ca.pem' ]
 ssl.certificate: '/etc/filebeat/ssl/certificate.pem'
 ssl.key: '/etc/filebeat/ssl/key.pem'
 \end{lstlisting}
+
+\begin{lstlisting}[caption={Dockerfile Kafka Streams aplikacije}
+	,label={lst:streamsDockerfile}]
+FROM openjdk:17
+LABEL authors="matejc"
+
+ENV PROFILE=local
+
+WORKDIR /app
+COPY build/libs/error_aggregator_stream-1.0.0.jar /app/log_aggregation_kstream.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=${PROFILE}" ,"/app/log_aggregation_kstream.jar"]
+
+USER 1002
+\end{lstlisting}
+
 
 
 
