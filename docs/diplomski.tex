@@ -772,12 +772,20 @@ Konačno, servisi za obogaćivanje, notifikacije i Kafka Streams aplikacija pokr
 \section{Pohrana dnevničkih zapisa u Apache Kafku}
 \label{sec:kafkaImpl}
 
+Kada Filebeat servis prikupi dnevničke zapise s CloudVane servisa i prenese ih na Apache Kafku koja je postavljena na lokalnom Kubernetes Minikube klasteru, postupak rezultira stvaranjem specifičnih tema koje su vidljive kroz Kafka UI alat, kako je prikazano na slici \ref{fig:kafkaui}. Filebeat, za svaku uslugu čije dnevničke zapise prikuplja, kreira zasebnu temu. Ovaj pristup omogućava dobro strukturirano i organizirano skladištenje dnevničkih zapisa.\\
+
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=15cm]{images/kafka-ui.png}
 	\caption[Teme na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa]{Teme \engl{topics} na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa}
 	\label{fig:kafkaui}
 \end{figure}
+
+Kada se podaci zabilježe u Apache Kafku, svaki konzument poruka može se povezati na relevantnu temu i čitati poruke. U okviru ovog rada, konzumenti poruka su Logstash, Kafka Streams aplikacija.
+
+Kasnije u procesu, prema dijagramu toka podataka \ref{fig:topics}, vidljivo je kako se servisi za obogaćivanje i notifikacije također povezuju na određene teme kako bi čitali poruke. Servis za obogaćivanje dodatno upisuje obogaćene podatke u svoju temu. Ovaj proces omogućava dnevničkim zapisima da prođu kroz niz transformacija prije nego što se konzumiraju, pružajući tako dodatne vrijednosti.\\
+
+Sve relevantne teme su detaljno opisane u tablici \ref{tbl:topics}, u kojoj je naveden i opis podataka koji se nalaze u svakoj od njih. Ova tablica pruža korisne informacije o tome što svaka tema predstavlja, čime olakšava razumijevanje strukture i svrhe svake teme.
 
 \clearpage
 \begin{longtblr}[
@@ -804,12 +812,26 @@ error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spreman
 \section{Agregiranje dnevničkih zapisa}
 \label{sec:streamImpl}
 
-\begin{figure}[htb]
-	\centering
-	\includegraphics[width=15cm]{images/KStream.png}
-	\caption[Topologija Kafka Streams aplikacije]{Topologija Kafka Streams aplikacije}
-	\label{fig:kstream}
-\end{figure}
+Dnevnički zapisi mogu biti iznimno brojni, posebno u kompleksnim sustavima. Na primjer, u CloudVane testnom okruženju, može se generirati i do $15,000$ dnevničkih zapisa u samo jednom satu. Ovaj velik broj zapisa često je simptom nekog problema unutar sustava, gdje se greške javljaju i sustav započne s generiranjem obavijesti o problemima.
+
+No, problemi se rijetko riješe sami od sebe. Sustav obično nastavlja generirati dnevničke zapise sve dok se problem ne riješi. To može rezultirati velikim količinama dnevničkih zapisa koje treba obraditi i analizirati kako bi se razumjelo što se točno događa unutar sustava.
+
+Svaki dnevnički zapis u stanju je pružiti dragocjene informacije o različitim aspektima sustava, uključujući performanse, potencijalne greške, ponašanje korisnika i ostale vitalne elemente operativnosti sustava. No, dnevnički zapisi često sadrže poruke o greškama koje se iznimno često ponavljaju u kratkim vremenskim intervalima, stvarajući time veliku količinu redundatnih informacija.\\
+
+Upravo u ovom kontekstu \textbf{Kafka Streams} biblioteka postaje iznimno korisna. Kafka Streams, opisana u poglavlju \ref{sec:kstream}, agregiranjem sličnih ili identičnih dnevničkih zapisa, može drastično smanjiti količinu podataka koju treba obraditi, zadržavajući ključne informacije o greškama i problemima unutar sustava.
+
+Na taj način, omogućuje se obrada agregiranih informacija, što omogućuje brže i efikasnije identificiranje, te rješavanje problema. Ovaj pristup ne samo da smanjuje kompleksnost i trošak analize dnevničkih zapisa, već također olakšava otkrivanje dubljih uzoraka i trendova, omogućavajući proaktivno rješavanje problema prije nego što uzrokuju ozbiljnije posljedice.\\
+
+Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref{algo:kstream} i čija je topologija ilustrirana na dijagramu \ref{fig:kstream}, uključuje sljedeće korake:
+
+\begin{enumerate}
+	\item Dnevnički zapisi se konzumiraju iz svih Kafka tema koje započinju ključnom riječi \emph{\glqq logs \grqq}.
+	\item Dnevnički zapisi se filtriraju temeljem statusa koji određuje jesu li to informativni log zapisi ili predstavljaju greške. U ovom kontekstu, izostavljaju se svi log zapisi koji ne predstavljaju greške, s obzirom na to da je cilj korisniku pružiti reakciju na greške unutar aplikacije.
+	\item Dnevnički zapisi se grupiraju prema ključu Kafka poruke, unutar kojeg se nalazi sadržaj greške. (Ključ Kafka poruke je definiran u konfiguraciji Filebeat servisa, što je prikazano u isječku \ref{lst:filebeat})
+	\item Agregacija dnevničkih zapisa provodi se po ključu poruke. Ovo grupiranje se izvodi korištenjem \emph{klizećeg prozora} sa trajanjem od \emph{30 sekundi}.
+	\item Agregacija koju izravno pruža Kafka Streams biblioteka se mapira na objekt koji sadrži broj agregiranih poruka, kao i prvu dohvaćenu vremensku oznaku.
+	\item Agregirani dnevnički zapisi se pohranjuju u Kafka temu \emph{\glqq aggregated-errors\grqq}.
+\end{enumerate}
 
 \begin{algorithm}
 	\caption{Kafka Streams aplikacija}
@@ -820,7 +842,7 @@ error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spreman
 		
 		\FOR{($topic$ in $topics$)}
 		
-		\STATE{stream := $streamBuilder.stream(topic))$}
+		\STATE{stream := $streamBuilder.stream(topic)$}
 		\STATE{filteredStream := $stream.filter(isValidErrorMessage())$}
 		\STATE{aggregatedStream := $filteredStream.groupByKey()$}
 		\STATE{\hspace{50pt}$.windowedBy(SlidingWindow,30sec).aggregate()$}
@@ -831,22 +853,73 @@ error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spreman
 	\end{algorithmic}
 \end{algorithm}
 
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=15cm]{images/KStream.png}
+	\caption[Topologija Kafka Streams aplikacije]{Topologija Kafka Streams aplikacije}
+	\label{fig:kstream}
+\end{figure}
+
 
 \section{Obogaćivanje dnevničkih zapisa}
 \label{sec:ai}
 
+Problem s greškama koje se pojavljuju unutar sustava često je nejasan prilikom prvog susreta. Iz izravnih dnevničkih zapisa, uzrok problema i potencijalno rješenje za njegovo rješavanje često nisu odmah očigledni.\\
+
+U svrhu rješavanja ovog problema, ovaj rad istražuje poseban Kafka servis, izrađen u Pythonu, koji koristi \emph{OpenAI API} kako bi obogatio agregirane dnevničke zapise o greškama, kako je opisano u prethodnom poglavlju. Cilj ovog obogaćivanja je da kasnije pruži dodatne informacije korisnicima koji su zaduženi za rješavanje problema, čime se pojačava njihova sposobnost razumijevanja i brzog reagiranja na probleme.\\
+
+Posebna značajka ovog servisa je njegova sposobnost horizontalnog skaliranja, omogućena putem Kafka Consumer API-ja. Ova karakteristika omogućuje servisu da se prilagodi povećanju opterećenja, čime se osigurava održavanje stabilnih performansi čak i pod visokim zahtjevima.\\
+
+U procesu obogaćivanja, servis koristi \emph{OpenAI API} - čiji je opis sadržan u sljedećem poglavlju - za analizu grešaka. Na temelju te analize, servis generira korisne informacije koje će korisnicima pomoći da bolje razumiju problem.
+
+Kao što je vidljivo u dijagramu \ref{fig:topics}, ovaj servis čita dnevničke zapise iz Kafka teme \glqq \emph{aggregated-errors}\grqq, obogaćuje ih koristeći OpenAI API, a zatim ih šalje u novu Kafka temu pod nazivom \glqq \emph{enriched-errors}\grqq.
+
+Kroz ovaj proces, servis ne samo da poboljšava korisnikovo razumijevanje i reakciju na greške, već također pomaže u poboljšanju ukupne kvalitete i pouzdanosti sustava.
+
 \subsection{OpenAI API}
 \label{sec:openai}
+
+\textbf{OpenAI API} predstavlja sučelje koje omogućava pristup sofisticiranim algoritmima strojnog učenja koje je razvila organizacija OpenAI. Ovi algoritmi sposobni su za razumijevanje, generiranje i interpretiranje prirodnog jezika, što ih čini iznimno korisnima za širok spektar primjena. U kontekstu ovog rada, ti algoritmi se koriste za obogaćivanje informacija o greškama u dnevničkim zapisima.\\
+
+Za potrebe ovog rada, korišten je OpenAI model pod nazivom \emph{text-davinci-003}. No, bitno je naglasiti da se prethodno opisani servis može konfigurirati za upotrebu bilo kojeg dostupnog modela OpenAI API-ja.
+
+Model \emph{text-davinci-003} je jedan od najmoćnijih modela za obradu prirodnog jezika koje je OpenAI razvio. Ovaj model je treniran na širokom skupu podataka, što mu omogućava da razumije i generira koherentan i kontekstualno relevantan tekst temeljen na dobivenim ulaznim podacima. Takva sposobnost modela omogućuje visokokvalitetno obogaćivanje informacija sadržanih u dnevničkim zapisima.
+
+Komunikacija s OpenAI API-om može se ostvariti kroz HTTP protokol ili kroz biblioteke napisane za popularne programerske jezike. U ovom radu, odabrana je direktna komunikacija putem HTTP protokola sa OpenAI API-om.
 
 \section{Notifikacije u stvarnom vremenu}
 \label{sec:notifService}
 
-\section{Logstash i pregled u Kibani}
+Problem s identifikacijom grešaka u sustavima može biti izazovan. Kada greška nastane, često nije odmah evidentno da određeni servis ima problem i da je njegov rad narušen. Ovaj izazov može otežati pravovremeno rješavanje problema, održavanje pouzdanosti i performansi sustava.\\
+
+Kako bi se riješio ovaj problem, za potrebe rada je razvijen poseban servis. Ovaj servis također je izrađen u Pythonu i ima mogućnost horizontalnog skaliranja zahvaljujući mogućnostima koje pruža Kafka Consumer API. Ova značajka omogućuje servisu da se prilagodi promjenjivim zahtjevima za performansama, omogućujući mu da efikasno obrađuje velike količine podataka i održava visoku razinu usluge.\\
+
+Ovaj servis služi kao sustav za obavještavanje, poslužujući se različitim kanalima kako bi korisnike obavijestio o nastalim greškama u sustavu. To se postiže slanjem notifikacija putem e-maila, objavama na Slack kanalu, te slanjem obavijesti putem Pushover aplikacije. Ovaj više-kanalni pristup obavještavanju osigurava da relevantne informacije o problemima dođu do korisnika na najbrži i najefikasniji mogući način.
+
+Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i dodatne informacije dobivene putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema, olakšavajući time proces traženja rješenja.\\
+
+Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: e-mail notifikacija nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover notifikacija na slici \ref{fig:notif_pushover}.
+
+Ovaj servis je ključan za održavanje stabilnosti sustava, omogućavajući pravovremeno reagiranje na greške, smanjenje vremena neaktivnosti i poboljšanje ukupne kvalitete usluge.
+
+\section{Pregled kroz Kibanu}
 \label{sec:kibanaImpl}
+
+%TODO
+TODO
 
 \chapter{Zaključak}
 \label{sec:conclusion}
-Zaključak.
+
+U doba digitalizacije i sve veće ovisnosti o informacijskim sustavima, efikasno i pravovremeno praćenje dnevničkih zapisa postaje presudno za pravilan rad i održavanje aplikacija. Ovaj rad istražio je kako se platforme Apache Kafka i ELK, uz pomoć OpenAI API-ja, mogu iskoristiti za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.
+
+ELK platforma koja uključuje ElasticSearch, Logstash i Kibanu, zajedno s Apache Kafka platformom koristila se za obradu, prikupljanje i prikaz dnevničkih zapisa. Kafka Streams biblioteka korištena je za agregaciju dnevničkih zapisa, a OpenAI API za obogaćivanje zapisa, što omogućuje dublju analizu i razumijevanje informacija prikupljenih iz sustava.
+
+Na primjeru SaaS aplikacije \emph{CloudVane} tvrtke \emph{Neos}, demonstriralo se kako je moguće primijeniti opisane metode i tehnologije za nadzor dnevničkih zapisa u složenim distribuiranim sustavima. Rezultati istraživanja pokazali su da je korištenjem navedenih alata moguće detektirati i nadzirati anomalije u radu sustava na učinkovit način.
+
+Rad je također pokazao kako se korištenjem Apache Kafka platforme i ELK platforme može unaprijediti pouzdanost i brzina obrade podataka, što omogućuje pravovremeno reagiranje i pregled problema sustava.\\
+
+Nadalje, kao nastavak na ovaj rad otvaraju se mogućnosti za buduća istraživanja. Primjerice, moguće je izgraditi servis koji bi, ovisno o detektiranoj grešci na koju je pretplaćen, mogao pokrenuti odgovarajuću skriptu. Moguće je integrirati servis Grafana za vizualizaciju sustava. Također, postoji prostor za poboljšanje postojećih procesa, unaprijeđenje automatizacije te ugradnju modela predikcije koji bi mogli koristiti kontekst prošlih pojavljenih dnevničkih zapisa.
 
 \bibliography{literatura}
 \bibliographystyle{fer}
@@ -1155,6 +1228,7 @@ ssl.certificate: '/etc/filebeat/ssl/certificate.pem'
 ssl.key: '/etc/filebeat/ssl/key.pem'
 \end{lstlisting}
 
+\clearpage
 \begin{lstlisting}[caption={Dockerfile Kafka Streams aplikacije}
 	,label={lst:streamsDockerfile}]
 FROM openjdk:17
@@ -1176,16 +1250,17 @@ USER 1002
 
 
 \begin{sazetak}
-Sažetak na hrvatskom jeziku.
+U radu naslovljenom \glqq Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu\grqq istražene su mogućnosti Apache Kafka platforme i komponenti ELK-a (ElasticSearch, Logstash i Kibana) za obradu i analizu dnevničkih zapisa raspodijeljenih mikro-servisnih aplikacija koje se izvode na Kubernetesu, u stvarnom vremenu. Rad koristi OpenAI API za obogaćivanje dnevničkih zapisa s dodatnim kontekstom i informacijama. Implementirani su mehanizmi za stvarno-vremenske notifikacije i agregaciju dnevničkih zapisa koristeći Kafka Streams, što omogućuje pravovremeno otkrivanje i reagiranje na anomalije u sustavu. Korištenjem SaaS aplikacije CloudVane tvrtke Neos kao primjera, pokazano je kako se ove tehnologije mogu primijeniti u nadzoru dnevničkih zapisa u složenim distribuiranim sustavima. Ovaj rad naglašava važnost dnevničkih zapisa za otkrivanje anomalija i nadzor performansi te ulogu Apache Kafka i ELK platforme u tom kontekstu.
 
-\kljucnerijeci{Kubernetees, Apache Kafka, Tokovi Podataka, Dnevnički zapisi, Obrada u stvarnom vremenu, Elastic, ELK, Nadzor aplikacija, Grozd računala}
+\kljucnerijeci{Kubernetes, Apache Kafka, Tokovi Podataka, Dnevnički zapisi, Obrada u stvarnom vremenu, Elastic, ELK, Nadzor aplikacija, Grozd računala, Logstash, Filebeat, ElasticSearch, Kibana, Minikube, Oblak}
 \end{sazetak}
 
+\clearpage
 \engtitle{Real-Time Log Analysis for Monitoring Distributed Systems}
 \begin{abstract}
-Abstract.
+In the thesis titled \glqq Real-time Log Analysis of Distributed Systems\grqq, the potential of Apache Kafka platform and ELK stack components (ElasticSearch, Logstash, and Kibana) for real-time processing and analysis of distributed microservice applications running on Kubernetes, was explored. The study utilizes the OpenAI API for enriching log files with additional context and information. The thesis introduces mechanisms for real-time notifications and log aggregations using Kafka Streams, enabling timely detection and response to system anomalies. Using Neos company's SaaS application CloudVane as an example, the study demonstrates how these technologies can be implemented in monitoring log files in complex distributed systems. This work emphasizes the importance of log files for anomaly detection and performance monitoring, as well as the role of Apache Kafka and ELK platforms in this context.
 
-\keywords{Kubernetes, Apache Kafka, Streaming, Real-Time, Logs, Elastic, ELK, Monitoring, Cluster}
+\keywords{Kubernetes, Apache Kafka, Streaming, Real-Time, Logs, Elastic, ELK, Monitoring, Cluster, Logstash, Filebeat, ElasticSearch, Kibana, Minikube, Cloud}
 \end{abstract} 
 
 \end{document}
