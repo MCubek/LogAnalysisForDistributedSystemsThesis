@@ -31,9 +31,10 @@ Clinton Gormley i Zachary Tong.
 \newblock ISBN 978-1-4493-5854-9.
 \newblock Google-Books-ID: 2tQBoQEACAAJ.
 
-\bibitem[Hunt et~al.()Hunt, Konar, Junqueira, i Reed]{hunt_zookeeper_nodate}
+\bibitem[Hunt et~al.(2010)Hunt, Konar, Junqueira, i Reed]{hunt_zookeeper_2010}
 Patrick Hunt, Mahadev Konar, Flavio~P Junqueira, i Benjamin Reed.
 \newblock {ZooKeeper}: {Wait}-free coordination for {Internet}-scale systems.
+\newblock 2010.
 
 \bibitem[Kolny(2023)]{kolny_scaling_2023}
 Marcin Kolny.

@@ -5,41 +5,39 @@ The style file: fer.bst
 Database file #1: literatura.bib
 Warning--empty year in courtemanche_what_nodate
 Warning--empty year in finops_fundation_finops_nodate
-Warning--empty journal in hunt_zookeeper_nodate
-Warning--empty year in hunt_zookeeper_nodate
-Warning--empty year in hunt_zookeeper_nodate
+Warning--empty journal in hunt_zookeeper_2010
 Warning--empty journal in cubek_apache_2022
 Warning--empty publisher in zarko_raspodijeljeni_2013
 You've used 17 entries,
             2773 wiz_defined-function locations,
-            685 strings with 7569 characters,
-and the built_in function-call counts, 5975 in all, are:
-= -- 495
+            686 strings with 7571 characters,
+and the built_in function-call counts, 5976 in all, are:
+= -- 497
 > -- 299
 < -- 14
 + -- 107
 - -- 90
-* -- 404
-:= -- 955
-add.period$ -- 64
+* -- 400
+:= -- 957
+add.period$ -- 65
 call.type$ -- 17
 change.case$ -- 74
 chr.to.int$ -- 17
-cite$ -- 41
+cite$ -- 39
 duplicate$ -- 307
 empty$ -- 545
 format.name$ -- 111
-if$ -- 1237
+if$ -- 1239
 int.to.chr$ -- 1
 int.to.str$ -- 1
 missing$ -- 18
-newline$ -- 106
+newline$ -- 107
 num.names$ -- 68
-pop$ -- 215
+pop$ -- 210
 preamble$ -- 1
 purify$ -- 64
 quote$ -- 0
-skip$ -- 224
+skip$ -- 228
 stack$ -- 0
 substring$ -- 34
 swap$ -- 25
@@ -47,8 +45,8 @@ text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 147
-warning$ -- 7
+warning$ -- 5
 while$ -- 51
 width$ -- 0
-write$ -- 235
-(There were 7 warnings)
+write$ -- 237
+(There were 5 warnings)
