@@ -898,10 +898,32 @@ Ovaj servis služi kao sustav za obavještavanje, poslužujući se različitim k
 
 Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i dodatne informacije dobivene putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema, olakšavajući time proces traženja rješenja.\\
 
-Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: e-mail notifikacija nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover notifikacija na slici \ref{fig:notif_pushover}.
+Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: e-mail notifikacija nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover mobilna notifikacija na slici \ref{fig:notif_pushover}.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=12cm]{images/email_notif.png}
+	\caption[Primjer notifikacije dnevničkog zapisa greške kroz email]{Primjer notifikacije dnevničkog zapisa greške kroz email}
+	\label{fig:notif_email}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=14cm]{images/slack_notif.png}
+	\caption[Primjer notifikacije dnevničkog zapisa greške kroz Slack]{Primjer notifikacije dnevničkog zapisa greške kroz Slack}
+	\label{fig:notif_slack}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=6cm]{images/mobile_notif.png}
+	\caption[Primjer notifikacije dnevničkog zapisa greške kroz Pushover mobilnu aplikaciju]{Primjer notifikacije dnevničkog zapisa greške kroz Pushover mobilnu aplikaciju}
+	\label{fig:notif_pushover}
+\end{figure}
 
 Ovaj servis je ključan za održavanje stabilnosti sustava, omogućavajući pravovremeno reagiranje na greške, smanjenje vremena neaktivnosti i poboljšanje ukupne kvalitete usluge.
 
+\clearpage
 \section{Pregled kroz Kibanu}
 \label{sec:kibanaImpl}
 
