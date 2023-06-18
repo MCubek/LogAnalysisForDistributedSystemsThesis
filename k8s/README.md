@@ -129,12 +129,12 @@
         bash logstash/logstash-deploy.sh
         ```
 
-- ## Kafka credentials on cloudvane cluster and deploy filebeat
+- ## Kafka credentials on CloudVane cluster and deploy filebeat
 
     1. Create secrets
 
         ```bash
-        k create secret generic kafka-matej-credentials --from-file=kafka/ca.jks --from-file=kafka/keystore.p12 --from-file=kafka/keystore.password --from-file=kafka/ssl-client.properties -n kafka
+        kubectl create secret generic kafka-matej-credentials --from-file=kafka/ca.jks --from-file=kafka/keystore.p12 --from-file=kafka/keystore.password --from-file=kafka/ssl-client.properties -n kafka
 
         kubectl create secret generic kafka-matej-ssl-secret \
         --from-file=ca.pem=./kafka/ca.pem \
@@ -169,15 +169,25 @@
         kubectl apply -f aggregator/aggregator-kstream-deployment.yaml
         ```
        
-    2. Deploy ai-enricher service
+    2. Create Secret with OpenAI api keys for ai-enricher. Replace placeholder in command.
+       ```bash
+       kubectl create secret generic enricher-credentials --from-literal=OPENAI_API_KEY='OPENAI_API_KEY'
+       ```
+       
+    3. Deploy ai-enricher service
 
         ```bash
         kubectl apply -f ai-enricher/ai-enricher-deployment.yaml
         ```
           
-    3. Deploy notification service
+    4. Deploy Secret with notification credentials. Replace placeholders in command.
+       ```bash
+       kubectl create secret generic notifier-credentials --from-literal=SLACK_BOT_TOKEN='SLACK_BOT_TOKEN' --from-literal=PUSHBYLLETAPI_KEY='PUSHBYLLETAPI_KEY' --from-literal=EMAIL_USERNAME='EMAIL_USERNAME' --from-literal=EMAIL_PASSWORD='EMAIL_PASSWORD'
+       ```
+    5. Deploy notification service
 
         ```bash
+        kubectl apply -f notifier/notifier-email-recipients-configmap.yaml
         kubectl apply -f notifier/notifier-deployment.yaml
         ```
        

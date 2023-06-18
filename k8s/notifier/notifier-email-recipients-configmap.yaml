@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: notifier-email-recipients
 data:
-  recipients: "matej.cubek@fer.hr,matej.cubek@gmail.com"
+  recipients: "matej.cubek@fer.hr"

@@ -24,7 +24,7 @@ spec:
             - name: TOPIC_PREFIX
               value: "notification-.*"
             - name: SLACK_CHANNEL
-              value: "kafka-notifications"
+              value: "alerts-channel"
             - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
