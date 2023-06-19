@@ -140,7 +140,7 @@ Radi efikasnosti u radu s mikro-servisima često se koristi kontejnerizacija, op
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=15cm]{images/microservice.png}
-	\caption[Usporedba monolitne arhitekture sa mikro-servisnom arhitekturom]{Usporedba monolitne arhitekture sa mikro-servisnom arhitekturom\\Slika preuzeta sa \url{https://dev.to/alex_barashkov/microservices-vs-monolith-architecture-4l1m}}
+	\caption[Usporedba monolitne arhitekture s mikro-servisnom arhitekturom]{Usporedba monolitne arhitekture s mikro-servisnom arhitekturom\\Slika preuzeta sa \url{https://dev.to/alex_barashkov/microservices-vs-monolith-architecture-4l1m}}
 	\label{fig:microservice}
 \end{figure}
 
@@ -389,7 +389,7 @@ Konzumenti u Kafki mogu biti konfigurirani da slijede jedan od triju modela dost
 
 Apache Kafka servisi implementirani su unutar CloudVane Kubernetes klastera korištenjem alata \textbf{Strimzi}. Strimzi je projekt otvorenog koda koji pruža operator za pokretanje Apache Kafka na Kubernetesu, znatno pojednostavljujući proces konfiguriranja, pokretanja i održavanja Apache Kafka klastera unutar Kubernetes okruženja.
 
-Strimzi koristi Kubernetes CRD-ove kako bi stvorio potrebne Kubernetes Deploymente i StatefulSet-ove. Ovi objekti omogućavaju definiranje i upravljanje Apache Kafka klasterima na jasan i deklarativan način, što rezultira većom učinkovitošću i manjom vjerojatnošću za greške.
+Strimzi koristi Kubernetes CRD-ove kako bi stvorio potrebne Kubernetes Deployment-e i StatefulSet-ove. Ovi objekti omogućavaju definiranje i upravljanje Apache Kafka klasterima na jasan i deklarativan način, što rezultira većom učinkovitošću i manjom vjerojatnošću za greške.
 
 Također, Strimzi omogućava jednostavno kreiranje i upravljanje Apache Kafka temama i Kafka Connect konektorima. Ovo znatno olakšava proces konfiguriranja i upravljanja ovim resursima smanjujući potrebu za ručnim intervencijama i omogućavajući brže i učinkovitije upravljanje Kafka okruženjem.
 
@@ -484,9 +484,9 @@ Kafka Connect, opisan u sljedećem poglavlju, servis je koji omogućuje jednosta
 
 Kafka Streams s druge strane, kao što je prikazano na slici \ref{fig:ksqldb_streams}, gradi ksqlDB te omogućuje korisnicima da se koriste funkcionalnostima obrade podataka koje ona pruža, ali s jednostavnošću upita sličnim SQL-u.
 
-KsqlDB, kombinirajući ove dvije komponente, pruža snažnu platformu za obradu tokova podataka. Korisnici mogu jednostavno implementirati složene obrade podataka koristeći jezik sličan poznatom SQL jeziku, dok ksqlDB obavlja teški posao povezivanja s izvorima i odredištima podataka i obrade podataka u stvarnom vremenu. Ova integracija omogućuje korisnicima da se usredotoče na logiku svojih aplikacija, umjesto na složenosti upravljanja infrastrukturom obrade podataka. \\
+KsqlDB, kombinirajući ove dvije komponente, pruža snažnu platformu za obradu tokova podataka. Korisnici mogu jednostavno implementirati složene obrade podataka koristeći jezik sličan poznatom SQL-u, dok ksqlDB obavlja teški posao povezivanja s izvorima i odredištima podataka i obrade podataka u stvarnom vremenu. Ova integracija omogućuje korisnicima da se usredotoče na logiku svojih aplikacija, umjesto na složenosti upravljanja infrastrukturom obrade podataka. \\
 
-CloudVane se oslanja upravo na ksqlDB klaster za obradu, agregaciju i manipulaciju tokova podataka koje prikuplja od podržanih pružatelja oblaka. KsqlDB ne samo da omogućuje agregaciju podataka već i provodi filtriranje i transformaciju podataka, pružajući CloudVaneu snažan alat za efikasnu i efektivnu obradu podataka.
+CloudVane se oslanja upravo na ksqlDB klaster za obradu, agregaciju i manipulaciju tokova podataka koje prikuplja od podržanih pružatelja oblaka. KsqlDB ne samo da omogućuje agregaciju podataka već i provodi filtriranje i transformaciju podataka, pružajući CloudVane aplikaciji snažan alat za efikasnu i efektivnu obradu podataka.
 
 
 \subsection{Kafka Connect}
@@ -525,7 +525,7 @@ Ova praksa omogućuje aplikaciji CloudVane da maksimalno iskoristi prednosti koj
 \subsection{Kafka UI}
 \label{sec:kafka-ui}
 
-Pristupanje Apache Kafka sustavu koristeći komandno-linijske alate \engl{Command Line Interface tools} može biti težak i spor proces, pogotovo za korisnike koji nisu iskusni s komandno-linijskim alatima. S druge strane, korištenje grafičkih korisničkih sučelja \engl{Graphical User Interface} pruža nekoliko prednosti koje mogu poboljšati produktivnost i iskustvo rada sa Apache Kafka temama, shemama i konektorima.
+Pristupanje Apache Kafka sustavu koristeći komandno-linijske alate \engl{Command Line Interface tools} može biti težak i spor proces, pogotovo za korisnike koji nisu iskusni s komandno-linijskim alatima. S druge strane, korištenje grafičkih korisničkih sučelja \engl{Graphical User Interface} pruža nekoliko prednosti koje mogu poboljšati produktivnost i iskustvo rada s Apache Kafka temama, shemama i konektorima.
 
 Korisnička sučelja omogućuju jednostavnije i efikasnije upravljanje jer eliminiraju potrebu za pamćenjem složenih naredbi koje su neophodne za provođenje osnovnih operacija na Apache Kafki. Upravo iz tog razloga, uz Apache Kafka za CloudVane, pokrenut je Kafka UI servis na Kubernetes klasteru.
 
@@ -562,7 +562,7 @@ Ova organizacijska struktura, koja uključuje odvajanje produkcijskog klastera o
 	CloudVane Datacollector & Dohvaća podatke iz oblaka, obrađuje ih i pohranjuje direktno u bazu podataka\\
 	CloudVane Front & Angular poslužitelj klijentske strane \\
 	CloudVane Predictioner API & REST poslužitelj predikcijskog sustava\\
-	CloudVane Predicioner Worker & Sustav umjetne inteligencije koji računa predikcije\\
+	CloudVane Predictioner Worker & Sustav umjetne inteligencije koji računa predikcije\\
 	CloudVane Scheduler & Raspoređivač zadataka CloudVane aplikacije\\
 	CloudVane User Management & Sustav za upravljanje korisnicima i autorizaciju \\
 	CloudVane Vault & Sustav za sigurnu pohranu korisničkih kredencijala \\
@@ -625,7 +625,7 @@ U nastavku poglavlja fokus će se staviti na dnevničke zapise programskog jezik
 \subsection{Dnevnički zapisi u programskom jeziku Java}
 \label{sec:java}
 
-CloudVane koristi \textbf{Logback biblioteku} za svoje potrebe generiranja dnevničkih zapisa, također koristeći \textbf{SLF4J apstrakciju}\footnote{SLF4J nudi mogućnost generičkog pisanja dnevničkih zapisa u programskom kodu neovisno o konkretnoj implementaciji sustava generiranja dnevničkih zapisa.} koju nudi biblioteka \emph{Spring}. Logback je konfiguriran da ispisuje dnevničke zapise u JSON formatu, što olakšava njihovu obradu, posebno u distribuiranom sustavu gdje različiti servisi generiraju zapise. Primjer konfiguracije Logbacka na aplikaciji CloudVane prikazan je u isječku \ref{lst:logback_xml}.
+CloudVane koristi \textbf{Logback biblioteku} za svoje potrebe generiranja dnevničkih zapisa, također koristeći \textbf{SLF4J apstrakciju}\footnote{SLF4J nudi mogućnost generičkog pisanja dnevničkih zapisa u programskom kodu neovisno o konkretnoj implementaciji sustava generiranja dnevničkih zapisa.} koju nudi biblioteka \emph{Spring}. Logback je konfiguriran da ispisuje dnevničke zapise u JSON formatu, što olakšava njihovu obradu, posebno u distribuiranom sustavu gdje različiti servisi generiraju zapise. Primjer konfiguracije Logback-a na aplikaciji CloudVane prikazan je u isječku \ref{lst:logback_xml}.
 
 Primjer jednog dnevničkog zapisa prikazan je u isječku \ref{lst:cloudvaneLog}. Ovaj zapis ilustrira kako se informacije strukturiraju u JSON formatu.\\
 
@@ -646,7 +646,7 @@ U ovom se poglavlju detaljno razmatraju funkcionalnosti svake pojedinačne kompo
 
 Zasnovan na \emph{Apache Lucene-u}\footnote{Apache Lucene je snažan sustav za pretraživanje teksta otvorenog koda koji se koristi u brojnim aplikacijama za pretragu i analizu podataka.}, Elasticsearch pruža distribuirani sustav za pretragu teksta s HTTP sučeljem. Ovo sučelje omogućuje jednostavan pristup i manipulaciju podacima kroz standardizirane HTTP protokole. \\
 
-U okviru ELK-a, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U kontekstu ovoga rada, to su dnevnički zapisi prikupljeni pomoću Logstasha, komponente zadužene za njihovo prikupljanje, transformaciju i slanje u Elasticsearch, opisane u poglavlju \ref{sec:logstash}.\\
+U okviru ELK-a, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U kontekstu ovoga rada, to su dnevnički zapisi prikupljeni pomoću Logstash-a, komponente zadužene za njihovo prikupljanje, transformaciju i slanje u Elasticsearch, opisane u poglavlju \ref{sec:logstash}.\\
 
 Elasticsearch ne samo da omogućava pohranu podataka već nudi i mogućnosti za njihovu detaljnu analizu i pretragu. Ove mogućnosti, u kombinaciji sa skalabilnošću i brzinom koju pruža, čine Elasticsearch idealnim izborom za upravljanje velikim količinama podataka u stvarnom vremenu \engl{real-time}.
 
@@ -734,7 +734,7 @@ Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgo
 	\label{fig:dataDiagram}
 \end{figure}
 
-Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokera}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
+Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom na to da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokera}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
 
 Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisana u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi zatim se šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.
 
@@ -816,7 +816,7 @@ Dnevnički zapisi mogu biti itekako brojni, posebno u kompleksnim sustavima. Na 
 
 No, problemi se rijetko riješe sami od sebe. Sustav obično nastavlja generirati dnevničke zapise sve dok se problem ne riješi. To može rezultirati velikim količinama dnevničkih zapisa koje treba obraditi i analizirati kako bi se razumjelo što se točno događa unutar sustava.
 
-Svaki dnevnički zapis u stanju je pružiti dragocjene informacije o različitim aspektima sustava, uključujući performanse, potencijalne greške, ponašanje korisnika i ostale vitalne elemente operativnosti sustava. No, dnevnički zapisi često sadrže poruke o greškama koje se iznimno često ponavljaju u kratkim vremenskim intervalima stvarajući time veliku količinu redundatnih informacija.\\
+Svaki dnevnički zapis u stanju je pružiti dragocjene informacije o različitim aspektima sustava, uključujući performanse, potencijalne greške, ponašanje korisnika i ostale vitalne elemente operativnosti sustava. No, dnevnički zapisi često sadrže poruke o greškama koje se iznimno često ponavljaju u kratkim vremenskim intervalima stvarajući time veliku količinu redundantnih informacija.\\
 
 Upravo u ovom kontekstu \textbf{Kafka Streams} biblioteka postaje iznimno korisna. Kafka Streams, opisana u poglavlju \ref{sec:kstream}, agregiranjem sličnih ili identičnih dnevničkih zapisa može drastično smanjiti količinu podataka koju treba obraditi zadržavajući ključne informacije o greškama i problemima unutar sustava.
 
