@@ -927,8 +927,25 @@ Ovaj servis je ključan za održavanje stabilnosti sustava omogućavajući pravo
 \section{Pregled kroz Kibanu}
 \label{sec:kibanaImpl}
 
-%TODO
-TODO
+Naposljetku, ako dođe do greške u aplikaciji i treba ju popraviti, potrebno je pregledati stanja svih servisa. Pregled stanja servisa u većini slučajeva uključuje pregled dnevničkih zapisa, međutim to, kao što je prethodno opisano, u distribuiranoj okolini nije jednostavan zadatak. Zbog velikog broja servisa za potpun pregled sustava potrebno je koristiti alat poput Kibane koji agregira dnevničke zapise \engl{logs}, a uvod u nju dan je u poglavlju \ref{sec:kibana}.\\
+
+Kibana, sučelje podataka ElasticSearch-a, omogućuje pregled dnevničkih zapisa svih servisa sustava kroz objedinjeno sučelje i omogućuje njihovo filtriranje po svim dostupnim atributima poput čvora grozda, imena servisa, prostora imena itd., kao što je prikazano na slici \ref{fig:kibana-filter}.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=15cm]{images/kibana-filter.png}
+	\caption[Prikaz filtriranih dnevničkih zapisa u Kibana sučelju]{Prikaz filtriranih dnevničkih zapisa \engl{logs} u Kibana sučelju}
+	\label{fig:kibana-filter}
+\end{figure}
+
+Kibana također omogućuje i kreiranje kontrolnih ploča s ključnim metrikama kao što je prikazano na slici \ref{fig:kibana-dash}. Ove kontrolne ploče pružaju brzi pregled performansi i stanja sustava te mogu pomoći u brzom identificiranju i rješavanju problema.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=15cm]{images/kibana-dash.png}
+	\caption[Prikaz kreirane kontrolne ploče u Kibani]{Prikaz kreirane kontrolne ploče u Kibani}
+	\label{fig:kibana-dash}
+\end{figure}
 
 \chapter{Zaključak}
 \label{sec:conclusion}
