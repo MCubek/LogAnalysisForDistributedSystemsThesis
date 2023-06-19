@@ -601,7 +601,7 @@ Metodologija i alati potrebni za praćenje aplikacije CloudVane bit će opisani 
 
 \textbf{Nadziranje} \engl{monitoring}, definirano kao sustavno promatranje i provjera ponašanja i izlaza sustava te njegovih komponenti kroz vrijeme \citep{monitorama_monitorama_2016}, ključni je element upravljanja informatičkim sustavima i aplikacijama. Ova strateška praksa, koja se sastoji od stalnog nadzora i analize, omogućuje održavanje optimalnih performansi, stabilnosti i pouzdanosti digitalnih resursa.
 
-Nadzor aplikacija nije samo proces identifikacije i rješavanja problema. On nudi dragocjene uvide koji omogućuju temeljitiju optimizaciju sustava, poboljšanje korisničkog iskustva i osiguranje da sve digitalne komponente funkcionalno integriraju. Sastoji se od kontinuirane provjere, identifikacije anomalija i promptnog rješavanja problema prije nego što se pretvore u kritične situacije. Kroz ovaj proaktivni pristup, nadzor postaje ključan instrument za održavanje visoke razine usluge i postizanje operativne izvrsnosti.\\
+Nadzor aplikacija nije samo proces identifikacije i rješavanja problema. On nudi dragocjene uvide koji omogućuju temeljitiju optimizaciju sustava, poboljšanje korisničkog iskustva i osiguranje da se sve digitalne komponente funkcionalno integriraju. Sastoji se od kontinuirane provjere, identifikacije anomalija i promptnog rješavanja problema prije nego što se pretvore u kritične situacije. Ovim proaktivnim pristupom nadzor postaje ključan instrument za održavanje visoke razine usluge i postizanje operativne izvrsnosti.\\
 
 U ovom poglavlju rada detaljno se istražuje nadzor aplikacija poput aplikacije CloudVane, koja je opisana u poglavlju \ref{sec:cloudvane}, s posebnim naglaskom na kontekst \emph{dnevničkih zapisa} prikazanih u poglavlju \ref{sec:logs} iz \emph{distribuiranih mikro-servisnih sustava}. Upotrebom alata \emph{ELK}, čije su komponente i funkcionalnosti predstavljene u poglavlju \ref{sec:elk}, ilustrirat će se korištenje sofisticiranih alata za izdvajanje dnevničkih zapisa iz distribuiranih aplikacija unutar Kubernetes grozda. Detaljno će se obraditi procesi prikaza, transformacije i unosa dnevničkih zapisa u Apache Kafku.
 
@@ -609,23 +609,23 @@ U ovom poglavlju rada detaljno se istražuje nadzor aplikacija poput aplikacije 
 \section{Dnevnički zapisi}
 \label{sec:logs}
 
-\textbf{Dnevnički zapisi} aplikacija \engl{application logs} ključna su komponenta koja pruža detaljan uvid u rad aplikacije i ključni su za otkrivanje i rješavanje problema, ali i za optimizaciju performansi aplikacije.\\
+\textbf{Dnevnički zapisi} aplikacija \engl{application logs} ključna su komponenta koja pruža detaljan uvid u rad aplikacije te su ključni za otkrivanje i rješavanje problema, ali i za optimizaciju performansi aplikacije.\\
 
-Dnevnički zapisi aplikacija sastoje se od sekvencijalno zapisanih događaja koji se događaju unutar aplikacije. Ti događaji mogu biti različite vrste, uključujući informacije o radnji koju je korisnik poduzeo, statusu aplikacije, greškama, upozorenjima i drugim relevantnim informacijama. Dnevnički zapisi pružaju sveobuhvatnu sliku o tome što se događa unutar aplikacije u svakom trenutku.\\
+Dnevnički zapisi aplikacija sastoje se od sekvencijalno zapisanih događaja koji se generiraju unutar aplikacije. Ti događaji mogu biti različite vrste, uključujući informacije o radnji koju je korisnik poduzeo, statusu aplikacije, greškama, upozorenjima i drugim relevantnim informacijama. Dnevnički zapisi pružaju sveobuhvatnu sliku o tome što se događa unutar aplikacije u svakom trenutku.\\
 
-U kontekstu \emph{mikro-servisnih arhitektura}, kao što je to slučaj s CloudVane aplikacijom, dnevnički zapisi su posebno važni. Budući da je svaki mikro-servis odgovoran za svoj dio funkcionalnosti, dnevnički zapisi svakog mikro-servisa pružaju uvid u njegov rad. Ako dođe do problema, dnevnički zapisi mogu pomoći u identificiranju koja je komponenta uzrokovala problem.
+U kontekstu \emph{mikro-servisnih arhitektura}, kao što je to slučaj s CloudVane aplikacijom, dnevnički su zapisi posebno važni. Budući da je svaki mikro-servis odgovoran za svoj dio funkcionalnosti, dnevnički zapisi svakog mikro-servisa pružaju uvid u rad cijele aplikacije. Ako dođe do problema, dnevnički zapisi mogu pomoći u identificiranju komponente koja je uzrokovala problem.
 
-Međutim, upravljanje dnevničkim zapisima u mikro-servisnom okruženju može biti izazovno.. Jedan od najizraženijih je problem agregiranja i pretraživanja dnevničkih zapisa. S obzirom na to da je aplikacija raspoređena na više čvorova unutar Kubernetes grozda, logički i fizički izolirani, konsolidacija i pretraživanje informacija postaje kompleksan zadatak \citep{newman_building_2015}.
+Međutim, upravljanje dnevničkim zapisima u mikro-servisnom okruženju može biti izazovno. Jedan od najizraženijih problema jest problem agregiranja i pretraživanja dnevničkih zapisa. S obzirom na to da je aplikacija raspoređena na više čvorova unutar Kubernetes grozda koji su izolirani, konsolidacija i pretraživanje informacija postaje kompleksan zadatak \citep{newman_building_2015}.
 
-U takvom distribuiranom okruženju, svaka komponenta ili mikro-servis generira svoje dnevničke zapise. S obzirom na to da su ovi dnevnički zapisi disperzirani preko različitih čvorova, njihova centralizacija zahtijeva robusna i skalabilna rješenja. Bez odgovarajućih alata i strategija, pretraživanje tih zapisa na jednom mjestu može biti prilično izazovno i vremenski zahtjevno. Osim toga, pitanje je i kako oblikovati i strukturirati te zapise tako da pružaju korisne informacije. Različiti mikro-servisi mogu imati različite strukture dnevničkih zapisa. Zahtijeva se strategija koja ne samo da agregira ove zapise, već ih i standardizira i strukturira za laku analizu i dijagnostiku. \\
+U takvom distribuiranom okruženju, svaka komponenta ili mikro-servis generira svoje dnevničke zapise. S obzirom na to da su ovi dnevnički zapisi disperzirani preko različitih čvorova, njihova centralizacija zahtijeva robusna i skalabilna rješenja. Bez odgovarajućih alata i strategija pretraživanje tih zapisa na jednom mjestu može biti prilično izazovno i vremenski zahtjevno. Osim toga, pitanje je i kako oblikovati i strukturirati te zapise tako da pružaju korisne informacije. Različiti mikro-servisi mogu imati različite strukture dnevničkih zapisa. Zahtijeva se strategija koja ne samo da agregira ove zapise već ih i standardizira i strukturira za laku analizu i dijagnostiku. \\
 
-U nastavku poglavlja, fokus će se postaviti na dnevničke zapise programskog jezika Java, što je tematika poglavlja \ref{sec:java}. Fokus na programski jezik Javu proizlazi iz činjenice da je većina servisa unutar distribuirane aplikacije CloudVane upravno razvijena ovim programskim jezikom. Iako i drugi programski jezici nude slične alate za konfiguraciju i upravljanje dnevničkim zapisima, specifičnosti Jave u ovom kontekstu su od posebne važnosti zbog potrebnih konfiguracija. Također, posvetit će se pažnja ELK alatima, što je centralna tema poglavlja \ref{sec:elk}. Ova dva aspekta čine ključne komponente istraživanja i analize nadzora aplikacija unutar distribuiranih sustava.
+U nastavku poglavlja fokus će se staviti na dnevničke zapise programskog jezika \emph{Java}. Fokus na programski jezik Javu proizlazi iz činjenice da je većina servisa unutar distribuirane aplikacije CloudVane razvijena upravo ovim programskim jezikom. Iako i drugi programski jezici nude slične alate za konfiguraciju i upravljanje dnevničkim zapisima, specifičnosti Jave u ovom kontekstu su od posebne važnosti zbog potrebnih konfiguracija. Također, posvetit će se pažnja ELK alatima, što je centralna tema poglavlja \ref{sec:elk}. Ova dva aspekta čine ključne komponente istraživanja i analize nadzora aplikacija unutar distribuiranih sustava.
 
 
 \subsection{Dnevnički zapisi u programskom jeziku Java}
 \label{sec:java}
 
-CloudVane koristi \textbf{Logback biblioteku} za svoje potrebe generiranja dnevničkih zapisa, također koristeći \textbf{SLF4J apstrakciju}\footnote{SLF4J nudi mogućnost generičkog pisanja dnevničkih zapisa u programskom kodu neovisno o konkretnoj implementaciji sustava generiranja dnevničkih zapisa.} koju nudi biblioteka \emph{Spring}. Logback je konfiguriran da ispisuje dnevničke zapise u JSON formatu, što olakšava njihovu obradu, posebno u distribuiranom sustavu gdje različiti servisi generiraju zapise. Primjer konfiguracije Logbacka na CloudVane-u prikazan je u isječku \ref{lst:logback_xml}.
+CloudVane koristi \textbf{Logback biblioteku} za svoje potrebe generiranja dnevničkih zapisa, također koristeći \textbf{SLF4J apstrakciju}\footnote{SLF4J nudi mogućnost generičkog pisanja dnevničkih zapisa u programskom kodu neovisno o konkretnoj implementaciji sustava generiranja dnevničkih zapisa.} koju nudi biblioteka \emph{Spring}. Logback je konfiguriran da ispisuje dnevničke zapise u JSON formatu, što olakšava njihovu obradu, posebno u distribuiranom sustavu gdje različiti servisi generiraju zapise. Primjer konfiguracije Logbacka na aplikaciji CloudVane prikazan je u isječku \ref{lst:logback_xml}.
 
 Primjer jednog dnevničkog zapisa prikazan je u isječku \ref{lst:cloudvaneLog}. Ovaj zapis ilustrira kako se informacije strukturiraju u JSON formatu.\\
 
@@ -635,36 +635,36 @@ Osim \emph{Logback}, postoji i \emph{Log4j} biblioteka, koja je također popular
 \section{Elastic, Logstash i Kibana (ELK)}
 \label{sec:elk}
 
-\textbf{ELK}, akronim koji označava \textbf{ElasticSearch}, \textbf{Logstash} i \textbf{Kibana}, predstavlja snažan skup alata sposoban za prikupljanje, pohranu, analizu i vizualizaciju podataka u stvarnom vremenu. Najčešće se koristi za upravljanje dnevničkim zapisima i praćenje događaja, što ga čini nezamjenjivim alatom za sigurnosne analize, poslovnu inteligenciju i efikasno pretraživanje podataka.. 
+\textbf{ELK}, akronim koji označava \textbf{ElasticSearch}, \textbf{Logstash} i \textbf{Kibana}, predstavlja snažan skup alata sposoban za prikupljanje, pohranu, analizu i vizualizaciju podataka u stvarnom vremenu. Najčešće se koristi za upravljanje dnevničkim zapisima i praćenje događaja, što ga čini nezamjenjivim alatom za sigurnosne analize, poslovnu inteligenciju i efikasno pretraživanje podataka.
 
-U ovom poglavlju se detaljno razmatraju funkcionalnosti svake pojedinačne komponente ELK-a, te se opisuje njegova uloga u rješenju koje iznosi ovaj rad.
+U ovom se poglavlju detaljno razmatraju funkcionalnosti svake pojedinačne komponente ELK-a te se opisuje njegova uloga u rješenju koje predlaže ovaj rad.
 
 \subsection{ElasticSearch}
 \label{sec:elastic}
 
-\textbf{Elasticsearch} je distribuirani sustav za pretragu i analizu podataka u stvarnom vremenu. Omogućava istraživanje podataka na brz i skalabilan način koji do sada nije bio ostvariv. Koristi se za pretragu cijelog teksta, strukturiranu pretragu, analitiku i kombinaciju sve tri funkcionalnosti \citep{gormley_elasticsearch_2015}.
+\textbf{Elasticsearch} je distribuirani sustav za pretragu i analizu podataka u stvarnom vremenu. Omogućava istraživanje podataka na brz i skalabilan način koji do sada nije bio ostvariv. Koristi se za pretragu cijelog teksta, strukturiranu pretragu, analitiku i kombinaciju svih triju funkcionalnosti \citep{gormley_elasticsearch_2015}.
 
 Zasnovan na \emph{Apache Lucene-u}\footnote{Apache Lucene je snažan sustav za pretraživanje teksta otvorenog koda koji se koristi u brojnim aplikacijama za pretragu i analizu podataka.}, Elasticsearch pruža distribuirani sustav za pretragu teksta s HTTP sučeljem. Ovo sučelje omogućuje jednostavan pristup i manipulaciju podacima kroz standardizirane HTTP protokole. \\
 
-U okviru ELK Stacka, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U kontekstu ovoga rada, to su dnevnički zapisi prikupljeni pomoću Logstasha, komponente zadužene za njihovo prikupljanje, transformaciju i slanje u Elasticsearch, opisane u poglavlju \ref{sec:logstash}.\\
+U okviru ELK-a, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U kontekstu ovoga rada, to su dnevnički zapisi prikupljeni pomoću Logstasha, komponente zadužene za njihovo prikupljanje, transformaciju i slanje u Elasticsearch, opisane u poglavlju \ref{sec:logstash}.\\
 
-Elasticsearch ne samo da omogućava pohranu podataka, već nudi i mogućnosti za njihovu detaljnu analizu i pretragu. Ove mogućnosti, u kombinaciji sa skalabilnošću i brzinom koju pruža, čine Elasticsearch idealnim izborom za upravljanje velikim količinama podataka u stvarnom vremenu \engl{real-time}.
+Elasticsearch ne samo da omogućava pohranu podataka već nudi i mogućnosti za njihovu detaljnu analizu i pretragu. Ove mogućnosti, u kombinaciji sa skalabilnošću i brzinom koju pruža, čine Elasticsearch idealnim izborom za upravljanje velikim količinama podataka u stvarnom vremenu \engl{real-time}.
 
 \subsubsection{Indeksi u ElasticSearch-u}
 
-Indeks u kontekstu ElasticSearch-a je osnovna jedinica za pretragu. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim jedinstvenim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom radu, indeks se koristi za organiziranje i skladištenje dnevničkih zapisa, omogućavajući njihovu brzu i efikasnu pretragu.
+Indeks u kontekstu ElasticSearch-a je osnovna jedinica za pretragu. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim jedinstvenim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom se radu indeks koristi za organiziranje i skladištenje dnevničkih zapisa omogućavajući njihovu brzu i efikasnu pretragu.
 
 \subsection{Logstash}
 \label{sec:logstash}
 
-\textbf{Logstash} je servis otvorenog koda i predstavlja moćan sustav za obradu podataka. Njegova glavna svrha je izvlačenje podataka iz različitih izvora, njihova transformacija i obogaćivanje, te naknadno slanje prema odredištu \citep{konda_elasticsearch_2023}. Zahvaljujući arhitekturi koja je bazirana na obradi tokova podataka, svaki događaj koji prođe kroz Logstash se obrađuje sukladno prethodno konfiguriranim pravilima i u stvarnom vremenu se prosljeđuje na odredište. To omogućava kontinuiranu obradu podataka, što je posebno primjenjivo u kritičnim sustavima, kao što su oni koji se bave analizom grešaka izvučenih iz dnevničkih zapisa.\\
+\textbf{Logstash} je servis otvorenog koda i predstavlja snažan sustav za obradu podataka. Njegova je glavna svrha izvlačenje podataka iz različitih izvora, njihova transformacija i obogaćivanje te naknadno slanje prema odredištu \citep{konda_elasticsearch_2023}. Zahvaljujući arhitekturi koja je bazirana na obradi tokova podataka, svaki događaj koji prođe kroz Logstash obrađuje se sukladno prethodno konfiguriranim pravilima i u stvarnom vremenu se prosljeđuje na odredište. To omogućava kontinuiranu obradu podataka, što je posebno primjenjivo u kritičnim sustavima, kao što su oni koji se bave analizom grešaka izvučenih iz dnevničkih zapisa.\\
 
-U okviru ovog rada, Logstash igra ključnu ulogu prikupljajući dnevničke zapise iz različitih Apache Kafka tema. Nakon toga, zapisi se upisuju u Elasticsearch indeks, čime postaju pretraživani i lako dostupni za daljnju analizu.
+U okviru ovog rada Logstash igra ključnu ulogu prikupljajući dnevničke zapise iz različitih Apache Kafka tema. Zatim se zapisi upisuju u ElasticSearch indeks, nakon čega se mogu pretraživati i postaju lako dostupni za daljnju analizu.
 
 \subsection{Kibana}
 \label{sec:kibana}
 
-\citet{gormley_elasticsearch_2015} navode da je \textbf{Kibana} višenamjenska web konzola koja nudi niz opcija, od izvršavanja upita do razvoja nadzornih ploča, grafova i vizualizacija dijagrama za detaljnu analizu i agregacije. Međutim, za komunikaciju s ElasticSearch-om i pozivanje API-ja nije nužno koristiti Kibanu. Na primjer, API-je možemo pozivati koristeći \emph{cURL}, \emph{Postman} ili klijente nekog programskog jezika.\\
+\citet{gormley_elasticsearch_2015} navode da je \textbf{Kibana} višenamjenska konzola koja nudi niz opcija, od izvršavanja upita do razvoja nadzornih ploča, grafova i vizualizacija dijagrama za detaljnu analizu i agregacije. Međutim, za komunikaciju s ElasticSearch-om i pozivanje API-ja nije nužno koristiti Kibanu. Na primjer, API-je ElasticSearch-a možemo pozivati koristeći \emph{cURL}, \emph{Postman} ili klijente nekog programskog jezika.\\
 
 Kibana, kao alat za vizualizaciju i istraživanje podataka, u ovom radu koristi se kao sučelje na kojem se mogu kreirati intuitivni grafikoni i izvješća. Ovi elementi omogućuju interaktivno navigiranje kroz velike količine dnevničkih zapisa. S Kibanom je moguće konfigurirati nadzorne ploče koje pružaju vizualne sažetke podataka i omogućuju detaljno istraživanje specifičnih događaja. Primjer prikaza alata Kibane s dnevničkim zapisima može se vidjeti na slici \ref{fig:kibana}.\\
 
@@ -680,43 +680,43 @@ Kibana pruža mogućnost vizualizacije podataka pohranjenih u ElasticSearchu kor
 \subsection{Filebeat}
 \label{sec:filebeat}
 
-\textbf{Filebeat} je alat za prikupljanje podataka čiji je glavni zadatak skupljanje i centralizacija dnevničkih zapisa. Njegova uloga u ELK-u je da nadzire specifične datoteke s dnevničkim zapisima, prikuplja ih i zatim prosljeđuje izravno u ElasticSearch indeks ili Logstash za daljnju obradu. 
+\textbf{Filebeat} je alat za prikupljanje podataka čiji je glavni zadatak skupljanje i centralizacija dnevničkih zapisa. Njegova je uloga u ELK-u nadziranje specifične datoteke s dnevničkim zapisima, njihovo prikupljanje i zatim prosljeđivanje izravno u ElasticSearch indeks ili u Logstash za daljnju obradu. 
 
 Filebeat je samo jedan od mnogih alata u sklopu Beats platforme koju je razvila tvrtka Elastic. Beats je platforma koja se sastoji od niza alata za prikupljanje podataka, uključujući dnevničke zapise, mrežni promet, metrike i slično. Svi alati unutar Beats platforme razvijeni su s ciljem jednostavnosti i učinkovitosti. 
 
 Zbog svog dizajna koji naglašava jednostavnost i minimalnu potrošnju resursa, Filebeat je iznimno pogodan za distribuirane okoline poput Kubernetesa.\\
 
-Iako Logstash nudi moćne mogućnosti obrade podataka, Filebeat je specijaliziran za biti lagan i brz, s naglaskom na efikasno prikupljanje dnevničkih zapisa i njihovo brzo prosljeđivanje do odredišta. To znači da se Filebeat može pokrenuti bez da se to značajno odrazi na performanse. Filebeat i Logstash često se koriste u tandemu; Filebeat je odgovoran za prikupljanje i prosljeđivanje dnevničkih zapisa, a Logstash ih zatim obrađuje i obogaćuje prije konačnog indeksiranja u ElasticSearchu.\\
+Iako Logstash nudi značajne mogućnosti obrade podataka, Filebeat je specijaliziran da bude lagan i brz, s naglaskom na efikasno prikupljanje dnevničkih zapisa i njihovo brzo prosljeđivanje do odredišta. To znači da se Filebeat može pokrenuti, a da se to ne odrazi značajno na performanse. Filebeat i Logstash često se koriste u tandemu; \emph{Filebeat} je odgovoran za prikupljanje i prosljeđivanje dnevničkih zapisa, a \emph{Logstash} ih zatim obrađuje i obogaćuje prije konačnog indeksiranja u ElasticSearch-u.\\
 
-U okviru ovog rada, Filebeat je pokrenut na CloudVane Kubernetes klasteru u obliku Kubernetes DaemonSet-a, te je konfiguriran da prikuplja dnevničke zapise s CloudVane servisa na testnoj okolini. Nakon prikupljanja, ti se dnevnički zapisi prosljeđuju preko interneta na lokalni Minikube Kubernetes klaster, točnije u Apache Kafka teme što je detaljnije opisano u poglavlju \ref{sec:kafkaImpl}. 
+U okviru ovog rada, Filebeat je pokrenut na CloudVane Kubernetes klasteru u obliku Kubernetes DaemonSet-a te je konfiguriran da prikuplja dnevničke zapise s CloudVane servisa na testnoj okolini. Nakon prikupljanja ti se dnevnički zapisi prosljeđuju preko interneta na lokalni Minikube Kubernetes klaster, točnije u Apache Kafka teme što je detaljnije opisano u poglavlju \ref{sec:kafkaImpl}. 
 
-S obzirom da se Filebeat pokreće na Kubernetes-u kao DaemonSet, pokreće se u onoliko instanci čvorova ima grozd. Jedna instanca Filebeat-a po čvoru omogućuje Filebeat-u pristup kontejnerima koji se na njemu vrte. Konfiguracija ovoga servisa implementirana je kao Kubernetes ConfigMapa i pokazana je u isječku koda \ref{lst:filebeat}.
+S obzirom na to da se Filebeat pokreće na Kubernetesu kao DaemonSet, pokreće se u onoliko instanci koliko čvorova ima grozd. Jedna instanca Filebeat-a po čvoru omogućuje Filebeat-u pristup kontejnerima koji se na njemu vrte. Konfiguracija ovoga servisa implementirana je kao Kubernetes ConfigMap i pokazana je u isječku koda \ref{lst:filebeat}.
 
 \subsection{Implementacija ELK-a na Kubernetes grozdu}
 \label{sec:elk_impl}
 
-U ovom radu, ElasticSearch, Kibana i Logstash su implementirani u lokalnom Kubernetes klasteru koristeći ELK CRD-ove. Elastic, kompanija koja stoji iza razvoja ovih aplikacija, kreirala je CRD-ove za te programe kako bi se olakšala njihova implementacija na Kubernetes klasteru. To omogućava korisnicima da jednostavno postave i upravljaju tim aplikacijama unutar Kubernetes okruženja, pružajući integrirane mogućnosti za konfiguraciju, skaliranje, sigurnost i nadzor.\\
+U ovom radu su ElasticSearch, Kibana i Logstash implementirani u lokalnom Kubernetes klasteru koristeći ELK CRD-ove. Elastic, kompanija koja stoji iza razvoja ovih aplikacija, kreirala je CRD-ove za te programe kako bi se olakšala njihova implementacija na Kubernetes klasteru. To omogućava korisnicima da jednostavno postave aplikacije i upravljaju tim aplikacijama unutar Kubernetes okruženja pružajući im integrirane mogućnosti za konfiguraciju, skaliranje, sigurnost i nadzor.\\
 
-Filebeat međutim, kao što je prethodno opisano, pokrenut je na CloudVane Kubernetes grozdu kao DaemonSet, a njegova konfiguracija je pružena putem ConfigMape.
+Filebeat je međutim, kao što je prethodno opisano, pokrenut na CloudVane Kubernetes grozdu kao DaemonSet, a njegova konfiguracija je pružena putem ConfigMap objekta.
 
 \chapter{Nadziranje stanja distribuiranog sustava u stvarnom vremenu}
 \label{sec:streamingMonitoring}
 
-Kao što je prethodno spomenuto u poglavlju \ref{sec:monitoring}, nadziranje aplikacija nije samo bitno, već je ključno za održavanje optimalnih performansi, stabilnosti i pouzdanosti aplikacija. Strukturirano i sustavno nadziranje može biti presudno za otkrivanje i rješavanje problema prije nego što oni utječu na korisnike ili poslovanje.
+Kao što je prethodno spomenuto u poglavlju \ref{sec:monitoring}, nadziranje aplikacija ključno je za održavanje optimalnih performansi, stabilnosti i pouzdanosti aplikacija. Strukturirano i sustavno nadziranje može biti presudno za otkrivanje i rješavanje problema prije nego što oni počnu utjecati na korisnike ili poslovanje.
 
-Dok su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj izazov je posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni sistemski neuspjeh.
+Dok su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj je izazov posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni sistemski neuspjeh.
 
-S takvom razinom kompleksnosti, nadziranje distribuiranih sustava prelazi granice jednostavnog praćenja pojedinačnih servisa i zahtijeva upotrebu sveobuhvatnih alata za nadzor. Nadzor nije samo otkrivanje grešaka ili slabosti unutar pojedinačnih servisa. Umjesto toga, nužno je uspostaviti sistemski pregled, identificirati anomalije u stvarnom vremenu, reagirati pravodobno i učinkovito kako bi se osigurao nesmetan rad distribuiranih sustava.
+S takvom razinom kompleksnosti nadziranje distribuiranih sustava prelazi granice jednostavnog praćenja pojedinačnih servisa i zahtijeva upotrebu sveobuhvatnih alata za nadzor. Nadzor nije samo otkrivanje grešaka ili slabosti unutar pojedinačnih servisa. Osim toga, nužno je uspostaviti sistemski pregled, identificirati anomalije u stvarnom vremenu, reagirati pravodobno i učinkovito kako bi se osigurao nesmetan rad distribuiranih sustava.
 
-U tom kontekstu, potrebno je koristiti napredne alate za nadzor koji omogućuju dubinsko praćenje performansi i stanja svih servisa, bez obzira na to gdje se nalaze. Ti alati trebaju omogućiti brzo otkrivanje problema, detaljne informacije o prirodi problema i omogućiti promptno djelovanje kako bi se osigurao optimalan rad i performanse distribuiranih sustava. Ovakav pristup osigurava visoku razinu pouzdanosti i stabilnosti, omogućujući sustavima da pružaju stalno visokokvalitetnu uslugu korisnicima.\\
+U tom je kontekstu potrebno koristiti napredne alate za nadzor koji omogućuju dubinsko praćenje performansi i stanja svih servisa, bez obzira na to gdje se nalaze. Ti alati trebaju omogućiti brzo otkrivanje problema, detaljne informacije o prirodi problema i omogućiti promptno djelovanje kako bi se osigurali optimalan rad i performanse distribuiranih sustava. Ovakav pristup osigurava visoku razinu pouzdanosti i stabilnosti omogućujući sustavima da stalo pružaju visokokvalitetnu uslugu korisnicima.\\
 
-U nadolazećim poglavljima rada obrađuje se arhitektura rješenja koja omogućava agregiranje dnevničkih zapisa svih servisa distribuirane aplikacije CloudVane u stvarnom vremenu. Ovo rješenje ne samo da filtrira zapise prema njihovom statusu, već koristi umjetnu inteligenciju kako bi prepoznalo potencijalne probleme i ponudilo moguća rješenja za njihovo rješavanje.
+U nadolazećim poglavljima rada obrađuje se arhitektura rješenja koja omogućava agregiranje dnevničkih zapisa svih servisa distribuirane aplikacije CloudVane u stvarnom vremenu. Ovo rješenje ne samo da filtrira zapise prema njihovom statusu već koristi i umjetnu inteligenciju kako bi prepoznalo potencijalne probleme i ponudilo moguća rješenja.
 
-Problem, zajedno s predloženim rješenjima, zatim se korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo sveobuhvatno rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
+Zatim se problem, zajedno s predloženim rješenjima, korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo sveobuhvatno rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
 
 \section{Pregled arhitekture rješenja}
 
-Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja koje je predmet ovog rada i koja je vidljiva na slici \ref{fig:archDiagram}, sastoji se od više komponenata koje zajedno formiraju sveobuhvatni sustav za nadzor distribuiranih aplikacija. Ovaj sustav,koji je implementiran na lokalnom Minikube Kubernetes grozdu, te djelomično na CloudVane Kubernetes grozdu, omogućuje kontinuirano praćenje, analizu i rješavanje problema unutar aplikacija.\\
+Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja, koje je predmet ovog rada, vidljiva na slici \ref{fig:archDiagram}, sastoji se od više komponenata koje zajedno formiraju sveobuhvatni sustav za nadzor distribuiranih aplikacija. Ovaj sustav, koji je implementiran na lokalnom Minikube Kubernetes grozdu te djelomično na CloudVane Kubernetes grozdu, omogućuje kontinuirano praćenje, analizu i rješavanje problema unutar aplikacija.\\
 
 \begin{figure}[htb]
 	\centering
@@ -725,7 +725,7 @@ Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja koje je p
 	\label{fig:archDiagram}
 \end{figure}
 
-Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis}, koji je odgovoran za prikupljanje dnevnika svih servisa aplikacije. Kako je opisano u poglavlju \ref{sec:filebeat}, Filebeat zatim dnevničke zapise šalje preko interneta na teme Apache Kafke, koja je pokrenuta u lokalnom Minikube grozdu. Budući da se ovi podaci prenose preko interneta, Apache Kafka je zaštićena TLS-om\footnote{TLS (Transport Layer Security) je protokol koji osigurava zaštitu podataka tijekom prijenosa preko interneta.} kako bi se osigurao siguran prijenos podataka. Na slici \ref{fig:dataDiagram} vidljiv je protok dnevničkih zapisa kroz sustav.
+Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgovoran za prikupljanje dnevnika svih servisa aplikacije. Kako je opisano u poglavlju \ref{sec:filebeat}, Filebeat dnevničke zapise zatim šalje preko interneta na teme Apache Kafke koja je pokrenuta u lokalnom Minikube grozdu. Budući da se ovi podaci prenose preko interneta, Apache Kafka je zaštićena TLS-om\footnote{TLS (Transport Layer Security) je protokol koji osigurava zaštitu podataka tijekom prijenosa preko interneta.} kako bi se osigurao siguran prijenos podataka. Na slici \ref{fig:dataDiagram} vidljiv je protok dnevničkih zapisa kroz sustav.
 
 \begin{figure}[htb]
 	\centering
@@ -734,9 +734,9 @@ Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis}, koji je odg
 	\label{fig:dataDiagram}
 \end{figure}
 
-Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokera}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanjem shema podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
+Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokera}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
 
-Nakon Apache Kafke, na lokalnom Kubernetes grozdu pokrenuta je i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisan u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi se zatim šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.
+Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisana u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi zatim se šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.
 
 \begin{figure}[htb]
 	\centering
@@ -749,7 +749,7 @@ Paralelno s tim, \textbf{servis za obogaćivanje dnevničkih zapisa} pokrenut je
 
 Na sve teme koje sadrže dnevničke zapise spojen je \textbf{Logstash servis}, opisan u poglavlju \ref{sec:logstash} i prikazan u dijagramu \ref{fig:dataDiagram}. Logstash skuplja dnevničke zapise iz svih tema, a zatim ih prosljeđuje u \textbf{ElasticSearch} indekse. Ova funkcionalnost omogućuje korisnicima da putem \textbf{Kibane} iz poglavlja \ref{sec:kibana}, imaju cjelovit uvid u dnevničke zapise, bilo da su agregirani ili ne. Implementacija pregleda dnevničkih zapisa kroz Kibanu demonstrirana je u poglavlju \ref{sec:kibanaImpl}.
 
-Konačno, kako bi korisnici bili u stvarnom vremenu informirani o svim greškama koje se javljaju u aplikaciji, implementiran je i \textbf{servis za notifikacije}. Ovaj servis, opisan u poglavlju \ref{sec:notifService} i vizualiziran u dijagramu \ref{fig:dataDiagram}, obavještava korisnike o svim detektiranim problemima putem različitih kanala komunikacije, uključujući e-mail, mobilne notifikacije i Slack kanal.\\
+Konačno, kako bi korisnici bili u stvarnom vremenu informirani o svim greškama koje se javljaju u aplikaciji, implementiran je i \textbf{servis za notifikacije}. Ovaj servis, opisan u poglavlju \ref{sec:notifService} i vizualiziran u dijagramu \ref{fig:dataDiagram}, obavještava korisnike o svim detektiranim problemima putem različitih kanala komunikacije uključujući elektroničku poštu, mobilne notifikacije i Slack kanal.\\
 
 Ova visoko integrirana arhitektura omogućuje proaktivni pristup upravljanju distribuiranim aplikacijama, omogućujući korisnicima da brzo reagiraju na probleme i osiguraju maksimalnu učinkovitost i pouzdanost svojih aplikacija.
 
@@ -759,33 +759,33 @@ Ova visoko integrirana arhitektura omogućuje proaktivni pristup upravljanju dis
 
 Kao što je prethodno istaknuto, i prema dijagramu \ref{fig:archDiagram}, sve komponente ovog rješenja implementirane su na lokalnom Kubernetes Minikube klasteru. Jedini izuzetak je Filebeat servis, koji je pokrenut na CloudVane Kubernetes klasteru, što je detaljnije objašnjeno u poglavlju \ref{sec:filebeat}.\\
 
-Na Kubernetes klasteru stvorena su dva dodatna Namespace-a. Prvi, pod imenom \emph{\glqq kafka\grqq}, sadrži Kafka servise Strimzi operatora, Schema Registry, Kafka UI, te prateće Service objekte za mrežnu komunikaciju s Kafkom. Drugi, imenovan \emph{\glqq elk\grqq}, sadrži ELK servise, uključujući Logstash, Kibanu i ElasticSearch. U \emph{zadanom} \engl{default} Namespace-u nalazi se Kafka Streams aplikacija, uz koju je pokrenut i servis za obogaćivanje i servis za notifikacije.
+Na Kubernetes klasteru stvorena su dva dodatna prostora imena \engl{Namespace}. Prvi, pod imenom \emph{\glqq kafka\grqq}, sadrži Kafka servise Strimzi operatora, Schema Registry, Kafka UI te prateće Service objekte za mrežnu komunikaciju s Kafkom. Drugi, imenovan \emph{\glqq elk\grqq}, sadrži ELK servise, uključujući Logstash, Kibanu i ElasticSearch. U \emph{zadanom} \engl{default} prostoru imena nalazi se Kafka Streams aplikacija, uz koju je pokrenut i servis za obogaćivanje i servis za notifikacije.
 
-Sve usluge koje su pokrenute na Minikube klasteru konfigurirane su s jednom replikom, s obzirom na to da Minikube klaster sastoji se od jednog čvora, kao što je navedeno u poglavlju \ref{sec:minikube}. U produkcijskom okruženju broj replika može se povećati jednostavnim izmjenama parametara u konfiguraciji Kubernetes objekata.\\
+Sve usluge koje su pokrenute na Minikube klasteru konfigurirane su s jednom replikom, s obzirom na to da se Minikube klaster sastoji od jednog čvora, kao što je navedeno u poglavlju \ref{sec:minikube}. U produkcijskom okruženju broj replika može se povećati jednostavnim izmjenama parametara u konfiguraciji Kubernetes objekata.\\
 
-Za potrebe pristupa Apache Kafka brokeru s interneta, bilo je nužno konfigurirati Strimzi Kafka objekt i omogućiti pristup preko TLS-a. Dodatno, bilo je potrebno kreirati Kafka User objekt, na temelju kojeg Strimzi generira kredencijale za autentifikaciju u obliku Secreta. Ti se kredencijali zatim izvlače i kao novi Secret pohranjuju u CloudVane Kubernetes klaster, omogućavajući Filebeatu slanje dnevničkih zapisa u Minikube klaster.\\
+Za potrebe pristupa Apache Kafka posredniku s interneta, bilo je nužno konfigurirati Strimzi Kafka objekt i omogućiti pristup preko TLS-a. Dodatno, bilo je potrebno kreirati Kafka User objekt na temelju kojeg Strimzi generira kredencijale za autentifikaciju u obliku Secreta. Ti se kredencijali zatim izvlače i kao novi Secret pohranjuju u CloudVane Kubernetes klaster omogućavajući Filebeat servisu slanje dnevničkih zapisa u Minikube klaster.\\
 
-ELK alati uključujući ElasticSearch, Filebeat i Kibanu, također generiraju kredencijale za pristup u obliku Secreta. Iz Secreta je potrebno izvući te podatke kako bi se omogućila autentifikacija u Kibanu. Logstash primjenjuje konfiguraciju za čitanje iz Kafka tema i pisanje u ElasticSearch u obliku ConfigMap-a, čiji je sadržaj prikazan u isječku \ref{lst:logstash}.\\
+ELK alati, uključujući ElasticSearch, Filebeat i Kibanu, također generiraju kredencijale za pristup u obliku Secret objekta. Iz Secret objekta je potrebno izvući te podatke kako bi se omogućila autentifikacija u Kibanu. Logstash primjenjuje konfiguraciju za čitanje iz Kafka tema i pisanje u ElasticSearch u obliku ConfigMap objekta, čiji je sadržaj prikazan u isječku \ref{lst:logstash}.\\
 
-Konačno, servisi za obogaćivanje, notifikacije i Kafka Streams aplikacija pokrenuti su kao Deployment objekti. Servis za obogaćivanje i servis za notifikacije dobivaju konfiguraciju i tajne (API ključeve i druge kredencijale) u obliku ConfigMap i Secret objekata. Ove aplikacije imaju Dockerfile u svom izvornom kodu, prikazan za primjer Kafka Streams aplikacije u isječku \ref{lst:streamsDockerfile}, koji opisuje postupak kreiranja kontejnera iz izvornog koda. Slike kontejnera se nakon izgradnje pakiraju i objavljuju na Docker Hub repozitoriju, što omogućuje Kubernetes klasteru da ih preuzme i pokrene prilikom kreiranja Deployment objekta.
+Konačno, servisi za obogaćivanje, notifikacije i Kafka Streams aplikacija pokrenuti su kao \emph{Deployment} objekti. Servis za obogaćivanje i servis za notifikacije dobivaju konfiguraciju i tajne (API ključeve i druge kredencijale) u obliku ConfigMap i Secret objekata. Ove aplikacije imaju \emph{Dockerfile} u svom izvornom kodu, prikazan za primjer Kafka Streams aplikacije u isječku \ref{lst:streamsDockerfile}, koji opisuje postupak kreiranja kontejnera iz izvornog koda. Slike kontejnera se nakon izgradnje pakiraju i objavljuju na Docker Hub repozitoriju, što omogućuje Kubernetes klasteru da ih preuzme i pokrene prilikom kreiranja Deployment objekta.
 
 \section{Pohrana dnevničkih zapisa u Apache Kafku}
 \label{sec:kafkaImpl}
 
-Kada Filebeat servis prikupi dnevničke zapise s CloudVane servisa i prenese ih na Apache Kafku koja je postavljena na lokalnom Kubernetes Minikube klasteru, postupak rezultira stvaranjem specifičnih tema koje su vidljive kroz Kafka UI alat, kako je prikazano na slici \ref{fig:kafkaui}. Filebeat, za svaku uslugu čije dnevničke zapise prikuplja, kreira zasebnu temu. Ovaj pristup omogućava dobro strukturirano i organizirano skladištenje dnevničkih zapisa.\\
+Kada Filebeat servis prikupi dnevničke zapise s CloudVane servisa i prenese ih u Apache Kafku koja je postavljena na lokalnom Kubernetes Minikube klasteru, proces rezultira stvaranjem specifičnih tema koje su vidljive kroz Kafka UI alat, kako je prikazano na slici \ref{fig:kafkaui}. Filebeat za svaku uslugu, čije dnevničke zapise prikuplja, kreira zasebnu temu. Ovaj pristup omogućava dobro strukturirano i organizirano skladištenje dnevničkih zapisa.\\
 
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=15cm]{images/kafka-ui.png}
-	\caption[Teme na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa]{Teme \engl{topics} na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa}
+	\caption[Kafka teme na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa]{Kafka teme \engl{topics} na lokalnom Apache Kafka grozdu kroz pogled Kafka UI servisa}
 	\label{fig:kafkaui}
 \end{figure}
 
-Kada se podaci zabilježe u Apache Kafku, svaki konzument poruka može se povezati na relevantnu temu i čitati poruke. U okviru ovog rada, konzumenti poruka su Logstash, Kafka Streams aplikacija.
+Kada se podaci zabilježe u Apache Kafku, svaki konzument poruka može se povezati na relevantnu temu i čitati poruke. U okviru ovog rada, konzumenti poruka izvornih dnevničkih zapisa su Logstash i Kafka Streams aplikacija.
 
 Kasnije u procesu, prema dijagramu toka podataka \ref{fig:topics}, vidljivo je kako se servisi za obogaćivanje i notifikacije također povezuju na određene teme kako bi čitali poruke. Servis za obogaćivanje dodatno upisuje obogaćene podatke u svoju temu. Ovaj proces omogućava dnevničkim zapisima da prođu kroz niz transformacija prije nego što se konzumiraju, pružajući tako dodatne vrijednosti.\\
 
-Sve relevantne teme su detaljno opisane u tablici \ref{tbl:topics}, u kojoj je naveden i opis podataka koji se nalaze u svakoj od njih. Ova tablica pruža korisne informacije o tome što svaka tema predstavlja, čime olakšava razumijevanje strukture i svrhe svake teme.
+Sve relevantne Kafka teme detaljno su opisane u tablici \ref{tbl:topics}, u kojoj je naveden i opis podataka koji se nalaze u svakoj od njih. Ova tablica pruža korisne informacije o tome što svaka tema predstavlja, čime olakšava razumijevanje strukture i svrhe svake teme.
 
 \clearpage
 \begin{longtblr}[
@@ -799,10 +799,10 @@ label = {tbl:topics},
 Ime Kafka teme & Sadržaj podataka u temi \\
 \hline
 logs-cloudvane-*-cloudvane-test & Dnevnički zapisi pojedinog CloudVane mikro-servisa \\ 
-aggregated-errors & Agregirani dnevnički zapisi grešaka u koje upisuje Kafka Streams aplikacija\\
-enriched-errors & Agregirani dnevnički zapisi grešaka sa dodatkom o potencijalnom rješenju u koje upisuje Python servis koji obogaćuje grešku pomoću umjetne inteligencije\\
+aggregated-errors & Agregirani dnevnički zapisi grešaka koje upisuje Kafka Streams aplikacija\\
+enriched-errors & Agregirani dnevnički zapisi grešaka s dodatkom o potencijalnom rješenju koje upisuje Python servis koji obogaćuje poruku greške pomoću umjetne inteligencije\\
 error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spremanje podataka potrebnih za agregacije\\
-\_consumer\_offsets & Interna tema Apache kafka za spremanje pozicije čitanja \\
+\_consumer\_offsets & Interna tema Apache Kafke za spremanje pozicije čitanja \\
 \_schemas & Interna tema za Schema Registry servis za pohranu shema\\
 \_strimzi* & Interne teme Strimzi servisa\\
 \hline
@@ -812,24 +812,24 @@ error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spreman
 \section{Agregiranje dnevničkih zapisa}
 \label{sec:streamImpl}
 
-Dnevnički zapisi mogu biti iznimno brojni, posebno u kompleksnim sustavima. Na primjer, u CloudVane testnom okruženju, može se generirati i do $15,000$ dnevničkih zapisa u samo jednom satu. Ovaj velik broj zapisa često je simptom nekog problema unutar sustava, gdje se greške javljaju i sustav započne s generiranjem obavijesti o problemima.
+Dnevnički zapisi mogu biti itekako brojni, posebno u kompleksnim sustavima. Na primjer, u CloudVane testnom okruženju može se generirati i do $15000$ dnevničkih zapisa u samo jednom satu. Ovaj velik broj zapisa često je simptom nekog problema unutar sustava, gdje se greške javljaju i sustav započne s generiranjem obavijesti o problemima.
 
 No, problemi se rijetko riješe sami od sebe. Sustav obično nastavlja generirati dnevničke zapise sve dok se problem ne riješi. To može rezultirati velikim količinama dnevničkih zapisa koje treba obraditi i analizirati kako bi se razumjelo što se točno događa unutar sustava.
 
-Svaki dnevnički zapis u stanju je pružiti dragocjene informacije o različitim aspektima sustava, uključujući performanse, potencijalne greške, ponašanje korisnika i ostale vitalne elemente operativnosti sustava. No, dnevnički zapisi često sadrže poruke o greškama koje se iznimno često ponavljaju u kratkim vremenskim intervalima, stvarajući time veliku količinu redundatnih informacija.\\
+Svaki dnevnički zapis u stanju je pružiti dragocjene informacije o različitim aspektima sustava, uključujući performanse, potencijalne greške, ponašanje korisnika i ostale vitalne elemente operativnosti sustava. No, dnevnički zapisi često sadrže poruke o greškama koje se iznimno često ponavljaju u kratkim vremenskim intervalima stvarajući time veliku količinu redundatnih informacija.\\
 
-Upravo u ovom kontekstu \textbf{Kafka Streams} biblioteka postaje iznimno korisna. Kafka Streams, opisana u poglavlju \ref{sec:kstream}, agregiranjem sličnih ili identičnih dnevničkih zapisa, može drastično smanjiti količinu podataka koju treba obraditi, zadržavajući ključne informacije o greškama i problemima unutar sustava.
+Upravo u ovom kontekstu \textbf{Kafka Streams} biblioteka postaje iznimno korisna. Kafka Streams, opisana u poglavlju \ref{sec:kstream}, agregiranjem sličnih ili identičnih dnevničkih zapisa može drastično smanjiti količinu podataka koju treba obraditi zadržavajući ključne informacije o greškama i problemima unutar sustava.
 
-Na taj način, omogućuje se obrada agregiranih informacija, što omogućuje brže i efikasnije identificiranje, te rješavanje problema. Ovaj pristup ne samo da smanjuje kompleksnost i trošak analize dnevničkih zapisa, već također olakšava otkrivanje dubljih uzoraka i trendova, omogućavajući proaktivno rješavanje problema prije nego što uzrokuju ozbiljnije posljedice.\\
+Na taj se način omogućuje obrada agregiranih informacija, što omogućuje brže i efikasnije identificiranje te rješavanje problema. Ovaj pristup ne samo da smanjuje kompleksnost i trošak analize dnevničkih zapisa već i olakšava otkrivanje dubljih uzoraka i trendova, omogućavajući proaktivno rješavanje problema prije nego što uzrokuju ozbiljnije posljedice.\\
 
 Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref{algo:kstream} i čija je topologija ilustrirana na dijagramu \ref{fig:kstream}, uključuje sljedeće korake:
 
 \begin{enumerate}
-	\item Dnevnički zapisi se konzumiraju iz svih Kafka tema koje započinju ključnom riječi \emph{\glqq logs \grqq}.
-	\item Dnevnički zapisi se filtriraju temeljem statusa koji određuje jesu li to informativni log zapisi ili predstavljaju greške. U ovom kontekstu, izostavljaju se svi log zapisi koji ne predstavljaju greške, s obzirom na to da je cilj korisniku pružiti reakciju na greške unutar aplikacije.
-	\item Dnevnički zapisi se grupiraju prema ključu Kafka poruke, unutar kojeg se nalazi sadržaj greške. (Ključ Kafka poruke je definiran u konfiguraciji Filebeat servisa, što je prikazano u isječku \ref{lst:filebeat})
-	\item Agregacija dnevničkih zapisa provodi se po ključu poruke. Ovo grupiranje se izvodi korištenjem \emph{klizećeg prozora} sa trajanjem od \emph{30 sekundi}.
-	\item Agregacija koju izravno pruža Kafka Streams biblioteka se mapira na objekt koji sadrži broj agregiranih poruka, kao i prvu dohvaćenu vremensku oznaku.
+	\item Dnevnički zapisi se konzumiraju iz svih Kafka tema koje započinju ključnom riječi \emph{\glqq logs\grqq}.
+	\item Dnevnički zapisi se filtriraju temeljem statusa koji određuje jesu li to informativni dnevnički zapisi ili predstavljaju greške. U ovom kontekstu izostavljaju se svi dnevnički zapisi koji ne predstavljaju greške s obzirom na to da je cilj korisniku pružiti reakciju na greške unutar aplikacije.
+	\item Dnevnički zapisi grupiraju se prema ključu Kafka poruke unutar kojeg se nalazi sadržaj greške. (Ključ Kafka poruke je definiran u konfiguraciji Filebeat servisa, što je prikazano u isječku \ref{lst:filebeat})
+	\item Agregacija dnevničkih zapisa provodi se po ključu poruke. Ovo grupiranje se izvodi korištenjem \emph{klizećeg prozora} u trajanju od \emph{$30$ sekundi}.
+	\item Agregacija koju izravno pruža Kafka Streams biblioteka mapira se na objekt koji sadrži broj agregiranih poruka, kao i prvu dohvaćenu vremensku oznaku.
 	\item Agregirani dnevnički zapisi se pohranjuju u Kafka temu \emph{\glqq aggregated-errors\grqq}.
 \end{enumerate}
 
@@ -838,7 +838,7 @@ Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref
 	\label{algo:kstream}
 	\begin{algorithmic}
 		\STATE{\textbf{Ulaz:} $logs-.*$ -- regularni izraz Kafka tema koje treba agregirati.}
-		\STATE{\textbf{Izlaz:} $aggregated-errors$ Kafka tema sa filtriranim i agregiranim dnevničkim zapisima.}
+		\STATE{\textbf{Izlaz:} $aggregated-errors$ Kafka tema s filtriranim i agregiranim dnevničkim zapisima.}
 		
 		\FOR{($topic$ in $topics$)}
 		
@@ -864,64 +864,64 @@ Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref
 \section{Obogaćivanje dnevničkih zapisa}
 \label{sec:ai}
 
-Problem s greškama koje se pojavljuju unutar sustava često je nejasan prilikom prvog susreta. Iz izravnih dnevničkih zapisa, uzrok problema i potencijalno rješenje za njegovo rješavanje često nisu odmah očigledni.\\
+Prilikom prvog susreta s greškama unutar sustava često je nejasno u čemu je problem. Iz izravnih dnevničkih zapisa uzrok problema i njegovo potencijalno rješenje često nisu odmah očigledni.\\
 
-U svrhu rješavanja ovog problema, ovaj rad istražuje poseban Kafka servis, izrađen u Pythonu, koji koristi \emph{OpenAI API} kako bi obogatio agregirane dnevničke zapise o greškama, kako je opisano u prethodnom poglavlju. Cilj ovog obogaćivanja je da kasnije pruži dodatne informacije korisnicima koji su zaduženi za rješavanje problema, čime se pojačava njihova sposobnost razumijevanja i brzog reagiranja na probleme.\\
+U svrhu rješavanja ovog problema, ovaj rad istražuje poseban Kafka servis, izrađen u Pythonu, koji koristi \emph{OpenAI API} kako bi obogatio agregirane dnevničke zapise o greškama, a to je opisano u prethodnom poglavlju. Cilj je ovog obogaćivanja da kasnije pruži dodatne informacije korisnicima koji su zaduženi za rješavanje problema, čime se pojačava njihova sposobnost razumijevanja i brzog reagiranja na probleme.\\
 
 Posebna značajka ovog servisa je njegova sposobnost horizontalnog skaliranja, omogućena putem Kafka Consumer API-ja. Ova karakteristika omogućuje servisu da se prilagodi povećanju opterećenja, čime se osigurava održavanje stabilnih performansi čak i pod visokim zahtjevima.\\
 
-U procesu obogaćivanja, servis koristi \emph{OpenAI API} - čiji je opis sadržan u sljedećem poglavlju - za analizu grešaka. Na temelju te analize, servis generira korisne informacije koje će korisnicima pomoći da bolje razumiju problem.
+U procesu obogaćivanja servis koristi \emph{OpenAI API}, čiji je opis sadržan u sljedećem poglavlju, za analizu grešaka. Na temelju njegovog odgovora servis generira korisne informacije koje će korisnicima pomoći da bolje razumiju problem.
 
 Kao što je vidljivo u dijagramu \ref{fig:topics}, ovaj servis čita dnevničke zapise iz Kafka teme \glqq \emph{aggregated-errors}\grqq, obogaćuje ih koristeći OpenAI API, a zatim ih šalje u novu Kafka temu pod nazivom \glqq \emph{enriched-errors}\grqq.
 
-Kroz ovaj proces, servis ne samo da poboljšava korisnikovo razumijevanje i reakciju na greške, već također pomaže u poboljšanju ukupne kvalitete i pouzdanosti sustava.
+Kroz ovaj proces servis ne samo da poboljšava korisnikovo razumijevanje i reakciju na greške već i pomaže u poboljšanju ukupne kvalitete i pouzdanosti sustava.
 
 \subsection{OpenAI API}
 \label{sec:openai}
 
-\textbf{OpenAI API} predstavlja sučelje koje omogućava pristup sofisticiranim algoritmima strojnog učenja koje je razvila organizacija OpenAI. Ovi algoritmi sposobni su za razumijevanje, generiranje i interpretiranje prirodnog jezika, što ih čini iznimno korisnima za širok spektar primjena. U kontekstu ovog rada, ti algoritmi se koriste za obogaćivanje informacija o greškama u dnevničkim zapisima.\\
+\textbf{OpenAI API} predstavlja sučelje koje omogućava pristup sofisticiranim algoritmima strojnog učenja koje je razvila organizacija \emph{OpenAI}. Ovi algoritmi sposobni su za razumijevanje, generiranje i interpretiranje prirodnog jezika, što ih čini iznimno korisnima za širok spektar primjena. U kontekstu ovog rada ti se algoritmi koriste za obogaćivanje informacija o greškama u dnevničkim zapisima.\\
 
-Za potrebe ovog rada, korišten je OpenAI model pod nazivom \emph{text-davinci-003}. No, bitno je naglasiti da se prethodno opisani servis može konfigurirati za upotrebu bilo kojeg dostupnog modela OpenAI API-ja.
+Za potrebe ovog rada korišten je OpenAI model pod nazivom \emph{text-davinci-003}. No, važno je naglasiti da se prethodno opisani servis može konfigurirati za upotrebu bilo kojeg dostupnog modela OpenAI API-ja.
 
-Model \emph{text-davinci-003} je jedan od najmoćnijih modela za obradu prirodnog jezika koje je OpenAI razvio. Ovaj model je treniran na širokom skupu podataka, što mu omogućava da razumije i generira koherentan i kontekstualno relevantan tekst temeljen na dobivenim ulaznim podacima. Takva sposobnost modela omogućuje visokokvalitetno obogaćivanje informacija sadržanih u dnevničkim zapisima.
+Model \emph{text-davinci-003} jedan je od najmoćnijih modela za obradu prirodnog jezika koje je OpenAI razvio. Ovaj model je treniran na širokom skupu podataka, što mu omogućava da razumije i generira koherentan i kontekstualno relevantan tekst temeljen na dobivenim ulaznim podacima. Takva sposobnost modela omogućuje visokokvalitetno obogaćivanje informacija sadržanih u dnevničkim zapisima.
 
-Komunikacija s OpenAI API-om može se ostvariti kroz HTTP protokol ili kroz biblioteke napisane za popularne programerske jezike. U ovom radu, odabrana je direktna komunikacija putem HTTP protokola sa OpenAI API-om.
+Komunikacija s OpenAI API-jem može se ostvariti kroz HTTP protokol ili kroz biblioteke napisane za popularne programerske jezike. U ovom radu odabrana je direktna komunikacija putem HTTP protokola s OpenAI API-jem.
 
 \section{Notifikacije u stvarnom vremenu}
 \label{sec:notifService}
 
 Problem s identifikacijom grešaka u sustavima može biti izazovan. Kada greška nastane, često nije odmah evidentno da određeni servis ima problem i da je njegov rad narušen. Ovaj izazov može otežati pravovremeno rješavanje problema, održavanje pouzdanosti i performansi sustava.\\
 
-Kako bi se riješio ovaj problem, za potrebe rada je razvijen poseban servis. Ovaj servis također je izrađen u Pythonu i ima mogućnost horizontalnog skaliranja zahvaljujući mogućnostima koje pruža Kafka Consumer API. Ova značajka omogućuje servisu da se prilagodi promjenjivim zahtjevima za performansama, omogućujući mu da efikasno obrađuje velike količine podataka i održava visoku razinu usluge.\\
+Kako bi se riješio ovaj problem, za potrebe rada je razvijen poseban servis. Ovaj servis također je izrađen u Pythonu i ima mogućnost horizontalnog skaliranja zahvaljujući mogućnostima koje pruža Kafka Consumer API. Ova značajka omogućuje servisu da se prilagodi promjenjivim zahtjevima za performanse, omogućujući mu da efikasno obrađuje velike količine podataka i održava visoku razinu usluge.\\
 
-Ovaj servis služi kao sustav za obavještavanje, poslužujući se različitim kanalima kako bi korisnike obavijestio o nastalim greškama u sustavu. To se postiže slanjem notifikacija putem e-maila, objavama na Slack kanalu, te slanjem obavijesti putem Pushover aplikacije. Ovaj više-kanalni pristup obavještavanju osigurava da relevantne informacije o problemima dođu do korisnika na najbrži i najefikasniji mogući način.
+Ovaj servis služi kao sustav za obavještavanje, poslužujući se različitim kanalima kako bi korisnike obavijestio o nastalim greškama u sustavu. To se postiže slanjem notifikacija putem elektroničke pošte, objavama na Slack kanalu te slanjem obavijesti putem Pushover aplikacije. Ovaj višekanalni pristup obavještavanja osigurava da relevantne informacije o problemima dođu do korisnika na najbrži i najefikasniji mogući način.
 
-Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i dodatne informacije dobivene putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema, olakšavajući time proces traženja rješenja.\\
+Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i dodatne informacije dobivene putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema olakšavajući time proces traženja rješenja.\\
 
-Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: e-mail notifikacija nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover mobilna notifikacija na slici \ref{fig:notif_pushover}.
+Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: notifikacija elektroničke pošte nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover mobilna notifikacija na slici \ref{fig:notif_pushover}.
 
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=12cm]{images/email_notif.png}
-	\caption[Primjer notifikacije dnevničkog zapisa greške kroz email]{Primjer notifikacije dnevničkog zapisa greške kroz email}
+	\caption[Primjer notifikacije dnevničkog zapisa greške kroz elektroničku poštu]{Primjer notifikacije dnevničkog zapisa greške putem elektroničke pošte}
 	\label{fig:notif_email}
 \end{figure}
 
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=14cm]{images/slack_notif.png}
-	\caption[Primjer notifikacije dnevničkog zapisa greške kroz Slack]{Primjer notifikacije dnevničkog zapisa greške kroz Slack}
+	\caption[Primjer notifikacije dnevničkog zapisa greške putem Slack aplikacije]{Primjer notifikacije dnevničkog zapisa greške putem Slack aplikacije}
 	\label{fig:notif_slack}
 \end{figure}
 
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=6cm]{images/mobile_notif.png}
-	\caption[Primjer notifikacije dnevničkog zapisa greške kroz Pushover mobilnu aplikaciju]{Primjer notifikacije dnevničkog zapisa greške kroz Pushover mobilnu aplikaciju}
+	\caption[Primjer notifikacije dnevničkog zapisa greške putem Pushover mobilne aplikacije]{Primjer notifikacije dnevničkog zapisa greške putem Pushover mobilne aplikacije}
 	\label{fig:notif_pushover}
 \end{figure}
 
-Ovaj servis je ključan za održavanje stabilnosti sustava, omogućavajući pravovremeno reagiranje na greške, smanjenje vremena neaktivnosti i poboljšanje ukupne kvalitete usluge.
+Ovaj servis je ključan za održavanje stabilnosti sustava omogućavajući pravovremeno reagiranje na greške, smanjenje vremena neaktivnosti i poboljšanje ukupne kvalitete usluge.
 
 \clearpage
 \section{Pregled kroz Kibanu}
@@ -933,15 +933,15 @@ TODO
 \chapter{Zaključak}
 \label{sec:conclusion}
 
-U doba digitalizacije i sve veće ovisnosti o informacijskim sustavima, efikasno i pravovremeno praćenje dnevničkih zapisa postaje presudno za pravilan rad i održavanje aplikacija. Ovaj rad istražio je kako se platforme Apache Kafka i ELK, uz pomoć OpenAI API-ja, mogu iskoristiti za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.
+U doba digitalizacije i sve veće ovisnosti o informacijskim sustavima efikasno i pravovremeno praćenje dnevničkih zapisa postaje presudno za pravilan rad i održavanje aplikacija. U ovom radu prikazano je istraživanje kako se platforme \emph{Apache Kafka} i \emph{ELK}, uz pomoć \emph{OpenAI API-ja}, mogu iskoristiti za obradu i analizu dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu.
 
-ELK platforma koja uključuje ElasticSearch, Logstash i Kibanu, zajedno s Apache Kafka platformom koristila se za obradu, prikupljanje i prikaz dnevničkih zapisa. Kafka Streams biblioteka korištena je za agregaciju dnevničkih zapisa, a OpenAI API za obogaćivanje zapisa, što omogućuje dublju analizu i razumijevanje informacija prikupljenih iz sustava.
+ELK platforma koja uključuje \emph{ElasticSearch}, \emph{Logstash} i \emph{Kibanu}, zajedno s Apache Kafka platformom koristila se za obradu, prikupljanje i prikaz dnevničkih zapisa. \emph{Kafka Streams} biblioteka korištena je za agregaciju dnevničkih zapisa, a OpenAI API za obogaćivanje zapisa, što omogućuje dublju analizu i razumijevanje informacija prikupljenih iz sustava.
 
-Na primjeru SaaS aplikacije \emph{CloudVane} tvrtke \emph{Neos}, demonstriralo se kako je moguće primijeniti opisane metode i tehnologije za nadzor dnevničkih zapisa u složenim distribuiranim sustavima. Rezultati istraživanja pokazali su da je korištenjem navedenih alata moguće detektirati i nadzirati anomalije u radu sustava na učinkovit način.
+Na primjeru SaaS aplikacije \emph{CloudVane} tvrtke \emph{Neos} demonstriralo se kako je moguće primijeniti opisane metode i tehnologije za nadzor dnevničkih zapisa u složenim distribuiranim sustavima. Rezultati istraživanja pokazali su da je korištenjem navedenih alata moguće detektirati i nadzirati anomalije u radu sustava na učinkovit način.
 
-Rad je također pokazao kako se korištenjem Apache Kafka platforme i ELK platforme može unaprijediti pouzdanost i brzina obrade podataka, što omogućuje pravovremeno reagiranje i pregled problema sustava.\\
+Rad je također pokazao kako se korištenjem Apache Kafka platforme i ELK platforme mogu unaprijediti pouzdanost i brzina obrade podataka, što omogućuje pravovremeno reagiranje i pregled problema sustava.\\
 
-Nadalje, kao nastavak na ovaj rad otvaraju se mogućnosti za buduća istraživanja. Primjerice, moguće je izgraditi servis koji bi, ovisno o detektiranoj grešci na koju je pretplaćen, mogao pokrenuti odgovarajuću skriptu. Moguće je integrirati servis Grafana za vizualizaciju sustava. Također, postoji prostor za poboljšanje postojećih procesa, unaprijeđenje automatizacije te ugradnju modela predikcije koji bi mogli koristiti kontekst prošlih pojavljenih dnevničkih zapisa.
+Nadalje, kao nastavak na ovaj rad otvaraju se mogućnosti za buduća istraživanja. Primjerice, moguće je izgraditi servis koji bi, ovisno o detektiranoj grešci na koju je pretplaćen, mogao pokrenuti odgovarajuću skriptu. Moguće je integrirati servis \emph{Grafana} za vizualizaciju sustava. Također, postoji prostor za poboljšanje postojećih procesa, unapređenje automatizacije te ugradnju modela predikcije koji bi mogao koristiti kontekst prošlih pojavljenih dnevničkih zapisa.
 
 \bibliography{literatura}
 \bibliographystyle{fer}
@@ -1019,7 +1019,7 @@ Nadalje, kao nastavak na ovaj rad otvaraju se mogućnosti za buduća istraživan
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[caption={Primjer dnevničkog zapisa sa CloudVane servisa sa metapodacima}
+\begin{lstlisting}[caption={Primjer dnevničkog zapisa sa CloudVane servisa s metapodacima}
 		,label={lst:cloudvaneLog}
 		,language=json]
 {
@@ -1116,7 +1116,7 @@ Nadalje, kao nastavak na ovaj rad otvaraju se mogućnosti za buduća istraživan
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[caption={Konfiguacija Logstasha na lokalnom Kubernetes grozdu}
+\begin{lstlisting}[caption={Konfiguacija Logstash-a na lokalnom Kubernetes grozdu}
 	,label={lst:logstash}]
 input {
 	kafka {
@@ -1149,7 +1149,7 @@ output {
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[caption={Konfiguacija Filebeata na CloudVane Kubernetes grozdu}
+\begin{lstlisting}[caption={Konfiguacija Filebeat-a na CloudVane Kubernetes grozdu}
 	,label={lst:filebeat}
 	,language=yaml]
 filebeat.inputs:
@@ -1272,7 +1272,7 @@ USER 1002
 
 
 \begin{sazetak}
-U radu naslovljenom \glqq Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu\grqq istražene su mogućnosti Apache Kafka platforme i komponenti ELK-a (ElasticSearch, Logstash i Kibana) za obradu i analizu dnevničkih zapisa raspodijeljenih mikro-servisnih aplikacija koje se izvode na Kubernetesu, u stvarnom vremenu. Rad koristi OpenAI API za obogaćivanje dnevničkih zapisa s dodatnim kontekstom i informacijama. Implementirani su mehanizmi za stvarno-vremenske notifikacije i agregaciju dnevničkih zapisa koristeći Kafka Streams, što omogućuje pravovremeno otkrivanje i reagiranje na anomalije u sustavu. Korištenjem SaaS aplikacije CloudVane tvrtke Neos kao primjera, pokazano je kako se ove tehnologije mogu primijeniti u nadzoru dnevničkih zapisa u složenim distribuiranim sustavima. Ovaj rad naglašava važnost dnevničkih zapisa za otkrivanje anomalija i nadzor performansi te ulogu Apache Kafka i ELK platforme u tom kontekstu.
+U radu naslovljenom \glqq Analiza dnevničkih zapisa raspodijeljenih sustava u stvarnom vremenu\grqq\hspace{1pt} istražene su mogućnosti Apache Kafka platforme i komponenti ELK-a (ElasticSearch, Logstash i Kibana) za obradu i analizu dnevničkih zapisa raspodijeljenih mikro-servisnih aplikacija koje se izvode na Kubernetesu u stvarnom vremenu. Rad koristi OpenAI API za obogaćivanje dnevničkih zapisa s dodatnim kontekstom i informacijama. Implementirani su mehanizmi za stvarno-vremenske notifikacije i agregaciju dnevničkih zapisa koristeći Kafka Streams, što omogućuje pravovremeno otkrivanje i reagiranje na anomalije u sustavu. Korištenjem SaaS aplikacije CloudVane tvrtke Neos kao primjera, pokazano je kako se ove tehnologije mogu primijeniti u nadzoru dnevničkih zapisa u složenim distribuiranim sustavima. Ovaj rad naglašava važnost dnevničkih zapisa za otkrivanje anomalija i nadzor performansi te ulogu Apache Kafka i ELK platforme u tom kontekstu.
 
 \kljucnerijeci{Kubernetes, Apache Kafka, Tokovi Podataka, Dnevnički zapisi, Obrada u stvarnom vremenu, Elastic, ELK, Nadzor aplikacija, Grozd računala, Logstash, Filebeat, ElasticSearch, Kibana, Minikube, Oblak}
 \end{sazetak}
@@ -1280,7 +1280,7 @@ U radu naslovljenom \glqq Analiza dnevničkih zapisa raspodijeljenih sustava u s
 \clearpage
 \engtitle{Real-Time Log Analysis for Monitoring Distributed Systems}
 \begin{abstract}
-In the thesis titled \glqq Real-time Log Analysis of Distributed Systems\grqq, the potential of Apache Kafka platform and ELK stack components (ElasticSearch, Logstash, and Kibana) for real-time processing and analysis of distributed microservice applications running on Kubernetes, was explored. The study utilizes the OpenAI API for enriching log files with additional context and information. The thesis introduces mechanisms for real-time notifications and log aggregations using Kafka Streams, enabling timely detection and response to system anomalies. Using Neos company's SaaS application CloudVane as an example, the study demonstrates how these technologies can be implemented in monitoring log files in complex distributed systems. This work emphasizes the importance of log files for anomaly detection and performance monitoring, as well as the role of Apache Kafka and ELK platforms in this context.
+In the thesis titled \glqq Real-time Log Analysis of Distributed Systems\grqq, the potential of Apache Kafka platform and ELK stack components (ElasticSearch, Logstash, and Kibana) for real-time processing and analysis of distributed microservice applications running on Kubernetes was explored. The study utilizes the OpenAI API for enriching log files with additional context and information. The thesis introduces mechanisms for real-time notifications and log aggregations using Kafka Streams enabling timely detection and response to system anomalies. Using Neos's SaaS application CloudVane as an example, the study demonstrates how these technologies can be implemented in monitoring log files in complex distributed systems. This work emphasizes the importance of log files for anomaly detection and performance monitoring, as well as the role of Apache Kafka and ELK platforms in this context.
 
 \keywords{Kubernetes, Apache Kafka, Streaming, Real-Time, Logs, Elastic, ELK, Monitoring, Cluster, Logstash, Filebeat, ElasticSearch, Kibana, Minikube, Cloud}
 \end{abstract} 
