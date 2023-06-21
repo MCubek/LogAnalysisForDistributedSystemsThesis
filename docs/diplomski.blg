@@ -3,50 +3,48 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: diplomski.aux
 The style file: fer.bst
 Database file #1: literatura.bib
-Warning--empty year in courtemanche_what_nodate
-Warning--empty year in finops_fundation_finops_nodate
 Warning--empty journal in hunt_zookeeper_2010
 Warning--empty journal in cubek_apache_2022
 Warning--empty publisher in zarko_raspodijeljeni_2013
-You've used 17 entries,
+You've used 21 entries,
             2773 wiz_defined-function locations,
-            686 strings with 7571 characters,
-and the built_in function-call counts, 5976 in all, are:
-= -- 497
-> -- 299
-< -- 14
-+ -- 107
-- -- 90
-* -- 400
-:= -- 957
-add.period$ -- 65
-call.type$ -- 17
-change.case$ -- 74
-chr.to.int$ -- 17
-cite$ -- 39
-duplicate$ -- 307
-empty$ -- 545
-format.name$ -- 111
-if$ -- 1239
+            706 strings with 8306 characters,
+and the built_in function-call counts, 7174 in all, are:
+= -- 603
+> -- 339
+< -- 18
++ -- 123
+- -- 102
+* -- 468
+:= -- 1139
+add.period$ -- 77
+call.type$ -- 21
+change.case$ -- 90
+chr.to.int$ -- 21
+cite$ -- 45
+duplicate$ -- 367
+empty$ -- 673
+format.name$ -- 127
+if$ -- 1497
 int.to.chr$ -- 1
 int.to.str$ -- 1
 missing$ -- 18
-newline$ -- 107
-num.names$ -- 68
-pop$ -- 210
+newline$ -- 127
+num.names$ -- 84
+pop$ -- 255
 preamble$ -- 1
-purify$ -- 64
+purify$ -- 76
 quote$ -- 0
-skip$ -- 228
+skip$ -- 281
 stack$ -- 0
-substring$ -- 34
-swap$ -- 25
+substring$ -- 42
+swap$ -- 33
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 147
-warning$ -- 5
-while$ -- 51
+type$ -- 191
+warning$ -- 3
+while$ -- 63
 width$ -- 0
-write$ -- 237
-(There were 5 warnings)
+write$ -- 287
+(There were 3 warnings)

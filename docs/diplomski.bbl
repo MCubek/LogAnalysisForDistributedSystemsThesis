@@ -1,4 +1,4 @@
-\begin{thebibliography}{17}
+\begin{thebibliography}{21}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -12,17 +12,31 @@ Kumar Chandrakant.
 \newblock URL
   \url{https://www.baeldung.com/kafka-shift-from-zookeeper-to-kraft}.
 
-\bibitem[Courtemanche et~al.()Courtemanche, Mell, i
-  Gillis]{courtemanche_what_nodate}
+\bibitem[CloudFlare(2023)]{cloudflare_why_2023}
+Inc CloudFlare.
+\newblock Why use serverless computing? {\textbar} {Pros} and cons of
+  serverless, 2023.
+\newblock URL
+  \url{https://www.cloudflare.com/learning/serverless/why-use-serverless/}.
+
+\bibitem[Courtemanche et~al.(2021)Courtemanche, Mell, i
+  Gillis]{courtemanche_what_2021}
 Meredith Courtemanche, Emily Mell, i Alexander Gillis.
-\newblock What {Is} {DevOps}? {The} {Ultimate} {Guide}.
+\newblock What {Is} {DevOps}? {The} {Ultimate} {Guide}, Prosinac 2021.
 \newblock URL
   \url{https://www.techtarget.com/searchitoperations/definition/DevOps}.
 
-\bibitem[Finops~Fundation()]{finops_fundation_finops_nodate}
+\bibitem[Finops~Fundation(2021)]{finops_fundation_finops_2021}
 Finops Finops~Fundation.
-\newblock {FinOps} {Foundation} - {What} is {FinOps}?
+\newblock {FinOps} {Foundation} - {What} is {FinOps}?, Studeni 2021.
 \newblock URL \url{https://www.finops.org/introduction/what-is-finops/}.
+
+\bibitem[Gillis(2020)]{gillis_what_2020}
+Alexander Gillis.
+\newblock What {Are} {Containers} ({Container}-based {Virtualization} or
+  {Containerization})?, O\v{z}ujak 2020.
+\newblock URL
+  \url{https://www.techtarget.com/searchitoperations/definition/container-containerization-or-container-based-virtualization}.
 
 \bibitem[Gormley i Tong(2015)]{gormley_elasticsearch_2015}
 Clinton Gormley i Zachary Tong.
@@ -30,6 +44,12 @@ Clinton Gormley i Zachary Tong.
 \newblock O'Reilly, 2015.
 \newblock ISBN 978-1-4493-5854-9.
 \newblock Google-Books-ID: 2tQBoQEACAAJ.
+
+\bibitem[Harris(2023)]{harris_microservices_2023}
+Chandler Harris.
+\newblock Microservices vs. monolithic architecture, 2023.
+\newblock URL
+  \url{https://www.atlassian.com/microservices/microservices-architecture/microservices-vs-monolith}.
 
 \bibitem[Hunt et~al.(2010)Hunt, Konar, Junqueira, i Reed]{hunt_zookeeper_2010}
 Patrick Hunt, Mahadev Konar, Flavio~P Junqueira, i Benjamin Reed.
@@ -82,6 +102,12 @@ Sam Newman.
 \newblock O'Reilly Media, Velja\v{c}a 2015.
 \newblock ISBN 978-1-4919-5035-7.
 \newblock Google-Books-ID: 1uUDoQEACAAJ.
+
+\bibitem[Red~Hat(2021)]{red_hat_what_2021}
+Inc Red~Hat.
+\newblock What is containerization?, Travanj 2021.
+\newblock URL
+  \url{https://www.redhat.com/en/topics/cloud-native-apps/what-is-containerization}.
 
 \bibitem[Seymour(2021)]{seymour_mastering_2021}
 Mitch Seymour.

@@ -87,7 +87,7 @@ Informacijski sustavi s vremenom postaju složeniji te su samim time izazovniji 
 
 Nadzor nad dnevničkim zapisima omogućuje otkrivanje anomalija, detektiranje negativnih učinaka na performanse i drugih problema koji mogu utjecati na kvalitetu usluge. Cilj je ove teze istražiti mogućnosti Kafka platforme za analizu dnevničkih zapisa, s posebnim naglaskom na detekciju i nadzor anomalija u raspodijeljenim sustavima.
 
-Ovaj rad proučavat će Apache Kafka  i ELK platforme istražujući kako se mogu koristiti za obradu i analizu dnevničkih zapisa u stvarnom vremenu. Analiza će se napraviti na stvarnom primjeru SaaS-a\footnote{Softver kao usluga \engl{Software as a Service}} \emph{CloudVane} tvrtke \emph{Neos} te će se upravo na toj distribuiranoj aplikaciji pokazati iskoristivost rješenja rada.
+Ovaj rad proučavat će Apache Kafka  i ELK platforme istražujući kako se mogu koristiti za obradu i analizu dnevničkih zapisa u stvarnom vremenu. Analiza će se napraviti na stvarnom primjeru SaaS-a\footnote{Softver kao usluga \engl{Software as a Service}} \emph{CloudVane} tvrtke \emph{Neos} te će se upravo na toj distribuiranoj mikro-servisnoj aplikaciji pokazati iskoristivost rješenja rada.
 
 Također, rad će razmatrati kako se korištenim alatima mogu poboljšati pouzdanost i brzina obrade podataka kako bi se pravovremeno moglo odazvati na probleme sustava. Očekuje se da će ovaj rad pružiti dublje razumijevanje važnosti i mogućnosti analize dnevničkih zapisa u raspodijeljenim sustavima, kao i uloge Kafka platforme u tom kontekstu.\\
 
@@ -109,13 +109,13 @@ U ovom će se poglavlju razmotriti različite arhitekture aplikacija, uključuju
 \section{Monolitne aplikacije}
 \label{sec:monolith}
 
-\textbf{Monolitne aplikacije} karakterizira integracija svih funkcionalnosti unutar jedinstvene operativne jedinice. U ovakvom sustavu sve komponente, od korisničkog sučelja do pozadinskog sustava i baze podataka, tvore koherentnu cjelinu iste aplikacije. \\
+\textbf{Monolitne aplikacije} karakterizira integracija svih funkcionalnosti unutar jedinstvene operativne jedinice \citep{harris_microservices_2023}. U ovakvom sustavu sve komponente, od korisničkog sučelja do pozadinskog sustava i baze podataka, tvore koherentnu cjelinu iste aplikacije. \\
 
 Glavna prednost monolitne arhitekture leži u njenom centraliziranom pristupu koji pojednostavljuje interakcije među komponentama eliminirajući potrebu za kompleksnom komunikacijom koja je česta kod distribuiranih aplikacija. Osim toga, monolitne aplikacije često su jednostavnije za testiranje i održavanje jer se ne zahtijeva upravljanje mnoštvom odvojenih servisa. 
 
 Ipak, monolitne aplikacije imaju nedostatke. Jedan je od ključnih izazova skaliranje: kako raste opterećenje na aplikaciju, monolitne aplikacije omogućavaju samo vertikalno skaliranje, što znači povećanje resursa na postojećem serveru. Horizontalno skaliranje, koje podrazumijeva dodavanje dodatnih servera, nije moguće. Također, ažuriranje ili mijenjanje bilo kojeg segmenta aplikacije često zahtijeva ponovnu implementaciju \engl{deployment} cijelog sustava, što može dovesti do privremene nedostupnosti usluge. \\
 
-Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u računalnoj industriji. U mnogim ih slučajevima njihova jednostavnost, kombinirana s potencijalnom uštedom u mrežnom prometu, čini atraktivnom opcijom za manje složene i manje opterećene sustave.
+Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u računalnoj industriji. U mnogim ih slučajevima njihova jednostavnost, kombinirana s potencijalnom uštedom u mrežnom prometu, čini atraktivnom opcijom za manje složene sustave ili sustave s konstantnim opterećenjem.
 
 
 \section{Distribuirane aplikacije}
@@ -170,20 +170,20 @@ Korištenje virtualnih strojeva donosi niz značajnih prednosti. Prva među njim
 
 Još jedan bitan aspekt korištenja virtualnih strojeva je izolacija. S obzirom na to da su virtualni strojevi nezavisne jedinice, moguće je pokrenuti različite aplikacije na različitim operativnim sustavima na istom fizičkom računalu. Ova izolacija smanjuje rizik od međusobnog utjecaja aplikacija i povećava sigurnost jer potencijalni problemi ili napadi na jedan virtualni stroj ne utječu na drugi.
 
-Uz to, virtualni strojevi pružaju veliku fleksibilnost i skalabilnost. Dodavanje ili uklanjanje virtualnih strojeva, prema potrebama korisnika ili aplikacije, može se obaviti brzo i efikasno. Mogućnost preslikavanja \engl{snapshotting} i kloniranja virtualnih strojeva olakšava sigurnosne kopije \engl{backup} i oporavak sustava te omogućava jednostavno testiranje i razvoj.
+Uz to, virtualni strojevi pružaju veliku fleksibilnost i skalabilnost. Dodavanje ili uklanjanje virtualnih strojeva, prema potrebama korisnika ili aplikacije, može se obaviti brzo i efikasno. Mogućnost preslikavanja \engl{snapshot} i kloniranja \engl{clone} virtualnih strojeva olakšava sigurnosne kopije \engl{backup} i oporavak sustava te omogućava jednostavno testiranje i razvoj.
 
 Međutim, unatoč brojnim prednostima, korištenje virtualnih strojeva donosi i određeno dodatno opterećenje \engl{overhead}. Svaki virtualni stroj zahtijeva određeni dio računalnih resursa za rad operativnog sustava, što može rezultirati manjom efikasnošću u odnosu na pokretanje aplikacija direktno na hardveru. Upravljanje velikim brojem virtualnih strojeva također može biti složeno, ali postoje različiti alati i platforme za upravljanje virtualnim okruženjima koji mogu pomoći u tome. Usporedba pokretanja na virtualnim strojevima s pokretanjem direktno na hardveru i kontejnerima objašnjenim u sljedećem poglavlju vidljiva je na slici \ref{fig:infra}.
 
 \section{Kontejnerizacija i Docker}
 \label{sec:docker}
 
-\textbf{Kontejnerizacija} \engl{containerization} je proces pakiranja aplikacije zajedno s potrebnim okruženjem i zavisnostima \engl{dependencies}, što omogućuje jednostavno izvršavanje i pokretanje aplikacije u različitim računalnim okruženjima. Kontejneri su izolirane jedinice koje sadrže sve što je potrebno za izvršavanje aplikacije uključujući programski kod, izvršno okruženje \engl{runtime}, sistemske alate, knjižnice \engl{libraries} i postavke. \\
+\textbf{Kontejnerizacija} \engl{containerization} je proces pakiranja aplikacije zajedno s potrebnim okruženjem i zavisnostima \engl{dependencies}, što omogućuje jednostavno izvršavanje i pokretanje aplikacije u različitim računalnim okruženjima \citep{red_hat_what_2021}. Kontejneri su izolirane jedinice koje sadrže sve što je potrebno za izvršavanje aplikacije uključujući programski kod, izvršno okruženje \engl{runtime}, sistemske alate, knjižnice \engl{libraries} i postavke. \\
 
 \textbf{Docker} je najpoznatiji alat za kontejnerizaciju koji je postao standard u industriji. S Dockerom programeri mogu stvoriti, pokrenuti i distribuirati aplikacije unutar kontejnera. Kontejneri stvoreni pomoću Dockera\footnote{Kroz Docker je moguće pokrenuti kontejnere koje su kreirali različiti alati, pod uvjetom da implementiraju Open Container Initiative standard koji je postavila Linux Fundacija. Slično tome, kontejneri koji su kreirani korištenjem Dockera mogu se pokrenuti kroz bilo koje drugo izvršno okruženje kontejnera koje podržava Open Container Initiative. Ova interoperabilnost omogućava veću fleksibilnost i slobodu izbora prilikom rada s kontejnerima.} mogu se pokrenuti bilo gdje je Docker instaliran bez obzira na osnovni operativni sustav. To znači da programeri ne moraju brinuti o kompatibilnosti operativnih sustava prilikom pokretanja svojih aplikacija.
 
-Kontejnerizacija donosi brojne prednosti. Kontejneri su manji i brži od tradicionalnih virtualnih strojeva jer ne zahtijevaju cijeli operativni sustav. Osim toga, kontejneri osiguravaju konzistentnost okruženja kroz razne faze razvojnog ciklusa aplikacija. Uz to, Docker omogućuje jednostavno skaliranje aplikacija dodavanjem ili uklanjanjem kontejnera po potrebi.
+Kontejnerizacija donosi brojne prednosti. Kontejneri su manji i brži od tradicionalnih virtualnih strojeva jer ne zahtijevaju cijeli operativni sustav. Osim toga, kontejneri osiguravaju konzistentnost okruženja kroz razne faze razvojnog ciklusa aplikacija \citep{gillis_what_2020}. Uz to, Docker omogućuje jednostavno skaliranje aplikacija dodavanjem ili uklanjanjem kontejnera po potrebi.
 
-Kao rezultat, kontejnerizacija i Docker postali su ključni elementi modernih razvojnih ciklusa i \emph{DevOps}\footnote{DevOps je skup praksi, filozofija i alata koji poboljšavaju suradnju između razvoja softvera \engl{Dev} i IT operacija \engl{Ops}} praksi, igrajući ključnu ulogu u povećanju efikasnosti i brzine isporuke softvera. 
+Kao rezultat, kontejnerizacija i Docker postali su ključni elementi modernih razvojnih ciklusa i \emph{DevOps}\footnote{DevOps je skup praksi, filozofija i alata koji poboljšavaju suradnju između razvoja softvera \engl{Dev} i IT operacija \engl{Ops} \citep{courtemanche_what_2021}.} praksi, igrajući ključnu ulogu u povećanju efikasnosti i brzine isporuke softvera. 
 
 Usporedba kontejnera, koji su zahvaljujući svojim prednostima postali temelj sustava poput \emph{Kubernetes} iz poglavlja \ref{sec:k8s}, s pokretanjem direktno na hardveru i virtualnim strojevima prikazana je na slici \ref{fig:infra}.
 
@@ -200,7 +200,7 @@ Prema \citet{zarko_raspodijeljeni_2013} postoje različiti modeli oblaka:
 	\item [Hibridni oblak:] mješavina javnog i privatnog oblaka, pruža organizacijama veću fleksibilnost prilikom upravljanja svojim resursima.
 \end{description}
 
-Korištenje usluga u oblaku također omogućava pristup naprednim tehnologijama i alatima, poput orkestracije kontejnera, automatizacije, umjetne inteligencije i analiza podataka, koje bi bile teško dostupne ili skupe za implementaciju na vlastitoj infrastrukturi.
+Korištenje usluga u oblaku također omogućava pristup naprednim tehnologijama i alatima, poput orkestracije kontejnera, automatizacije, umjetne inteligencije i analize podataka, koje bi bile teške i skupe za implementaciju na vlastitoj infrastrukturi.
 
 Osim toga, pružatelji usluga u oblaku nude sofisticirane mehanizme sigurnosti, otpornosti na pogreške i oporavka podataka, čime dodatno povećavaju dostupnost i pouzdanost aplikacija koje se nalaze u oblaku.
 
@@ -220,7 +220,7 @@ Pružatelji usluga u oblaku, poput \emph{Amazon Web Services} (\textbf{AWS}), \e
 
 \subsection{Lambda funkcije}
 
-\textbf{Lambda funkcije}, koje su popularizirane kroz računalni oblak \textbf{AWS}\footnote{Amazon Web Services}, predstavljaju ključni dio koncepta \textbf{bez-servernog} \engl{serverless} računarstva. Naziv potječe od koncepta da se programeri ne trebaju brinuti o infrastrukturi na kojoj se njihova usluga pokreće.
+\textbf{Lambda funkcije}, koje su popularizirane kroz računalni oblak \textbf{AWS}\footnote{Amazon Web Services}, predstavljaju ključni dio koncepta \textbf{bez-servernog} \engl{serverless} računarstva. Naziv potječe od koncepta da se programeri ne trebaju brinuti o infrastrukturi na kojoj se njihova usluga pokreće \citep{cloudflare_why_2023}.
 
 Lambda funkcije esencijalno su blokovi koda koji su dizajnirani za obavljanje specifične zadaće i koji se mogu pokrenuti na zahtjev. One se izvršavaju samo kada su potrebne, što znači da korisnici plaćaju samo za vrijeme izvršavanja koda, a ne za stalno prisutne poslužitelje.
 
@@ -239,7 +239,7 @@ Kako bi riješio ove probleme, Amazon Prime Video je rekonstruirao uslugu u mono
 
 \textbf{CloudVane} je proizvod koji pomaže upravljati i optimizirati trošak te infrastrukturu u \emph{više-oblačnom} \engl{multicloud} okruženju  \citep{neos_cloudvane_2023}. Glavni je cilj CloudVane aplikacije pružiti vidljivost i kontrolu nad upotrebom oblaka \engl{clouda} u cijeloj organizaciji. \\
 
-CloudVane je izgrađen na \textbf{FinOps}\footnote{FinOps je udruga koja se bavi kulturom upravljanja troškova usluga u oblaku. Naziv FinOps dolazi od riječi financijsko upravljanje \engl{Financial Operations} i definira prakse, principe i kulturu kako bi organizacije bolje razumjele svoje troškove u oblaku i donosile informirane poslovne odluke \citep{finops_fundation_finops_nodate}.} principima koji se fokusiraju na razumijevanje i upravljanje troškovima u oblaku i resursima kako bi se donijele informirane poslovne odluke. CloudVane sadrži alatnu ploču \engl{dashboard} koja nudi pogled na izvještaje iz oblaka, proračune, pragove proračuna i hijerarhiju organizacije kroz jedinstveni pogled.
+CloudVane je izgrađen na \textbf{FinOps}\footnote{FinOps je udruga koja se bavi kulturom upravljanja troškova usluga u oblaku. Naziv FinOps dolazi od riječi financijsko upravljanje \engl{Financial Operations} i definira prakse, principe i kulturu kako bi organizacije bolje razumjele svoje troškove u oblaku i donosile informirane poslovne odluke \citep{finops_fundation_finops_2021}.} principima koji se fokusiraju na razumijevanje i upravljanje troškovima u oblaku i resursima kako bi se donijele informirane poslovne odluke. CloudVane sadrži alatnu ploču \engl{dashboard} koja nudi pogled na izvještaje iz oblaka, proračune, pragove proračuna i hijerarhiju organizacije kroz jedinstveni pogled.
 Neke od funkcionalnosti koje CloudVane nudi jesu:
 
 \begin{itemize} 
@@ -285,7 +285,7 @@ Bez obzira na to kako je pokrenut, Kubernetes donosi robustan, fleksibilan i ska
 
 \subsection{Implementacija aplikacije CloudVane na Kubernetesu}
 
-Kao što je prethodno spomenuto, svi mikro-servisi koje koristi CloudVane, kao i Apache Kafka servisi kasnije opisani u poglavlju \ref{sec:kafka}, operiraju unutar Kubernetes klastera na Oracle Cloud Infrastructure (OCI) platformi. DevOps prakse, koje kombiniraju elemente softverskog razvoja \engl{Development} i IT operacija \engl{Operations} kako bi se poboljšala brzina isporuke i kvaliteta softvera \citep{courtemanche_what_nodate}, također su implementirane unutar ovog sustava.\\
+Kao što je prethodno spomenuto, svi mikro-servisi koje koristi CloudVane, kao i Apache Kafka servisi kasnije opisani u poglavlju \ref{sec:kafka}, operiraju unutar Kubernetes klastera na \emph{Oracle Cloud Infrastructure (OCI)} platformi. DevOps prakse, koje kombiniraju elemente softverskog razvoja \engl{Development} i IT operacija \engl{Operations} kako bi se poboljšala brzina isporuke i kvaliteta softvera \citep{courtemanche_what_2021}, također su implementirane unutar ovog sustava.\\
 
 \textbf{Jenkins}, moćan alat za kontinuiranu integraciju koji automatizira ključne aspekte razvojnog procesa softvera, poput izgradnje, testiranja i implementacije koda, dodatno je integriran u ovaj Kubernetes klaster. Jenkins omogućuje korisnicima agilne DevOps procese pružajući automatizirane cikluse izgradnje za brzu i pouzdanu isporuku koda.\\
 
@@ -296,7 +296,7 @@ Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je 
 
 Kako bi se uspješno kretalo kroz kompleksni svijet Kubernetesa i učinkovito upravljalo njegovim resursima, razumijevanje temeljne terminologije je neophodno. Ovo poglavlje pruža uvid u ključne pojmove i komponente važne za razumijevanje ovog rada.
 
-Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskriptivnih YAML\footnote{YAML \engl{YAML Ain't Markup Language} je format za serijalizaciju podataka idealan za konfiguracijske datoteke.} ili JSON\footnote{JSON \engl{JavaScript Object Notation} je format koji je lagan za čitanje i pisanje za ljude, a jednostavan za strojeve za obradu.} datoteka, omogućavajući precizno i reproducibilno definiranje stanja resursa unutar klastera.
+Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskriptivnih \emph{YAML}\footnote{YAML \engl{YAML Ain't Markup Language} je format za serijalizaciju podataka idealan za konfiguracijske datoteke.} ili \emph{JSON}\footnote{JSON \engl{JavaScript Object Notation} je format koji je lagan za čitanje i pisanje za ljude, a jednostavan za strojeve za obradu.} datoteka, omogućavajući precizno i reproducibilno definiranje stanja resursa unutar klastera.
 
 \begin{description} 
 	\item[Pod:] Pod je najmanja i najjednostavnija jedinica u Kubernetes modelu. To je skupina jednog ili više kontejnera koji dijele mrežu, prostor za pohranu i postavke za pokretanje.
@@ -309,23 +309,24 @@ Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskrip
 	\item[Deployment:] Deployment je kontroler koji omogućuje ažuriranje aplikacija na serverima bez prekida rada. Deployment upravlja ReplicaSet-ovima.
 	\item[DaemonSet:] DaemonSet je kontroler koji osigurava da se kopija određenog Pod-a pokreće na svim čvorovima (ili na odabranim čvorovima) unutar klastera.
 	\item[StatefulSet:] StatefulSet je kontroler koji omogućuje upravljanje stanjem aplikacija.
-	\item[Ingress:] Ingress je API objekt koji upravlja vanjskim pristupima servisima u klasteru, obično HTTP-u.
-	\item[Kubernetes prostor imena \engl(namespace):] Prostor imena je mehanizam za izolaciju resursa u klasteru.
+	\item[Ingress:] Ingress je API objekt koji upravlja vanjskim pristupima servisima u klasteru.
+	\item[Kubernetes prostor imena \engl{Namespace}:] Prostor imena je mehanizam za izolaciju resursa u klasteru.
 	\item[CRD \engl{Custom Resource Definitions}:] CRD-ovi su snažan okvir za stvaranje i upravljanje prilagođenim resursima.
 	\item[Kubelet:] Kubelet je agent koji se pokreće na svakom čvoru klastera i osigurava da su kontejneri u Pod-u pokrenuti i rade ispravno.
-	\item[Kubectl:] Kubectl je komandna linija za interakciju s Kubernetes klasterom.
+	\item[Kubectl:] Kubectl je komandno-linijski alat za interakciju s Kubernetes klasterom.
 	\item[Kubernetes operator:] Operator je metoda koja omogućuje pakiranje, implementaciju i upravljanje Kubernetes aplikacijom.
 \end{description}
+\citep{luksa_kubernetes_2023}
 
 \clearpage
 \subsection{Minikube}
 \label{sec:minikube}
 
-Za implementaciju komponenti ovog rada koristi se Kubernetes klaster različit od onoga na kojem funkcionira CloudVane testno okruženje. Konkretno \textbf{Minikube}, alat dizajniran za rad s Kubernetesom na lokalnoj razini, koji se izvodi kao Docker kontejner.
+Za implementaciju komponenti ovog rada koristi se Kubernetes klaster različit od onoga na kojem funkcionira CloudVane okruženje. Konkretno \textbf{Minikube}, alat dizajniran za rad s Kubernetesom na lokalnoj razini, koji se izvodi kao Docker kontejner.
 
 Minikube je visoko prilagodljiv i lako dostupan alat koji pojednostavljuje proces postavljanja i testiranja Kubernetes aplikacija u izoliranoj i kontroliranoj okolini. Njegova sposobnost da simulira Kubernetes klaster unutar Docker kontejnera čini ga iznimno korisnim za razvoj i testiranje omogućujući programerima da eksperimentiraju, prate promjene i brzo testiraju nove funkcionalnosti bez rizika za produkcijsko okruženje \citep{luksa_kubernetes_2023}. \\
 
-Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada istovremeno osiguravajući stabilnost i integritet CloudVane testne okoline. 
+Ovaj pristup omogućuje sigurno testiranje i iteraciju kroz razvoj komponenata ovog rada istovremeno osiguravajući stabilnost i integritet CloudVane okoline. 
 
 Minikube zbog činjenice da je pokrenut kao Docker kontejner sadrži samo jedan računalni čvor u Kubernetes grozdu koji stvara. Međutim, svi Kubernetes objekti koji su razvijeni u sklopu ovog rada te dizajnirani i pokrenuti u Minikube-u mogu se lako migrirati u drugi Kubernetes klaster s minimalnim potrebnim preinakama.
 
@@ -341,9 +342,9 @@ Originalno razvijena unutar LinkedIn-a, Kafka je bila rješenje za izazove povez
 
 Kao dodatak brzini i efikasnosti Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu. \\
 
-Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafku kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući \emph{Kafka Brokere, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI} servise.
+Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafku kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući \emph{Kafka posrednike, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI} servise.
 
-Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Specifična uloga svakog servisa u kontekstu obrade podataka aplikacije CloudVane u testnom okruženju također je pažljivo razrađena u poglavlju \ref{sec:architecture}.
+Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Specifična uloga svakog servisa u kontekstu obrade podataka aplikacije CloudVane također je pažljivo razrađena u poglavlju \ref{sec:architecture}.
 
 Ova strukturirana arhitektura koju omogućuje Apache Kafka, s usko povezanim srodnim servisima, omogućava CloudVane aplikaciji da efikasno upravlja velikim količinama podataka pružajući robustan i pouzdan sustav za obradu podataka u stvarnom vremenu.
 Detalji o funkcionalnostima i karakteristikama svakog servisa predstavljeni su u idućim poglavljima.
@@ -407,7 +408,7 @@ Međutim, Apache Kafka je nedavno (u vrijeme pisanja ovoga rada) prešla s kori�
 
 Kako \citet{chandrakant_kafkas_2022} navodi, cilj prelaska s ZooKeeper-a na Kraft je pojednostaviti arhitekturu Kafke i poboljšati je. Kraft je varijanta Raft konsenzusnog protokola temeljena na događajima i promjena koju uvodi smanjuje prozor nedostupnosti kod pogrešaka Kafka posrednika jer može nadoknaditi propuštene događaje iz dnevnika nakon ponovnog pridruživanja. 
 
-Očekuje se da će prelazak na Kraft biti od značajne koristi zajednici Apache Kafke. Administratori sustava će lakše nadzirati, administrirati i podržavati Kafku. Novo upravljanje meta-podacima također znatno poboljšava performanse Apache Kafke omogućujući posredniku da se brže prebaci na rezervu i obradi mnogo veći broj particija po klasteru.
+Očekuje se da će prelazak na Kraft biti od značajne koristi zajednici Apache Kafke. Administratori sustava će lakše nadzirati, administrirati i podržavati Kafku. Novo upravljanje meta-podacima također znatno poboljšava performanse Apache Kafke omogućujući posredniku da se brže oporavi od pogrešaka i da obrađuje mnogo veći broj particija \citep{chandrakant_kafkas_2022}.
 
 \clearpage
 \subsection{Kafka Streams}
@@ -429,17 +430,17 @@ Kafka Streams podržava širok spektar agregacijskih operacija. Ovo uključuje s
 
 Agregacije se u Kafka Streams biblioteci provode na temelju \emph{ključa} Kafka poruke. Ako ključ poruke ne odgovara vrijednosti prema kojoj je potrebno agregirati, Kafka Streams nudi proces promjene ključa \engl{rekeying}. Međutim, ovaj proces rezultira stvaranjem nove Kafka teme.
 
-Važna komponenta Kafka Streams-a prilikom obrade agregacija jest baza podataka \emph{RocksDB}. RocksDB se koristi kao lokalna baza podataka za brzo pohranjivanje i pristup podacima koji su ključni za agregacijske operacije. Stanje Kafka Streams aplikacije se također pohranjuje trajno u specijaliziranu Kafka temu, što omogućava otpornost na greške i olakšava oporavak.\\
+Važna komponenta Kafka Streams-a prilikom obrade agregacija jest baza podataka \emph{RocksDB}. RocksDB se koristi kao lokalna baza podataka za brzo pohranjivanje i pristup podacima koji su ključni za agregacijske operacije. Stanje Kafka Streams aplikacije se također pohranjuje trajno u specijaliziranu Kafka temu, što omogućava otpornost na greške i oporavak.\\
 
 Uz mogućnost provođenja agregacija na tokovima podataka, Kafka Streams biblioteka omogućava korisnicima transformaciju velikih količina podataka u korisne informacije. Ove informacije mogu biti od presudne važnosti za donošenje informiranih odluka.
 
 \subsubsection{Prozori u Kafka Streams-u}
 
-Jedna od naprednih funkcionalnosti Kafka Streams biblioteke je \emph{prozoriranje} \engl{windowing} koje omogućuje obradu podataka unutar određenog vremenskog intervala, poznatog kao prozor \engl{window}. Prozoriranje je posebno korisno kada se podaci trebaju agregirati na temelju vremenskih intervala, kao što su minuta, sat ili dan.\\
+Jedna od naprednih funkcionalnosti Kafka Streams biblioteke je \emph{prozoriranje} \engl{windowing} koje omogućuje obradu podataka unutar određenog vremenskog intervala, poznatog kao prozor \engl{window}. Prozoriranje je posebno korisno kada se podaci trebaju agregirati na temelju vremenskih intervala, kao što su \emph{minuta}, \emph{sat} ili \emph{dan}.\\
 
 U biblioteci Kafka Streams postoje tri glavne vrste prozora, čije se karakteristike mogu pregledati u tablici pod referencom \ref{tbl:windows} i na slici \ref{fig:windows}. Ove vrste prozora omogućuju provođenje složenih analitičkih operacija, poput izračuna pomičnog prosjeka ili izračuna agregata unutar određenoga vremenskog intervala.
 
-Iako se u tablici navode četiri vrste prozora, klizeći prozor \engl{sliding window} zapravo je podskup skakućeg prozora \engl{hopping window} s beskonačno malim vremenskim pomakom. Ovo znači da, za razliku od skakućeg prozora koji \glqq preskače\grqq\hspace{1pt} na novi vremenski interval, klizeći prozor kontinuirano \glqq klizi\grqq\hspace{1pt}  kroz vremensku os pružajući time neprekidan pregled podataka.
+Iako se u tablici navode četiri vrste prozora, \emph{klizeći prozor} \engl{sliding window} zapravo je podskup \emph{skakućeg prozora} \engl{hopping window} s beskonačno malim vremenskim pomakom. Ovo znači da, za razliku od skakućeg prozora koji \glqq preskače\grqq\hspace{1pt} na novi vremenski interval, klizeći prozor kontinuirano \glqq klizi\grqq\hspace{1pt}  kroz vremensku os pružajući time neprekidan pregled podataka.
 
 Ove različite vrste prozora pružaju fleksibilnost u obradi tokova podataka s Kafkom omogućujući različite načine gledanja na podatke ovisno o specifičnim potrebama aplikacije.
 
@@ -504,7 +505,7 @@ Ukupno gledano, Kafka Connect pruža snažan i fleksibilan način za povezivanje
 
 U kontekstu CloudVane aplikacije Kafka Connect se koristi za prijenos podataka koji su agregirani putem ksqlDB-a u ciljnu bazu podataka, konkretno \emph{Oracle ATP}  bazu.
 
-Ova funkcionalnost omogućava aplikaciji CloudVane da efikasno i pouzdano prenosi obrađene i agregirane podatke iz Kafka ekosustava u \emph{Oracle ATP}, što dalje omogućava naprednu analizu i obradu tih podataka. Korištenje Kafka Connect-a za ovu svrhu osigurava da se podaci prenose na siguran i pouzdan način, uz održavanje visoke razine performansi i mogućnosti skaliranja.
+Ova funkcionalnost omogućava aplikaciji CloudVane da efikasno i pouzdano prenosi obrađene i agregirane podatke iz Kafka ekosustava u \emph{Oracle ATP} bazu, što dalje omogućava naprednu analizu i obradu tih podataka. Korištenje Kafka Connect-a za ovu svrhu osigurava da se podaci prenose na siguran i pouzdan način, uz održavanje visoke razine performansi i mogućnosti skaliranja.
 
 Ova integracija između Kafka Connect-a, ksqlDB-a i Oracle ATP baze podataka omogućava aplikaciji CloudVane da maksimalno iskoristi svoje podatke, pružajući joj snažne alate za obradu podataka u stvarnom vremenu i njihovo pohranjivanje za daljnju analizu i obradu.
 
@@ -532,7 +533,7 @@ Korisnička sučelja omogućuju jednostavnije i efikasnije upravljanje jer elimi
 \section{Arhitektura aplikacije CloudVane}
 \label{sec:architecture}
 
-CloudVane, kako je prethodno navedeno, distribuirana je aplikacija koja se izvodi na \emph{Oracle Kubernetes Engine} (OKE) platformi. Osim toga, CloudVane je primjer \emph{mikro-servisne arhitekture}, što znači da se sastoji od brojnih servisa, svaki s određenim zadacima unutar cjelokupnog sustava. Ovi servisi su detaljno opisani u tablici \ref{tbl:cloudvaneServices} i \ref{tbl:kafkaServices}, a cjelokupna arhitektura sustava prikazana je na slici \ref{fig:cloudvaneArch}.\\
+CloudVane, kako je prethodno navedeno, \emph{distribuirana} je aplikacija koja se izvodi na \emph{Oracle Kubernetes Engine} (OKE) platformi. Osim toga, CloudVane je primjer \emph{mikro-servisne arhitekture}, što znači da se sastoji od brojnih servisa, svaki s određenim zadacima unutar cjelokupnog sustava. Ovi servisi su detaljno opisani u tablici \ref{tbl:cloudvaneServices} i \ref{tbl:kafkaServices}, a cjelokupna arhitektura sustava prikazana je na slici \ref{fig:cloudvaneArch}.\\
 
 Ova struktura omogućuje visoku razinu modularnosti i fleksibilnosti. Svaki servis može se razvijati, skalirati i održavati neovisno o ostalima, što omogućuje brzi razvoj i lako ažuriranje. Također, ova arhitektura omogućuje bolju iskoristivost resursa jer svaki servis može biti skaliran prema svojim specifičnim potrebama.
 
