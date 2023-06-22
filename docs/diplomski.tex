@@ -614,7 +614,7 @@ U ovom poglavlju rada detaljno se istražuje nadzor aplikacija poput aplikacije 
 
 Dnevnički zapisi aplikacija sastoje se od sekvencijalno zapisanih događaja koji se generiraju unutar aplikacije. Ti događaji mogu biti različite vrste, uključujući informacije o radnji koju je korisnik poduzeo, statusu aplikacije, greškama, upozorenjima i drugim relevantnim informacijama. Dnevnički zapisi pružaju sveobuhvatnu sliku o tome što se događa unutar aplikacije u svakom trenutku.\\
 
-U kontekstu \emph{mikro-servisnih arhitektura}, kao što je to slučaj s CloudVane aplikacijom, dnevnički su zapisi posebno važni. Budući da je svaki mikro-servis odgovoran za svoj dio funkcionalnosti, dnevnički zapisi svakog mikro-servisa pružaju uvid u rad cijele aplikacije. Ako dođe do problema, dnevnički zapisi mogu pomoći u identificiranju komponente koja je uzrokovala problem.
+U kontekstu \emph{mikro-servisnih arhitektura}, kao što je to slučaj s CloudVane aplikacijom, dnevnički su zapisi posebno važni. Budući da je svaki mikro-servis odgovoran za svoj dio funkcionalnosti, dnevnički zapisi svakog mikro-servisa pružaju uvid u ispravnost rada cijele aplikacije. Ako dođe do problema, dnevnički zapisi mogu pomoći u identificiranju komponente koja je uzrokovala problem.
 
 Međutim, upravljanje dnevničkim zapisima u mikro-servisnom okruženju može biti izazovno. Jedan od najizraženijih problema jest problem agregiranja i pretraživanja dnevničkih zapisa. S obzirom na to da je aplikacija raspoređena na više čvorova unutar Kubernetes grozda koji su izolirani, konsolidacija i pretraživanje informacija postaje kompleksan zadatak \citep{newman_building_2015}.
 
@@ -636,7 +636,7 @@ Osim \emph{Logback}, postoji i \emph{Log4j} biblioteka, koja je također popular
 \section{Elastic, Logstash i Kibana (ELK)}
 \label{sec:elk}
 
-\textbf{ELK}, akronim koji označava \textbf{ElasticSearch}, \textbf{Logstash} i \textbf{Kibana}, predstavlja snažan skup alata sposoban za prikupljanje, pohranu, analizu i vizualizaciju podataka u stvarnom vremenu. Najčešće se koristi za upravljanje dnevničkim zapisima i praćenje događaja, što ga čini nezamjenjivim alatom za sigurnosne analize, poslovnu inteligenciju i efikasno pretraživanje podataka.
+\textbf{ELK}, akronim koji označava \textbf{ElasticSearch}, \textbf{Logstash} i \textbf{Kibana}, predstavlja snažan skup alata sposoban za prikupljanje, pohranu, analizu i vizualizaciju podataka u stvarnom vremenu. Često se koristi za upravljanje dnevničkim zapisima i praćenje događaja, što ga čini nezamjenjivim alatom za sigurnosne analize, poslovnu inteligenciju i efikasno pretraživanje podataka \citep{konda_elasticsearch_2023}.
 
 U ovom se poglavlju detaljno razmatraju funkcionalnosti svake pojedinačne komponente ELK-a te se opisuje njegova uloga u rješenju koje predlaže ovaj rad.
 
@@ -653,7 +653,7 @@ Elasticsearch ne samo da omogućava pohranu podataka već nudi i mogućnosti za 
 
 \subsubsection{Indeksi u ElasticSearch-u}
 
-Indeks u kontekstu ElasticSearch-a je osnovna jedinica za pretragu. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim jedinstvenim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom se radu indeks koristi za organiziranje i skladištenje dnevničkih zapisa omogućavajući njihovu brzu i efikasnu pretragu.
+\emph{Indeks} \engl{index} u kontekstu ElasticSearch-a je osnovna jedinica za pretragu. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim jedinstvenim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom se radu indeks koristi za organiziranje i skladištenje dnevničkih zapisa omogućavajući njihovu brzu i efikasnu pretragu.
 
 \subsection{Logstash}
 \label{sec:logstash}
@@ -665,9 +665,9 @@ U okviru ovog rada Logstash igra ključnu ulogu prikupljajući dnevničke zapise
 \subsection{Kibana}
 \label{sec:kibana}
 
-\citet{gormley_elasticsearch_2015} navode da je \textbf{Kibana} višenamjenska konzola koja nudi niz opcija, od izvršavanja upita do razvoja nadzornih ploča, grafova i vizualizacija dijagrama za detaljnu analizu i agregacije. Međutim, za komunikaciju s ElasticSearch-om i pozivanje API-ja nije nužno koristiti Kibanu. Na primjer, API-je ElasticSearch-a možemo pozivati koristeći \emph{cURL}, \emph{Postman} ili klijente nekog programskog jezika.\\
+\citet{gormley_elasticsearch_2015} navode da je \textbf{Kibana} višenamjenska konzola koja nudi niz opcija, od izvršavanja upita do razvoja nadzornih ploča, grafova i vizualizacija dijagrama za detaljnu analizu i agregacije. Međutim, za komunikaciju s ElasticSearch-om i pozivanje API-ja nije nužno koristiti Kibanu. Na primjer, API-ji ElasticSearch-a mogu se pozivati koristeći \emph{cURL}, \emph{Postman} ili klijente podržanog programskog jezika.\\
 
-Kibana, kao alat za vizualizaciju i istraživanje podataka, u ovom radu koristi se kao sučelje na kojem se mogu kreirati intuitivni grafikoni i izvješća. Ovi elementi omogućuju interaktivno navigiranje kroz velike količine dnevničkih zapisa. S Kibanom je moguće konfigurirati nadzorne ploče koje pružaju vizualne sažetke podataka i omogućuju detaljno istraživanje specifičnih događaja. Primjer prikaza alata Kibane s dnevničkim zapisima može se vidjeti na slici \ref{fig:kibana}.\\
+Kibana, kao alat za vizualizaciju i istraživanje podataka, u ovom radu koristi se kao sučelje na kojem se mogu kreirati intuitivni grafikoni i na kojem se mogu filtrirati te pregledavati dnevnički zapisi. Ovaj alat omogućuje interaktivno navigiranje kroz velike količine dnevničkih zapisa. S Kibanom je moguće konfigurirati nadzorne ploče koje pružaju vizualne sažetke podataka i omogućuju detaljno istraživanje specifičnih događaja. Primjer prikaza alata Kibane s dnevničkim zapisima može se vidjeti na slici \ref{fig:kibana}.\\
 
 Kibana pruža mogućnost vizualizacije podataka pohranjenih u ElasticSearch-u koristeći njene snažne mogućnosti upita i filtriranja. Time se omogućuje detaljna analiza specifičnih metrika ili trendova. Ova funkcionalnost je ključna za učinkovito analiziranje i razumijevanje obimnih podatkovnih setova, kao što su dnevnički zapisi koje obrađuje ovaj rad.
 
@@ -681,9 +681,9 @@ Kibana pruža mogućnost vizualizacije podataka pohranjenih u ElasticSearch-u ko
 \subsection{Filebeat}
 \label{sec:filebeat}
 
-\textbf{Filebeat} je alat za prikupljanje podataka čiji je glavni zadatak skupljanje i centralizacija dnevničkih zapisa. Njegova je uloga u ELK-u nadziranje specifične datoteke s dnevničkim zapisima, njihovo prikupljanje i zatim prosljeđivanje izravno u ElasticSearch indeks ili u Logstash za daljnju obradu. 
+\textbf{Filebeat} je alat za prikupljanje podataka čiji je glavni zadatak skupljanje i centralizacija dnevničkih zapisa. Njegova je uloga u ELK-u nadziranje specifične datoteke s dnevničkim zapisima, njihovo prikupljanje i zatim prosljeđivanje izravno u ElasticSearch indeks ili u Logstash za daljnju obradu \citep{konda_elasticsearch_2023}. 
 
-Filebeat je samo jedan od mnogih alata u sklopu Beats platforme koju je razvila tvrtka Elastic. Beats je platforma koja se sastoji od niza alata za prikupljanje podataka, uključujući dnevničke zapise, mrežni promet, metrike i slično. Svi alati unutar Beats platforme razvijeni su s ciljem jednostavnosti i učinkovitosti. 
+Filebeat je samo jedan od mnogih alata u sklopu \emph{Beats} platforme koju je razvila tvrtka Elastic. \textbf{Beats} je platforma koja se sastoji od niza alata za prikupljanje podataka, uključujući dnevničke zapise, mrežni promet, metrike i slično. Svi alati unutar Beats platforme razvijeni su s ciljem jednostavnosti i učinkovitosti. 
 
 Zbog svog dizajna koji naglašava jednostavnost i minimalnu potrošnju resursa, Filebeat je iznimno pogodan za distribuirane okoline poput Kubernetesa.\\
 
@@ -764,7 +764,7 @@ Na Kubernetes klasteru stvorena su dva dodatna prostora imena \engl{Namespace}. 
 
 Sve usluge koje su pokrenute na Minikube klasteru konfigurirane su s jednom replikom, s obzirom na to da se Minikube klaster sastoji od jednog čvora, kao što je navedeno u poglavlju \ref{sec:minikube}. U produkcijskom okruženju broj replika može se povećati jednostavnim izmjenama parametara u konfiguraciji Kubernetes objekata.\\
 
-Za potrebe pristupa Apache Kafka posredniku s interneta, bilo je nužno konfigurirati Strimzi Kafka objekt i omogućiti pristup preko TLS-a. Dodatno, bilo je potrebno kreirati Kafka User objekt na temelju kojeg Strimzi generira kredencijale za autentifikaciju u obliku Secreta. Ti se kredencijali zatim izvlače i kao novi Secret pohranjuju u CloudVane Kubernetes klaster omogućavajući Filebeat servisu slanje dnevničkih zapisa u Minikube klaster.\\
+Za potrebe pristupa Apache Kafka posredniku s interneta, bilo je nužno konfigurirati Strimzi Kafka objekt i omogućiti pristup preko TLS-a. Dodatno, bilo je potrebno kreirati Kafka User objekt na temelju kojeg Strimzi generira kredencijale za autentifikaciju u obliku Secret objekta. Ti se kredencijali zatim izvlače i kao novi Secret pohranjuju u CloudVane Kubernetes klaster omogućavajući Filebeat servisu slanje dnevničkih zapisa u Minikube klaster.\\
 
 ELK alati, uključujući ElasticSearch, Filebeat i Kibanu, također generiraju kredencijale za pristup u obliku Secret objekta. Iz Secret objekta je potrebno izvući te podatke kako bi se omogućila autentifikacija u Kibanu. Logstash primjenjuje konfiguraciju za čitanje iz Kafka tema i pisanje u ElasticSearch u obliku ConfigMap objekta, čiji je sadržaj prikazan u isječku \ref{lst:logstash}.\\
 
