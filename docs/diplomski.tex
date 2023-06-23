@@ -68,7 +68,7 @@
 \renewcommand{\lstlistlistingname}{Indeks isječka kodova}% List of Listings -> List of Algorithms
 
 
-\tableofcontentsƒ
+\tableofcontents
 
 
 \begingroup
@@ -296,7 +296,9 @@ Jedini element infrastrukture koji se ne pokreće unutar Kubernetes klastera je 
 
 Kako bi se uspješno kretalo kroz kompleksni svijet Kubernetesa i učinkovito upravljalo njegovim resursima, razumijevanje temeljne terminologije je neophodno. Ovo poglavlje pruža uvid u ključne pojmove i komponente važne za razumijevanje ovog rada.
 
-Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskriptivnih \emph{YAML}\footnote{YAML \engl{YAML Ain't Markup Language} je format za serijalizaciju podataka idealan za konfiguracijske datoteke.} ili \emph{JSON}\footnote{JSON \engl{JavaScript Object Notation} je format koji je lagan za čitanje i pisanje za ljude, a jednostavan za strojeve za obradu.} datoteka, omogućavajući precizno i reproducibilno definiranje stanja resursa unutar klastera.
+Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskriptivnih \emph{YAML}\footnote{YAML \engl{YAML Ain't Markup Language} je format za serijalizaciju podataka idealan za konfiguracijske datoteke.} ili \emph{JSON}\footnote{JSON \engl{JavaScript Object Notation} je format koji je lagan za čitanje i pisanje za ljude, a jednostavan za strojeve za obradu.} datoteka, omogućavajući precizno i reproducibilno definiranje stanja resursa unutar klastera.\\
+
+Slijede objašnjenja ključne terminologije temeljena na knjizi autora Lukše \citep{luksa_kubernetes_2023}:
 
 \begin{description} 
 	\item[Pod:] Pod je najmanja i najjednostavnija jedinica u Kubernetes modelu. To je skupina jednog ili više kontejnera koji dijele mrežu, prostor za pohranu i postavke za pokretanje.
@@ -316,7 +318,6 @@ Također je bitno istaknuti da se Kubernetes objekti konfiguriraju putem deskrip
 	\item[Kubectl:] Kubectl je komandno-linijski alat za interakciju s Kubernetes klasterom.
 	\item[Kubernetes operator:] Operator je metoda koja omogućuje pakiranje, implementaciju i upravljanje Kubernetes aplikacijom.
 \end{description}
-\citep{luksa_kubernetes_2023}
 
 \clearpage
 \subsection{Minikube}
@@ -360,7 +361,7 @@ Slično kao i s Kubernetesom, kretanje kroz složeni svijet Apache Kafke zahtije
 	
 	\item[Kafka particija \engl{Kafka Partition}:] predstavlja podjelu ili frakciju podataka unutar teme. Particije su ključne za paralelizaciju i omogućavaju Kafki da poboljša performanse i izdržljivost pohranjivanjem i čitanjem podataka s različitih posrednika u klasteru. Svaka particija može imati jednu ili više replika, što omogućava oporavak podataka u slučaju gubitka posrednika.
 	
-	\item[Kafka Segment:] predstavlja podjelu ili dio Kafka particije. Svaka particija organizirana je kao niz segmenata, gdje svaki segment predstavlja kolekciju zapisa.
+	\item[Kafka segment:] predstavlja podjelu ili dio Kafka particije. Svaka particija organizirana je kao niz segmenata, gdje svaki segment predstavlja kolekciju zapisa.
 \end{description}
 
 
@@ -394,7 +395,7 @@ Strimzi koristi Kubernetes CRD-ove kako bi stvorio potrebne Kubernetes Deploymen
 
 Također, Strimzi omogućava jednostavno kreiranje i upravljanje Apache Kafka temama i Kafka Connect konektorima. Ovo znatno olakšava proces konfiguriranja i upravljanja ovim resursima smanjujući potrebu za ručnim intervencijama i omogućavajući brže i učinkovitije upravljanje Kafka okruženjem.
 
-Pored toga, Strimzi dolazi s podrškom za razne sigurnosne značajke, poput SSL/TLS, SASL i ACL-a, što olakšava implementaciju sigurnosnih mjera i osigurava zaštitu Kafka klastera.\\
+Pored toga, Strimzi dolazi s podrškom za razne sigurnosne značajke, poput TLS-a, što olakšava implementaciju sigurnosnih mjera i osigurava zaštitu Kafka klastera.\\
 
 Upravo zbog navedenog jednostavnijeg, sigurnijeg i efikasnijeg upravljanja Apache Kafka okruženjem, CloudVane se koristi operatorom Strimzi za implementaciju Apache Kafka posrednika na svoj Kubernetes grozd.
 
@@ -653,7 +654,7 @@ Elasticsearch ne samo da omogućava pohranu podataka već nudi i mogućnosti za 
 
 \subsubsection{Indeksi u ElasticSearch-u}
 
-\emph{Indeks} \engl{index} u kontekstu ElasticSearch-a jest spremnik za čuvanje podataka \citep{konda_elasticsearch_2023}. Predstavlja kolekciju dokumenata koji imaju slične karakteristike. Indeks je identificiran svojim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom se radu indeks koristi za organiziranje i skladištenje dnevničkih zapisa omogućavajući njihovu brzu i efikasnu pretragu.
+\emph{Indeks} \engl{index} u kontekstu ElasticSearch-a jest spremnik za čuvanje podataka \citep{konda_elasticsearch_2023}. Predstavlja kolekciju dokumenata sa sličnim karakteristikama. Indeks je identificiran svojim imenom, koje se koristi prilikom izvršavanja operacija pretrage, ažuriranja, brisanja i indeksiranja na dokumentima. U ovom se radu indeks koristi za organiziranje i skladištenje dnevničkih zapisa omogućavajući njihovu brzu i efikasnu pretragu.
 
 \subsection{Logstash}
 \label{sec:logstash}
@@ -735,7 +736,7 @@ Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgo
 	\label{fig:dataDiagram}
 \end{figure}
 
-Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom na to da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokera}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
+Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom na to da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokers}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
 
 Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisana u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi zatim se šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.
 
