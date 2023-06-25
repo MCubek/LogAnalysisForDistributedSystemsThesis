@@ -89,7 +89,7 @@ Nadzor nad dnevničkim zapisima omogućuje otkrivanje anomalija, detektiranje ne
 
 Ovaj rad proučavat će Apache Kafka  i ELK platforme istražujući kako se mogu koristiti za obradu i analizu dnevničkih zapisa u stvarnom vremenu. Analiza će se napraviti na stvarnom primjeru SaaS-a\footnote{Softver kao usluga \engl{Software as a Service}} \emph{CloudVane} tvrtke \emph{Neos} te će se upravo na toj distribuiranoj mikro-servisnoj aplikaciji pokazati iskoristivost rješenja rada.
 
-Također, rad će razmatrati kako se korištenim alatima mogu poboljšati pouzdanost i brzina obrade podataka kako bi se pravovremeno moglo odazvati na probleme sustava. Očekuje se da će ovaj rad pružiti dublje razumijevanje važnosti i mogućnosti analize dnevničkih zapisa u raspodijeljenim sustavima, kao i uloge Kafka platforme u tom kontekstu.\\
+Također, rad će razmatrati kako se korištenim alatima mogu poboljšati pouzdanost i brzina obrade podataka kako bi se pravovremeno moglo reagirati na probleme sustava. Očekuje se da će ovaj rad pružiti dublje razumijevanje važnosti i mogućnosti analize dnevničkih zapisa u raspodijeljenim sustavima, kao i uloge Kafka platforme u tom kontekstu.\\
 
 Poglavlje \ref{sec:app_arch} početak je ovog rada i pruža uvid u arhitekture aplikacija, uz opis monolitnih i distribuiranih aplikacija, kao i metoda njihovih implementiranja. Nadalje, poglavlje \ref{sec:cloudvane} posvećeno je CloudVane aplikaciji, njenim komponentama kao što su Apache Kafka i Kubernetes. U poglavlju \ref{sec:monitoring} izloženo je kako se vrši nadzor putem dnevničkih zapisa i objašnjena je upotreba ELK platforme. Poglavlje \ref{sec:streamingMonitoring} opisuje proces obrade dnevničkih zapisa u stvarnom vremenu. Završno, poglavlje \ref{sec:conclusion} donosi rezime i osvrt na sve što je istraženo i predstavljeno u ovom radu.
 
@@ -183,7 +183,7 @@ Međutim, unatoč brojnim prednostima, korištenje virtualnih strojeva donosi i 
 
 Kontejnerizacija donosi brojne prednosti. Kontejneri su manji i brži od tradicionalnih virtualnih strojeva jer ne zahtijevaju cijeli operativni sustav. Osim toga, kontejneri osiguravaju konzistentnost okruženja kroz razne faze razvojnog ciklusa aplikacija \citep{gillis_what_2020}. Uz to, Docker omogućuje jednostavno skaliranje aplikacija dodavanjem ili uklanjanjem kontejnera po potrebi.
 
-Kao rezultat, kontejnerizacija i Docker postali su ključni elementi modernih razvojnih ciklusa i \emph{DevOps}\footnote{DevOps je skup praksi, filozofija i alata koji poboljšavaju suradnju između razvoja softvera \engl{Dev} i IT operacija \engl{Ops} \citep{courtemanche_what_2021}.} praksi, igrajući ključnu ulogu u povećanju efikasnosti i brzine isporuke softvera. 
+Kao rezultat, kontejnerizacija i Docker postali su ključni elementi modernih razvojnih ciklusa i \emph{DevOps}\footnote{DevOps je skup praksi, filozofija i alata koji poboljšavaju suradnju između razvoja softvera \engl{Dev} i IT operacija \engl{Ops} \citep{courtemanche_what_2021}.} praksi, pružajući ključnu ulogu u povećanju efikasnosti i brzine isporuke softvera. 
 
 Usporedba kontejnera, koji su zahvaljujući svojim prednostima postali temelj sustava poput \emph{Kubernetes} iz poglavlja \ref{sec:k8s}, s pokretanjem direktno na hardveru i virtualnim strojevima prikazana je na slici \ref{fig:infra}.
 
@@ -281,7 +281,7 @@ Tako Kubernetes omogućuje implementaciju aplikacija potpuno transparentno, bez 
 
 Kubernetes se može pokrenuti direktno na hardveru računala nudeći potpunu kontrolu i fleksibilnost u konfiguraciji i upravljanju resursima. Alternativno se Kubernetes može koristiti kao \emph{potpuno održavana usluga} \engl{managed service} na oblaku \engl{cloud}. Potpuno održavan Kubernetes uvelike olakšava postavljanje i upravljanje Kubernetes grozdovima preuzimajući na sebe vremenski zahtjevne operativne zadatke poput skaliranja, nadogradnje, sigurnosti i ostalog održavanja.
 
-Bez obzira na to kako je pokrenut, Kubernetes donosi robustan, fleksibilan i skalabilan okvir za upravljanje kontejnerskim aplikacijama koji omogućuje transparentno i jednostavno upravljanje distribuiranim aplikacijama.
+Bez obzira na to kako je pokrenut, Kubernetes predstavlja robustan, fleksibilan i skalabilan okvir za upravljanje kontejnerskim aplikacijama koji omogućuje transparentno i jednostavno upravljanje distribuiranim aplikacijama.
 
 \subsection{Implementacija aplikacije CloudVane na Kubernetesu}
 
@@ -476,7 +476,7 @@ CloudVane se trenutno ne koristi bibliotekom Kafka Streams za obradu tokova poda
 	\label{fig:ksqldb_streams}
 \end{figure}
 
-
+\clearpage
 \subsection{ksqlDB}
 \label{sec:ksql}
 
@@ -601,7 +601,7 @@ Metodologija i alati potrebni za praćenje aplikacije CloudVane bit će opisani 
 \chapter{Nadziranje aplikacija}
 \label{sec:monitoring}
 
-\textbf{Nadziranje} \engl{monitoring}, definirano kao sustavno promatranje i provjera ponašanja i izlaza sustava te njegovih komponenti kroz vrijeme \citep{monitorama_monitorama_2016}, ključni je element upravljanja informatičkim sustavima i aplikacijama. Ova strateška praksa, koja se sastoji od stalnog nadzora i analize, omogućuje održavanje optimalnih performansi, stabilnosti i pouzdanosti digitalnih resursa.
+\textbf{Nadziranje} \engl{monitoring}, definirano kao sustavno promatranje i provjera ponašanja i izlaza sustava te njegovih komponenti kroz vrijeme \citep{monitorama_monitorama_2016}, ključni je element upravljanja informatičkim sustavima i aplikacijama. Kroz tu praksu, koja se sastoji od stalnog nadzora i analize, omogućeno je održavanje optimalnih performansi, stabilnosti i pouzdanosti digitalnih resursa.
 
 Nadzor aplikacija nije samo proces identifikacije i rješavanja problema. On nudi dragocjene uvide koji omogućuju temeljitiju optimizaciju sustava, poboljšanje korisničkog iskustva i osiguranje da se sve digitalne komponente funkcionalno integriraju. Sastoji se od kontinuirane provjere, identifikacije anomalija i promptnog rješavanja problema prije nego što se pretvore u kritične situacije. Ovim proaktivnim pristupom nadzor postaje ključan instrument za održavanje visoke razine usluge i postizanje operativne izvrsnosti.\\
 
@@ -646,7 +646,7 @@ U ovom se poglavlju detaljno razmatraju funkcionalnosti svake pojedinačne kompo
 
 \textbf{Elasticsearch} je distribuirani sustav za pretragu i analizu podataka u stvarnom vremenu. Omogućava istraživanje podataka na brz i skalabilan način koji do sada nije bio ostvariv. Koristi se za pretragu cijelog teksta, strukturiranu pretragu, analitiku i kombinaciju svih triju funkcionalnosti \citep{gormley_elasticsearch_2015}.
 
-Zasnovan na \emph{Apache Lucene-u}\footnote{Apache Lucene je snažan sustav za pretraživanje teksta otvorenog koda koji se koristi u brojnim aplikacijama za pretragu i analizu podataka.}, Elasticsearch pruža distribuirani sustav za pretragu teksta s HTTP sučeljem. Ovo sučelje omogućuje jednostavan pristup i manipulaciju podacima kroz standardizirane HTTP protokole. \\
+Zasnovan na \emph{Apache Lucene-u}\footnote{Apache Lucene je snažan sustav za pretraživanje teksta otvorenog koda koji se koristi u brojnim aplikacijama za pretragu i analizu podataka.}, Elasticsearch predstavlja distribuirani sustav za pretragu teksta s HTTP sučeljem. Ovo sučelje omogućuje jednostavan pristup i manipulaciju podacima kroz standardizirane HTTP protokole. \\
 
 U okviru ELK-a, Elasticsearch igra ključnu ulogu kao središnje mjesto za pohranu svih podataka. U kontekstu ovoga rada, to su dnevnički zapisi prikupljeni pomoću Logstash-a, komponente zadužene za njihovo prikupljanje, transformaciju i slanje u Elasticsearch, opisane u poglavlju \ref{sec:logstash}.\\
 
@@ -674,7 +674,7 @@ Kibana pruža mogućnost vizualizacije podataka pohranjenih u ElasticSearch-u ko
 
 \begin{figure}[htb]
 	\centering
-	\includegraphics[width=15cm]{images/elastic-logs.jpeg}
+	\includegraphics[width=15cm]{images/elastic-logs.png}
 	\caption[Kibana sučelje]{Kibana sučelje}
 	\label{fig:kibana}
 \end{figure}
@@ -706,15 +706,15 @@ Filebeat je međutim, kao što je prethodno opisano, pokrenut na CloudVane Kuber
 
 Kao što je prethodno spomenuto u poglavlju \ref{sec:monitoring}, nadziranje aplikacija ključno je za održavanje optimalnih performansi, stabilnosti i pouzdanosti aplikacija. Strukturirano i sustavno nadziranje može biti presudno za otkrivanje i rješavanje problema prije nego što oni počnu utjecati na korisnike ili poslovanje.
 
-Dok su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj je izazov posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni sistemski neuspjeh.
+Dok su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj je izazov posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni kvar sustava.
 
-S takvom razinom kompleksnosti nadziranje distribuiranih sustava prelazi granice jednostavnog praćenja pojedinačnih servisa i zahtijeva upotrebu sveobuhvatnih alata za nadzor. Nadzor nije samo otkrivanje grešaka ili slabosti unutar pojedinačnih servisa. Osim toga, nužno je uspostaviti sistemski pregled, identificirati anomalije u stvarnom vremenu, reagirati pravodobno i učinkovito kako bi se osigurao nesmetan rad distribuiranih sustava.
+S takvom razinom kompleksnosti nadziranje distribuiranih sustava prelazi granice jednostavnog praćenja pojedinačnih servisa i zahtijeva upotrebu sveobuhvatnih alata za nadzor. Nadzor nije samo otkrivanje grešaka ili slabosti unutar pojedinačnih servisa. Pored toga, nužno je uspostaviti sistemski pregled, identificirati anomalije u stvarnom vremenu, reagirati pravodobno i učinkovito kako bi se osigurao nesmetan rad distribuiranih sustava.
 
 U tom je kontekstu potrebno koristiti napredne alate za nadzor koji omogućuju dubinsko praćenje performansi i stanja svih servisa, bez obzira na to gdje se nalaze. Ti alati trebaju omogućiti brzo otkrivanje problema, detaljne informacije o prirodi problema i omogućiti promptno djelovanje kako bi se osigurali optimalan rad i performanse distribuiranih sustava. Ovakav pristup osigurava visoku razinu pouzdanosti i stabilnosti omogućujući sustavima da stalo pružaju visokokvalitetnu uslugu korisnicima.\\
 
 U nadolazećim poglavljima rada obrađuje se arhitektura rješenja koja omogućava agregiranje dnevničkih zapisa svih servisa distribuirane aplikacije CloudVane u stvarnom vremenu. Ovo rješenje ne samo da filtrira zapise prema njihovom statusu već koristi i umjetnu inteligenciju kako bi prepoznalo potencijalne probleme i ponudilo moguća rješenja.
 
-Zatim se problem, zajedno s predloženim rješenjima, korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo sveobuhvatno rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
+Time se problem, zajedno s predloženim rješenjima, korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo sveobuhvatno rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
 
 \section{Pregled arhitekture rješenja}
 
@@ -876,7 +876,9 @@ U procesu obogaćivanja servis koristi \emph{OpenAI API}, čiji je opis sadržan
 
 Kao što je vidljivo u dijagramu \ref{fig:topics}, ovaj servis čita dnevničke zapise iz Kafka teme \glqq \emph{aggregated-errors}\grqq, obogaćuje ih koristeći OpenAI API, a zatim ih šalje u novu Kafka temu pod nazivom \glqq \emph{enriched-errors}\grqq.
 
-Kroz ovaj proces servis ne samo da poboljšava korisnikovo razumijevanje i reakciju na greške već i pomaže u poboljšanju ukupne kvalitete i pouzdanosti sustava.
+Kroz ovaj proces servis ne samo da poboljšava korisnikovo razumijevanje i reakciju na greške već i pomaže u poboljšanju ukupne kvalitete i pouzdanosti sustava. 
+
+Primjer dnevničkog zapisa obogaćenog umjetnom inteligencijom prikazan je u isječku \ref{lst:enriched_logs}. Polje \glqq instructions\grqq\hspace{1pt} generirano je umjetnom inteligencijom na temelju agregiranih dnevničkih zapisa.
 
 \subsection{OpenAI API}
 \label{sec:openai}
@@ -1285,6 +1287,97 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=${PROFILE}" ,"/app/log_aggregation_kstream.jar"]
 
 USER 1002
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Primjer obogaćenog dnevničkog zapisa CloudVane servisa}
+	,label={lst:enriched_logs}
+	,language=json]
+{
+	"kafkaKey": {
+		"message": "CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \"https://storageaccounttestcv.blob.core.windows.net/
+		dailycontainer\": storageaccounttestcv.blob.core.windows.net; 
+		nested exception is java.net.UnknownHostException: 
+		storageaccounttestcv.blob.core.windows.net",
+		"service": "cloudvane-datacollector-kafka",
+		"kubernetes": {
+			"namespace": "cloudvane-test",
+			"pod": "cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j"
+		}
+	},
+	"kafkaValue": {
+		"count": 1,
+		"messages": [
+		{
+			"@timestamp": "2023-06-18T01:04:20.397Z",
+			"@metadata": {
+				"beat": "filebeat",
+				"type": "_doc",
+				"version": "8.7.1"
+			},
+			"level": "ERROR",
+			"kubernetes": {...},
+				"pod": {...},
+				"namespace": "cloudvane-test",
+				"namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+				"namespace_labels": {
+					"kubernetes_io/metadata_name": "cloudvane-test"
+				},
+				"replicaset": {
+					"name": "cloudvane-datacollector-kafka-test-dbb7f7b8f"
+				},
+				"labels": {
+					"app": "cloudvane-datacollector-kafka",
+					"client": "test",
+					"pod-template-hash": "dbb7f7b8f"
+				},
+				"container": {
+					"name": "cloudvane-datacollector"
+				}
+			},
+			"ecs": {
+				"version": "8.0.0"
+			},
+			"thread_name": "scheduling-1",
+			"indexName": "cloudvane-datacollector-kafka",
+			"kafkaKey": "{\"message\":\"CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \\\"https://storageaccounttestcv.blob.core.windows.net/
+				dailycontainer\\\": storageaccounttestcv.blob.core.windows.net; 
+				nested exception is java.net.UnknownHostException: 
+				storageaccounttestcv.blob.core.windows.net\",\"service\":
+				\"cloudvane-datacollector-kafka\",\"kubernetes\":
+				{\"namespace\":\"cloudvane-test\",\"pod\":
+				\"cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j\"}}",
+			"host": {...},
+			"input": {
+				"type": "container"
+			},
+			"stack_trace": "org.springframework.web.client.ResourceAccessException: I/O error on GET request for ...",
+			"@version": "1",
+			"logger_name": "hr.neos.cloudvane.datacollector.collector.cloud
+			.azure.AzureCollectionService",
+			"container": {...},
+			"agent": {
+				"version": "8.7.1",
+				"ephemeral_id": "3c5a96f4-29dc-4e57-9a47-b8b7120752d5",
+				"id": "e474b345-9e7c-4449-900d-c625d654d9d2",
+				"name": "filebeat-kafka-matej-sfhmk",
+				"type": "filebeat"
+			},
+			"stream": "stdout",
+			"message": "CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \"https://storageaccounttestcv.blob.core.windows.net
+			/dailycontainer	\": 
+			storageaccounttestcv.blob.core.windows.net; 
+			nested exception is java.net.UnknownHostException: 
+			storageaccounttestcv.blob.core.windows.net",
+			"level_value": 40000,
+			"log": {...},
+			"count": 1
+		}
+		],
+		"firstTimestamp": "2023-06-18T01:04:20.397Z",
+		"instructions": "This error indicates that the hostname storageaccounttestcv.blob.core.windows.net could not be found. This could be due to a typo in the hostname, or it could be that the hostname is not registered in the DNS. Check to ensure that the hostname is correct, and if it is, then you may need to register the hostname in the DNS."
+	}
+}
 \end{lstlisting}
 
 

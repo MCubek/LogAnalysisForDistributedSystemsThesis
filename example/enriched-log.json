@@ -1,0 +1,136 @@
+{
+  "key": {
+    "message": "CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \"https://storageaccounttestcv.blob.core.windows.net/dailycontainer\": storageaccounttestcv.blob.core.windows.net; nested exception is java.net.UnknownHostException: storageaccounttestcv.blob.core.windows.net",
+    "service": "cloudvane-datacollector-kafka",
+    "kubernetes": {
+      "namespace": "cloudvane-test",
+      "pod": "cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j"
+    }
+  },
+  "value": {
+    "count": 1,
+    "messages": [
+      {
+        "@timestamp": "2023-06-18T01:04:20.397Z",
+        "@metadata": {
+          "beat": "filebeat",
+          "type": "_doc",
+          "version": "8.7.1"
+        },
+        "level": "ERROR",
+        "kubernetes": {
+          "node": {
+            "name": "10.38.1.233",
+            "uid": "7a1a0588-f278-46dd-894c-662ab7d7a6ac",
+            "labels": {
+              "topology_kubernetes_io/region": "eu-frankfurt-1",
+              "node_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+              "hostname": "oke-ctdomdegvsd-ntsragkufka-s732jf3gncq-2",
+              "name": "oke-new-pool1",
+              "oci_oraclecloud_com/fault-domain": "FAULT-DOMAIN-3",
+              "kubernetes_io/os": "linux",
+              "displayName": "oke-ctdomdegvsd-ntsragkufka-s732jf3gncq-2",
+              "beta_kubernetes_io/os": "linux",
+              "oke_oraclecloud_com/node_info_private_subnet": "true",
+              "oke_oraclecloud_com/node_info_private_worker": "true",
+              "kubernetes_io/arch": "amd64",
+              "node_info/compartment_name": "development",
+              "kubernetes_io/hostname": "10.38.1.233",
+              "topology_kubernetes_io/zone": "EU-FRANKFURT-1-AD-1",
+              "internal_addr": "10.38.1.233",
+              "node_info_ds_proxymux_client": "true",
+              "beta_kubernetes_io/arch": "amd64",
+              "failure-domain_beta_kubernetes_io/region": "eu-frankfurt-1",
+              "failure-domain_beta_kubernetes_io/zone": "EU-FRANKFURT-1-AD-1",
+              "node-role_kubernetes_io/node": "",
+              "beta_kubernetes_io/instance-type": "VM.Standard.E4.Flex",
+              "node_info/kubeletVersion": "v1.26"
+            },
+            "hostname": "10.38.1.233"
+          },
+          "pod": {
+            "uid": "4c1202f5-d364-4a5d-abdb-ed7a94e5ab82",
+            "ip": "10.244.5.35",
+            "name": "cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j"
+          },
+          "namespace": "cloudvane-test",
+          "namespace_uid": "4af72ed8-18a8-4d35-ad03-966d1804e9c7",
+          "namespace_labels": {
+            "kubernetes_io/metadata_name": "cloudvane-test"
+          },
+          "replicaset": {
+            "name": "cloudvane-datacollector-kafka-test-dbb7f7b8f"
+          },
+          "labels": {
+            "app": "cloudvane-datacollector-kafka",
+            "client": "test",
+            "pod-template-hash": "dbb7f7b8f"
+          },
+          "container": {
+            "name": "cloudvane-datacollector"
+          }
+        },
+        "ecs": {
+          "version": "8.0.0"
+        },
+        "thread_name": "scheduling-1",
+        "indexName": "cloudvane-datacollector-kafka",
+        "kafkaKey": "{\"message\":\"CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \\\"https://storageaccounttestcv.blob.core.windows.net/dailycontainer\\\": storageaccounttestcv.blob.core.windows.net; nested exception is java.net.UnknownHostException: storageaccounttestcv.blob.core.windows.net\",\"service\":\"cloudvane-datacollector-kafka\",\"kubernetes\":{\"namespace\":\"cloudvane-test\",\"pod\":\"cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j\"}}",
+        "host": {
+          "ip": [
+            "10.244.5.69",
+            "fe80::4411:3eff:fe70:385a"
+          ],
+          "mac": [
+            "46-11-3E-70-38-5A"
+          ],
+          "name": "filebeat-kafka-matej-sfhmk",
+          "hostname": "filebeat-kafka-matej-sfhmk",
+          "architecture": "x86_64",
+          "os": {
+            "name": "Ubuntu",
+            "kernel": "5.4.17-2136.316.7.el7uek.x86_64",
+            "codename": "focal",
+            "type": "linux",
+            "platform": "ubuntu",
+            "version": "20.04.6 LTS (Focal Fossa)",
+            "family": "debian"
+          },
+          "containerized": true
+        },
+        "input": {
+          "type": "container"
+        },
+        "stack_trace": "org.springframework.web.client.ResourceAccessException: I/O error on GET request for \"https://storageaccounttestcv.blob.core.windows.net/dailycontainer\": storageaccounttestcv.blob.core.windows.net; nested exception is java.net.UnknownHostException: storageaccounttestcv.blob.core.windows.net\n\tat org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:785)\n\tat org.springframework.web.client.RestTemplate.execute(RestTemplate.java:711)\n\tat org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:631)\n\tat hr.neos.cloudvane.datacollector.rest.client.azure.AzureApiClient.getPages(AzureApiClient.java:76)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.processCostReportFileFromOffset(AzureCollectionService.java:328)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.lambda$processCostReportFileName$6(AzureCollectionService.java:318)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.processBatchOffset(CollectionService.java:243)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.processCostReportFileName(AzureCollectionService.java:314)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.fetchApi(AzureCollectionService.java:201)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService.collect(AzureCollectionService.java:129)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.collectScheduled(CollectionService.java:84)\n\tat hr.neos.cloudvane.datacollector.collector.cloud.CollectionService.collectCronJob(CollectionService.java:76)\n\tat jdk.internal.reflect.GeneratedMethodAccessor93.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:568)\n\tat org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:84)\n\tat org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)\n\tat org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:95)\n\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:833)\nCaused by: java.net.UnknownHostException: storageaccounttestcv.blob.core.windows.net\n\tat java.base/java.net.InetAddress$CachedAddresses.get(InetAddress.java:801)\n\tat java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1509)\n\tat java.base/java.net.InetAddress.getAllByName(InetAddress.java:1367)\n\tat java.base/java.net.InetAddress.getAllByName(InetAddress.java:1301)\n\tat org.apache.http.impl.conn.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:45)\n\tat org.apache.http.impl.conn.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:112)\n\tat org.apache.http.impl.conn.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:376)\n\tat org.apache.http.impl.execchain.MainClientExec.establishRoute(MainClientExec.java:393)\n\tat org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:236)\n\tat org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)\n\tat org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)\n\tat org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)\n\tat org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)\n\tat org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)\n\tat org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:56)\n\tat org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:87)\n\tat org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)\n\tat org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)\n\tat org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:109)\n\tat hr.neos.cloudvane.datacollector.rest.client.azure.AzureSecurityInterceptor.intercept(AzureSecurityInterceptor.java:63)\n\tat org.springframework.http.client.InterceptingClientHttpRequest$InterceptingRequestExecution.execute(InterceptingClientHttpRequest.java:93)\n\tat org.springframework.http.client.InterceptingClientHttpRequest.executeInternal(InterceptingClientHttpRequest.java:77)\n\tat org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)\n\tat org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)\n\tat org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:776)\n\t... 23 common frames omitted\n",
+        "@version": "1",
+        "logger_name": "hr.neos.cloudvane.datacollector.collector.cloud.azure.AzureCollectionService",
+        "container": {
+          "runtime": "cri-o",
+          "image": {
+            "name": "fra.ocir.io/frpf7jvyycgx/cv-kafka/openjdk-17/cloudvane-datacollector:e872cc7d0ffa7c64c331627a72727ed10aaa0a01"
+          },
+          "id": "b5758a9b2e383da25eaa35a5421b61f974ce78c98ceb3c6b21d11b57dfce8646"
+        },
+        "agent": {
+          "version": "8.7.1",
+          "ephemeral_id": "3c5a96f4-29dc-4e57-9a47-b8b7120752d5",
+          "id": "e474b345-9e7c-4449-900d-c625d654d9d2",
+          "name": "filebeat-kafka-matej-sfhmk",
+          "type": "filebeat"
+        },
+        "stream": "stdout",
+        "message": "CLOUD_ACC: azure_neos # FETCH_TYPE: SCHEDULED # API: ListBlobsAmortized # AzureCollectionService.fetchApi # EXC: I/O error on GET request for \"https://storageaccounttestcv.blob.core.windows.net/dailycontainer\": storageaccounttestcv.blob.core.windows.net; nested exception is java.net.UnknownHostException: storageaccounttestcv.blob.core.windows.net",
+        "level_value": 40000,
+        "log": {
+          "offset": 436356,
+          "file": {
+            "path": "/var/log/containers/cloudvane-datacollector-kafka-test-dbb7f7b8f-fh88j_cloudvane-test_cloudvane-datacollector-b5758a9b2e383da25eaa35a5421b61f974ce78c98ceb3c6b21d11b57dfce8646.log"
+          }
+        },
+        "count": 1
+      }
+    ],
+    "firstTimestamp": "2023-06-18T01:04:20.397Z",
+    "instructions": "This error indicates that the hostname storageaccounttestcv.blob.core.windows.net could not be found. This could be due to a typo in the hostname, or it could be that the hostname is not registered in the DNS. Check to ensure that the hostname is correct, and if it is, then you may need to register the hostname in the DNS."
+  }
+}
