@@ -125,7 +125,7 @@ Unatoč ovim izazovima, monolitne aplikacije zadržavaju značajnu prisutnost u 
 
 Pokretanje aplikacija na različitim računalnim čvorovima znači da instance aplikacije mogu podijeliti opterećenje povećavajući tako učinkovitost i performanse sustava. Ova decentralizacija također znači da kvar jednog čvora neće onemogućiti rad cijele aplikacije. Umjesto toga, rad će biti preusmjeren na ostale čvorove osiguravajući tako kontinuitet usluge. Upravo je ta visoka dostupnost, robusnost i brzina odziva ključna prednost distribuiranih aplikacija. Uz to, fleksibilnost skaliranja omogućuje im da se prilagode promjenjivim uvjetima potražnje, dodavanjem ili uklanjanjem računalnih čvorova prema potrebi.
 
-No, unatoč brojnim prednostima, distribuirane aplikacije donose i određene izazove. \citet{zarko_raspodijeljeni_2013} navodi kako složena pitanja poput koordinacije i sinkronizacije među čvorovima, očuvanje konzistencije podataka kroz različite komponente sustava te upravljanje povećanim složenostima mreže zahtijevaju sofisticirane strategije i tehnike. Algoritmi i protokoli za rješavanje ovih problema moraju biti pažljivo osmišljeni kako bi se osigurao pravilan rad distribuiranog sustava. \\
+No, unatoč brojnim prednostima, distribuirane aplikacije donose i određene izazove. \citet{zarko_raspodijeljeni_2013} navode kako složena pitanja poput koordinacije i sinkronizacije među čvorovima, očuvanje konzistencije podataka kroz različite komponente sustava te upravljanje povećanim složenostima mreže zahtijevaju sofisticirane strategije i tehnike. Algoritmi i protokoli za rješavanje ovih problema moraju biti pažljivo osmišljeni kako bi se osigurao pravilan rad distribuiranog sustava. \\
 
 Unatoč ovim izazovima, distribuirane aplikacije ostaju ključan alat za postizanje visoke efikasnosti, pouzdanosti i fleksibilnosti u današnjem digitalno povezanom svijetu. Budući da tehnologija napreduje, distribuirane aplikacije postaju sve sofisticiranije, pružajući sve naprednija rješenja za suvremene poslovne i društvene izazove.
 
@@ -134,7 +134,7 @@ Unatoč ovim izazovima, distribuirane aplikacije ostaju ključan alat za postiza
 
 Aplikaciju \textbf{mikro-servisne} arhitekture \engl{microservice architecture} čini kolekcija malih autonomnih servisa. Svaki servis ima svoje funkcionalnosti, no uz međusobnu komunikaciju stvaraju kohezivnu cjelinu.
 
-Na slici \ref{fig:microservice} može se vidjeti kako mikro-servisna arhitektura izgleda u usporedbi s monolitnom arhitekturom opisanom u poglavlju \ref{sec:monolith}. Iako mikro-servisna arhitektura donosi izazove poput složenije komunikacije i održavanja sinkronizacije podataka, istovremeno pruža znatne prednosti, kao što su pojednostavljeno horizontalno skaliranje i smanjeni rizik od sistemskih kvarova zahvaljujući autonomiji servisa.
+Na slici \ref{fig:microservice} može se vidjeti kako mikro-servisna arhitektura izgleda u usporedbi s monolitnom arhitekturom opisanom u poglavlju \ref{sec:monolith}. Iako mikro-servisna arhitektura donosi izazove poput složenije komunikacije i održavanja sinkronizacije podataka, istovremeno pruža znatne prednosti, kao što su pojednostavljeno horizontalno skaliranje i smanjeni rizik od kvarova sustava zahvaljujući autonomiji servisa.
 Radi efikasnosti u radu s mikro-servisima često se koristi kontejnerizacija, opisana u poglavlju \ref{sec:docker}, i  orkestracijski alati poput Kubernetes-a opisanog u poglavlju \ref{sec:k8s}. Upravo takav sustav koristi aplikacija CloudVane opisana u poglavlju \ref{sec:cloudvane} na čijim se dnevničkim zapisima bazira ovaj rad.
 
 \begin{figure}[htb]
@@ -214,7 +214,7 @@ Grozdovi računala, zahvaljujući distribuiranosti, također omogućuju paraleln
 
 Unatoč svim prednostima, upravljanje grozdovima računala može biti složeno i zahtijeva adekvatne alate i stručnost. Moraju se uspostaviti mehanizmi za koordinaciju između računala, ravnomjerno raspoređivanje opterećenja, otkrivanje i oporavak od kvarova te osiguravanje konzistentnosti podataka. \\
 
-U kontekstu grozdova računala \emph{Računalni oblak} \engl{Cloud} pruža ključnu infrastrukturu koja značajno olakšava upravljanje. Koristeći oblak, organizacije se mogu fokusirati na razvoj i izvršavanje svojih aplikacija bez potrebe za postavljanjem i održavanjem vlastite hardverske infrastrukture.
+U kontekstu grozdova računala \emph{računalni oblak} \engl{cloud} pruža ključnu infrastrukturu koja značajno olakšava upravljanje. Koristeći oblak, organizacije se mogu fokusirati na razvoj i izvršavanje svojih aplikacija bez potrebe za postavljanjem i održavanjem vlastite hardverske infrastrukture.
 
 Pružatelji usluga u oblaku, poput \emph{Amazon Web Services} (\textbf{AWS}), \emph{Google Cloud Platform} (\textbf{GCP}), \emph{Microsoft Azure} ili \emph{Oracle Cloud Infrastructure} (\textbf{OCI}), nude usluge za upravljanje grozdovima računala koje olakšavaju postavljanje, skaliranje i održavanje. Ti se grozdovi mogu lako prilagoditi potrebama korisnika, bilo da je riječ o povećanju ili smanjenju broja računala u grozdu.
 
@@ -343,7 +343,7 @@ Originalno razvijena unutar LinkedIn-a, Kafka je bila rješenje za izazove povez
 
 Kao dodatak brzini i efikasnosti Kafka se ističe i svojom skalabilnošću. U mogućnosti je obraditi velike količine podataka bez gubitka performansi, što ju čini iznimno prilagodljivim rješenjem za različite potrebe korisnika. Sve to čini Kafku idealnim rješenjem za sučeljavanje s izazovima povezanim s upravljanjem velikim volumenom podataka u stvarnom vremenu. \\
 
-Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafku kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući \emph{Kafka posrednike, Apache Zookeeper, Schema Registry, Kafka Connect, kSqlDB i Kafka UI} servise.
+Kao što je detaljno opisano u poglavlju \ref{sec:architecture}, CloudVane aplikacija koristi Apache Kafku kao središnje spremište za podatke dohvaćene s poslužitelja u oblaku. Ova integrirana platforma pruža bogat ekosustav usluga koje dopunjuju temeljni Kafka sustav, uključujući \emph{Kafka posrednike, Apache Zookeeper, Schema Registry, Kafka Connect, ksqlDB i Kafka UI} servise.
 
 Svaki od ovih servisa ima ključnu ulogu u obradi i upravljanju podacima. Specifična uloga svakog servisa u kontekstu obrade podataka aplikacije CloudVane također je pažljivo razrađena u poglavlju \ref{sec:architecture}.
 
@@ -407,7 +407,7 @@ ZooKeeper se često koristi za održavanje konfiguracija, pružanje distribuiran
 
 Međutim, Apache Kafka je nedavno (u vrijeme pisanja ovoga rada) prešla s korištenja ZooKeeper-a na novi protokol konsenzusa nazvan \textbf{Kafka Raft} (\textbf{Kraft}).
 
-Kako \citet{chandrakant_kafkas_2022} navodi, cilj prelaska s ZooKeeper-a na Kraft je pojednostaviti arhitekturu Kafke i poboljšati je. Kraft je varijanta Raft konsenzusnog protokola temeljena na događajima i promjena koju uvodi smanjuje prozor nedostupnosti kod pogrešaka Kafka posrednika jer može nadoknaditi propuštene događaje iz dnevnika nakon ponovnog pridruživanja. 
+Kako \citet{chandrakant_kafkas_2022} navodi, cilj prelaska s ZooKeeper-a na Kraft je pojednostaviti arhitekturu Kafke i poboljšati je. Kraft je varijanta Raft konsenzusnog protokola temeljena na događajima i promjena koju uvodi smanjuje prozor nedostupnosti kod pogrešaka Kafka posrednika jer može nadoknaditi propuštene događaje iz Kafka dnevnika nakon ponovnog pridruživanja. 
 
 Očekuje se da će prelazak na Kraft biti od značajne koristi zajednici Apache Kafke. Administratori sustava će lakše nadzirati, administrirati i podržavati Kafku. Novo upravljanje meta-podacima također znatno poboljšava performanse Apache Kafke omogućujući posredniku da se brže oporavi od pogrešaka i da obrađuje mnogo veći broj particija \citep{chandrakant_kafkas_2022}.
 
@@ -529,7 +529,7 @@ Ova praksa omogućuje aplikaciji CloudVane da maksimalno iskoristi prednosti koj
 
 Pristupanje Apache Kafka sustavu koristeći komandno-linijske alate \engl{Command Line Interface tools} može biti težak i spor proces, pogotovo za korisnike koji nisu iskusni s komandno-linijskim alatima. S druge strane, korištenje grafičkih korisničkih sučelja \engl{Graphical User Interface} pruža nekoliko prednosti koje mogu poboljšati produktivnost i iskustvo rada s Apache Kafka temama, shemama i konektorima.
 
-Korisnička sučelja omogućuju jednostavnije i efikasnije upravljanje jer eliminiraju potrebu za pamćenjem složenih naredbi koje su neophodne za provođenje osnovnih operacija na Apache Kafki. Upravo iz tog razloga, uz Apache Kafka za CloudVane, pokrenut je Kafka UI servis na Kubernetes klasteru.
+Korisnička sučelja omogućuju jednostavnije i efikasnije upravljanje jer eliminiraju potrebu za pamćenjem složenih naredbi koje su neophodne za provođenje osnovnih operacija na Apache Kafki. Upravo iz tog razloga, uz Apache Kafku, pokrenut je Kafka UI servis na Kubernetes klasteru.
 
 \section{Arhitektura aplikacije CloudVane}
 \label{sec:architecture}
@@ -692,7 +692,7 @@ Iako Logstash nudi značajne mogućnosti obrade podataka, Filebeat je specijaliz
 
 U okviru ovog rada, Filebeat je pokrenut na CloudVane Kubernetes klasteru u obliku Kubernetes DaemonSet-a te je konfiguriran da prikuplja dnevničke zapise s CloudVane servisa na testnoj okolini. Nakon prikupljanja ti se dnevnički zapisi prosljeđuju preko interneta na lokalni Minikube Kubernetes klaster, točnije u Apache Kafka teme što je detaljnije opisano u poglavlju \ref{sec:kafkaImpl}. 
 
-S obzirom na to da se Filebeat pokreće na Kubernetesu kao DaemonSet, pokreće se u onoliko instanci koliko čvorova ima grozd. Jedna instanca Filebeat-a po čvoru omogućuje Filebeat-u pristup kontejnerima koji se na njemu vrte. Konfiguracija ovoga servisa implementirana je kao Kubernetes ConfigMap i pokazana je u isječku koda \ref{lst:filebeat}.
+S obzirom na to da se Filebeat pokreće na Kubernetesu kao DaemonSet, pokreće se u onoliko instanci koliko čvorova ima grozd. Jedna instanca Filebeat-a po čvoru omogućuje Filebeat-u pristup kontejnerima koji se na njemu vrte. Konfiguracija ovoga servisa implementirana je kao Kubernetes ConfigMap i prikazana je u isječku \ref{lst:filebeat}.
 
 \subsection{Implementacija ELK-a na Kubernetes grozdu}
 \label{sec:elk_impl}
@@ -706,19 +706,19 @@ Filebeat je međutim, kao što je prethodno opisano, pokrenut na CloudVane Kuber
 
 Kao što je prethodno spomenuto u poglavlju \ref{sec:monitoring}, nadziranje aplikacija ključno je za održavanje optimalnih performansi, stabilnosti i pouzdanosti aplikacija. Strukturirano i sustavno nadziranje može biti presudno za otkrivanje i rješavanje problema prije nego što oni počnu utjecati na korisnike ili poslovanje.
 
-Dok su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj je izazov posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni kvar sustava.
+Kako su suvremene aplikacije postale sve složenije, zadatak njihova nadzora postao je izrazito zahtjevan. Ovaj je izazov posebno istaknut kod nadziranja distribuiranih sustava, gdje svaki individualni servis može potencijalno postati točka slabosti ili čak izazvati potpuni kvar sustava.
 
 S takvom razinom kompleksnosti nadziranje distribuiranih sustava prelazi granice jednostavnog praćenja pojedinačnih servisa i zahtijeva upotrebu sveobuhvatnih alata za nadzor. Nadzor nije samo otkrivanje grešaka ili slabosti unutar pojedinačnih servisa. Pored toga, nužno je uspostaviti sistemski pregled, identificirati anomalije u stvarnom vremenu, reagirati pravodobno i učinkovito kako bi se osigurao nesmetan rad distribuiranih sustava.
 
 U tom je kontekstu potrebno koristiti napredne alate za nadzor koji omogućuju dubinsko praćenje performansi i stanja svih servisa, bez obzira na to gdje se nalaze. Ti alati trebaju omogućiti brzo otkrivanje problema, detaljne informacije o prirodi problema i omogućiti promptno djelovanje kako bi se osigurali optimalan rad i performanse distribuiranih sustava. Ovakav pristup osigurava visoku razinu pouzdanosti i stabilnosti omogućujući sustavima da stalo pružaju visokokvalitetnu uslugu korisnicima.\\
 
-U nadolazećim poglavljima rada obrađuje se arhitektura rješenja koja omogućava agregiranje dnevničkih zapisa svih servisa distribuirane aplikacije CloudVane u stvarnom vremenu. Ovo rješenje ne samo da filtrira zapise prema njihovom statusu već koristi i umjetnu inteligenciju kako bi prepoznalo potencijalne probleme i ponudilo moguća rješenja.
+U nadolazećim poglavljima rada obrađuje se arhitektura rješenja koja omogućava agregiranje dnevničkih zapisa svih servisa distribuirane aplikacije CloudVane u stvarnom vremenu. Ovo rješenje ne samo da filtrira zapise prema njihovom statusu već koristi i umjetnu inteligenciju kako bi ponudilo moguća rješenja za prepoznate greške.
 
-Time se problem, zajedno s predloženim rješenjima, korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo sveobuhvatno rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
+Time se problem, zajedno s predloženim rješenjima, korisniku prezentira kroz sustav notifikacija. Osim toga, rješenje uključuje vizualizaciju svih relevantnih podataka unutar Kibane, što korisnicima omogućava brzo i intuitivno razumijevanje stanja njihove aplikacije. Ovo rješenje omogućuje korisnicima da brzo reagiraju na potencijalne probleme, čime se unapređuje ukupna stabilnost i performanse distribuiranih aplikacija.
 
 \section{Pregled arhitekture rješenja}
 
-Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja, koje je predmet ovog rada, vidljiva na slici \ref{fig:archDiagram}, sastoji se od više komponenata koje zajedno formiraju sveobuhvatni sustav za nadzor distribuiranih aplikacija. Ovaj sustav, koji je implementiran na lokalnom Minikube Kubernetes grozdu te djelomično na CloudVane Kubernetes grozdu, omogućuje kontinuirano praćenje, analizu i rješavanje problema unutar aplikacija.\\
+Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja, koje je predmet ovog rada, vidljiva na slici \ref{fig:archDiagram}, sastoji se od više komponenata koje zajedno formiraju sveobuhvatni sustav za nadzor distribuiranih aplikacija. Ovaj sustav, koji je implementiran na lokalnom Minikube Kubernetes grozdu te djelomično na CloudVane Kubernetes grozdu, omogućuje kontinuirano praćenje, analizu i rješavanje problema unutar aplikacija.\\\\
 
 \begin{figure}[htb]
 	\centering
@@ -727,7 +727,7 @@ Kako je već spomenuto u prethodnim poglavljima, arhitektura rješenja, koje je 
 	\label{fig:archDiagram}
 \end{figure}
 
-Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgovoran za prikupljanje dnevnika svih servisa aplikacije. Kako je opisano u poglavlju \ref{sec:filebeat}, Filebeat dnevničke zapise zatim šalje preko interneta na teme Apache Kafke koja je pokrenuta u lokalnom Minikube grozdu. Budući da se ovi podaci prenose preko interneta, Apache Kafka je zaštićena TLS-om\footnote{TLS (Transport Layer Security) je protokol koji osigurava zaštitu podataka tijekom prijenosa preko interneta.} kako bi se osigurao siguran prijenos podataka. Na slici \ref{fig:dataDiagram} vidljiv je protok dnevničkih zapisa kroz sustav.
+Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgovoran za prikupljanje dnevničkih zapisa svih servisa aplikacije. Kako je opisano u poglavlju \ref{sec:filebeat}, Filebeat dnevničke zapise zatim šalje preko interneta na teme Apache Kafke koja je pokrenuta u lokalnom Minikube grozdu. Budući da se ovi podaci prenose preko interneta, Apache Kafka je zaštićena TLS-om\footnote{TLS (Transport Layer Security) je protokol koji osigurava zaštitu podataka tijekom prijenosa preko interneta.} kako bi se osigurao siguran prijenos podataka. Na slici \ref{fig:dataDiagram} vidljiv je protok dnevničkih zapisa kroz sustav.
 
 \begin{figure}[htb]
 	\centering
@@ -738,7 +738,7 @@ Na CloudVane Kubernetes grozdu je pokrenut \textbf{Filebeat servis} koji je odgo
 
 Na lokalnom Kubernetes Minikube grozdu pokrenuta je \textbf{Apache Kafka} pomoću alata \textbf{Strimzi}. Uz jedan Apache Kafka posrednik\footnote{S obzirom na to da se Minikube sastoji samo od jednoga čvora, nema razloga pokretati više replika posrednika \engl{brokers}.} \engl{broker} pokrenut preko alata Strimzi, pokrenut je i Schema Registry servis za upravljanje shemama podataka. U poglavlju \ref{sec:kafkaImpl} opisani su implementacijski detalji lokalne instance Apache Kafke i Kafka teme koje se koriste za pohranu dnevničkih zapisa.
 
-Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisana u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi zatim se šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.
+Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \textbf{Kafka Streams aplikacija} koja filtrira i agregira dnevničke zapise. Ova aplikacija je detaljno opisana u poglavlju \ref{sec:streamImpl}. Agregirani dnevnički zapisi zatim se šalju natrag u nove, agregirane Kafka teme, a taj je protok vidljiv na dijagramu \ref{fig:topics}.\\
 
 \begin{figure}[htb]
 	\centering
@@ -747,7 +747,7 @@ Nakon Apache Kafke na lokalnom je Kubernetes grozdu pokrenuta i distribuirana \t
 	\label{fig:topics}
 \end{figure}
 
-Paralelno s tim, \textbf{servis za obogaćivanje dnevničkih zapisa} pokrenut je na Kubernetes grozdu i opisan je u poglavlju \ref{sec:ai}. Ovaj servis je dizajniran da bude skalabilan i prilagodljiv, ovisno o potrebama sustava. Za svaku grešku koja se javlja u CloudVane aplikaciji i koja se detektira u dnevničkom zapisu, ovaj servis komunicira s API-jem usluge umjetne inteligencije kako bi pronašao potencijalno rješenje. Svaka detektirana greška, zajedno sa sugeriranim rješenjem, zatim se šalje u novu Kafka temu kao što je vidljivo u dijagramu \ref{fig:topics}.
+Paralelno s tim, \textbf{servis za obogaćivanje dnevničkih zapisa} pokrenut je na Kubernetes grozdu i opisan je u poglavlju \ref{sec:ai}. Ovaj servis je dizajniran da bude skalabilan i prilagodljiv, ovisno o potrebama sustava. Za svaku grešku koja se javlja u CloudVane aplikaciji i koja se detektira u dnevničkom zapisu, ovaj servis komunicira s API-jem usluge umjetne inteligencije kako bi pronašao njeno potencijalno rješenje. Svaka detektirana greška, zajedno sa sugeriranim rješenjem, zatim se šalje u novu Kafka temu kao što je vidljivo u dijagramu \ref{fig:topics}.
 
 Na sve teme koje sadrže dnevničke zapise spojen je \textbf{Logstash servis}, opisan u poglavlju \ref{sec:logstash} i prikazan u dijagramu \ref{fig:dataDiagram}. Logstash skuplja dnevničke zapise iz svih tema, a zatim ih prosljeđuje u \textbf{ElasticSearch} indekse. Ova funkcionalnost omogućuje korisnicima da putem \textbf{Kibane} iz poglavlja \ref{sec:kibana}, imaju cjelovit uvid u dnevničke zapise, bilo da su agregirani ili ne. Implementacija pregleda dnevničkih zapisa kroz Kibanu demonstrirana je u poglavlju \ref{sec:kibanaImpl}.
 
@@ -814,7 +814,7 @@ error\_aggregator\_kstream\_* & Interna tema Kafka Streams aplikacije za spreman
 \section{Agregiranje dnevničkih zapisa}
 \label{sec:streamImpl}
 
-Dnevnički zapisi mogu biti itekako brojni, posebno u kompleksnim sustavima. Na primjer, u CloudVane testnom okruženju može se generirati i do $15000$ dnevničkih zapisa u samo jednom satu. Ovaj velik broj zapisa često je simptom nekog problema unutar sustava, gdje se greške javljaju i sustav započne s generiranjem obavijesti o problemima.
+Dnevnički zapisi mogu biti itekako brojni, posebno u kompleksnim sustavima. Na primjer, u CloudVane testnom okruženju može se generirati i do $15000$ dnevničkih zapisa u samo jednom satu. Velik broj dnevničkih zapisa često je simptom nekog problema unutar sustava, gdje se greške javljaju i sustav započne s generiranjem obavijesti o problemima.
 
 No, problemi se rijetko riješe sami od sebe. Sustav obično nastavlja generirati dnevničke zapise sve dok se problem ne riješi. To može rezultirati velikim količinama dnevničkih zapisa koje treba obraditi i analizirati kako bi se razumjelo što se točno događa unutar sustava.
 
@@ -829,7 +829,7 @@ Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref
 \begin{enumerate}
 	\item Dnevnički zapisi se konzumiraju iz svih Kafka tema koje započinju ključnom riječi \emph{\glqq logs\grqq}.
 	\item Dnevnički zapisi se filtriraju temeljem statusa koji određuje jesu li to informativni dnevnički zapisi ili predstavljaju greške. U ovom kontekstu izostavljaju se svi dnevnički zapisi koji ne predstavljaju greške s obzirom na to da je cilj korisniku pružiti reakciju na greške unutar aplikacije.
-	\item Dnevnički zapisi grupiraju se prema ključu Kafka poruke unutar kojeg se nalazi sadržaj greške. (Ključ Kafka poruke je definiran u konfiguraciji Filebeat servisa, što je prikazano u isječku \ref{lst:filebeat})
+	\item Dnevnički zapisi grupiraju se prema ključu Kafka poruke unutar kojeg se nalazi sadržaj greške. (Ključ Kafka poruke je definiran u konfiguraciji Filebeat servisa koja je prikazana u isječku \ref{lst:filebeat})
 	\item Agregacija dnevničkih zapisa provodi se po ključu poruke. Ovo grupiranje se izvodi korištenjem \emph{klizećeg prozora} u trajanju od \emph{$30$ sekundi}.
 	\item Agregacija koju izravno pruža Kafka Streams biblioteka mapira se na objekt koji sadrži broj agregiranih poruka, kao i prvu dohvaćenu vremensku oznaku.
 	\item Agregirani dnevnički zapisi se pohranjuju u Kafka temu \emph{\glqq aggregated-errors\grqq}.
@@ -862,13 +862,13 @@ Izrađena Kafka Streams aplikacija, čiji je algoritam prikazan pseudokodom \ref
 	\label{fig:kstream}
 \end{figure}
 
-
+\clearpage
 \section{Obogaćivanje dnevničkih zapisa}
 \label{sec:ai}
 
 Prilikom prvog susreta s greškama unutar sustava često je nejasno u čemu je problem. Iz izravnih dnevničkih zapisa uzrok problema i njegovo potencijalno rješenje često nisu odmah očigledni.\\
 
-U svrhu rješavanja ovog problema, ovaj rad istražuje poseban Kafka servis, izrađen u Pythonu, koji koristi \emph{OpenAI API} kako bi obogatio agregirane dnevničke zapise o greškama, a to je opisano u prethodnom poglavlju. Cilj je ovog obogaćivanja da kasnije pruži dodatne informacije korisnicima koji su zaduženi za rješavanje problema, čime se pojačava njihova sposobnost razumijevanja i brzog reagiranja na probleme.\\
+U svrhu rješavanja ovog problema, ovaj rad istražuje poseban Kafka servis, izrađen u Pythonu, koji koristi \emph{OpenAI API} kako bi obogatio prethodno agregirane dnevničke zapise o greškama. Cilj je ovog obogaćivanja pružati dodatne informacije korisnicima koji su zaduženi za rješavanje problema, čime se pojačava njihova sposobnost razumijevanja i brzog reagiranja na probleme.\\
 
 Posebna značajka ovog servisa je njegova sposobnost horizontalnog skaliranja, omogućena putem Kafka Consumer API-ja. Ova karakteristika omogućuje servisu da se prilagodi povećanju opterećenja, čime se osigurava održavanje stabilnih performansi čak i pod visokim zahtjevima.\\
 
@@ -900,7 +900,8 @@ Kako bi se riješio ovaj problem, za potrebe rada je razvijen poseban servis. Ov
 
 Ovaj servis služi kao sustav za obavještavanje, poslužujući se različitim kanalima kako bi korisnike obavijestio o nastalim greškama u sustavu. To se postiže slanjem notifikacija putem elektroničke pošte, objavama na Slack kanalu te slanjem obavijesti putem Pushover aplikacije. Ovaj višekanalni pristup obavještavanja osigurava da relevantne informacije o problemima dođu do korisnika na najbrži i najefikasniji mogući način.
 
-Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i dodatne informacije dobivene putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema olakšavajući time proces traženja rješenja.\\
+\clearpage
+Svaka obavijest sadrži ključne informacije o grešci, uključujući vrijeme kada je greška prvi put identificirana, opis problema prema informacijama iz dnevničkih zapisa, kao i potencijalno rješenje problema dobiveno putem OpenAI API-ja. Ove informacije pomažu korisnicima da brzo shvate prirodu problema olakšavajući time proces popravka.\\
 
 Dnevnički zapisi koji se isporučuju u notifikacijama čitaju se iz Kafka teme \emph{\glqq enriched-errors\grqq} kao što je vidljivo na dijagramu \ref{fig:topics}. Primjeri notifikacija prikazani su na sljedećim slikama: notifikacija elektroničke pošte nalazi se na slici \ref{fig:notif_email}, Slack notifikacija na slici \ref{fig:notif_slack}, a Pushover mobilna notifikacija na slici \ref{fig:notif_pushover}.
 
